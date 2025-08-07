@@ -1,0 +1,913 @@
+:root {
+    --background-color: #121212;
+    --card-color: #1e1e1e;
+    --text-color: #ffffff;
+    --accent-color: #ff5e3a;
+    --secondary-color: #2c2c2c;
+    --watched-color: #4caf50;
+    /* Reducir la altura del header */
+    --header-height: 60px; /* Reducido de 90px a 60px */
+    --primary-color: #ff7700; /* Cambiado de #6a11cb (púrpura) a naranja */
+    --gradient-color: #ff5e3a; /* Cambiado de #2575fc (azul) a naranja más claro */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding-bottom: 2rem;
+}
+
+/* Ajustar el header para que sea más corto */
+/* Estilos para el header con el botón de exportar */
+header {
+    background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
+    padding: 0.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrar el contenido */
+    height: var(--header-height);
+    transition: all 0.3s ease-in-out;
+    position: relative; /* Añadir posición relativa para posicionar el botón */
+}
+
+/* Ajustar el título para que esté centrado */
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* Botón de exportar/importar */
+.export-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: absolute; /* Posicionar absolutamente */
+    right: 1rem; /* Colocar a la derecha */
+    top: 50%; /* Centrar verticalmente */
+    transform: translateY(-50%); /* Ajustar para centrado vertical perfecto */
+}
+
+.export-button:hover {
+    background-color: rgba(255, 255, 255, 0.452);
+}
+
+.export-icon {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+/* Estilos para el modal de exportar/importar */
+.export-import-container {
+    padding: 1.5rem;
+    color: var(--text-color);
+}
+
+.export-section, .import-section {
+    margin-bottom: 2rem;
+    background-color: var(--card-color);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.export-import-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--gradient-color);
+}
+
+.export-import-container h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.action-button {
+    background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#export-code, #import-code {
+    width: 100%;
+    height: 100px;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    resize: none;
+    font-family: monospace;
+}
+
+.result-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 5px;
+    display: none;
+}
+
+.success {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+    display: block;
+}
+
+.error {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: #F44336;
+    display: block;
+}
+
+/* Ajustar el título para que tenga un margen adecuado */
+h1 {
+    margin: 0; /* Eliminar margen inferior */
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* Ajustar el contenedor de búsqueda para que tenga su propio espacio */
+.search-container {
+    display: flex;
+    width: 100%;
+    max-width: 500px;
+    margin: 1.5rem auto; /* Centrar horizontalmente con margen automático */
+    justify-content: center; /* Centrar los elementos internos */
+}
+
+#search-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+#search-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.anime-card {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.anime-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.anime-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.anime-card:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.anime-card:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+.anime-card:nth-child(n+6) {
+    animation-delay: 0.5s;
+}
+
+.anime-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.anime-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.anime-info {
+    padding: 1rem;
+}
+
+.anime-title {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.anime-episodes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.episode {
+    background-color: var(--secondary-color);
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.episode:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.episode.watched {
+    background-color: var(--watched-color);
+    border-color: rgba(76, 175, 80, 0.3);
+    animation: watchedPulse 0.5s ease-in-out;
+}
+
+@keyframes watchedPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.episode::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.episode:hover::after {
+    opacity: 0.2;
+}
+
+.add-to-list {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    padding: 0;
+    line-height: 1;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.add-to-list:hover {
+    background-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.add-to-list.in-list {
+    background-color: var(--watched-color);
+}
+
+.add-to-list::before {
+    content: '+';
+    font-size: 18px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+
+.add-to-list.in-list::before {
+    content: '✓';
+    animation: checkmark 0.5s ease-in-out;
+}
+
+@keyframes checkmark {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.detail-list-button {
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+}
+
+.season-title {
+    cursor: pointer;
+    padding: 0.5rem 0;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.season-toggle {
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.season-episodes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+}
+
+.anime-detail-view {
+    padding: 1rem;
+}
+
+.anime-detail-header {
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+.anime-detail-image {
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.anime-detail-info {
+    margin-left: 1.5rem;
+    flex: 1;
+}
+
+.anime-detail-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.anime-detail-status {
+    margin-bottom: 1rem;
+    color: #aaa;
+}
+
+.anime-detail-seasons {
+    margin-top: 1rem;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    overflow-y: auto;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.modal.fade-in {
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal.fade-out {
+    animation: modalFadeOut 0.3s ease-out;
+}
+
+@keyframes modalFadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.modal-content {
+    background-color: var(--card-color);
+    margin: 5% auto;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Añadir animación para el contenido del modal al cerrarse */
+.modal.fade-out .modal-content {
+    animation: modalContentFadeOut 0.3s ease-out forwards;
+}
+
+@keyframes modalContentFadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* Asegurar que el body no se pueda scrollear cuando el modal está abierto */
+body.modal-open {
+    overflow: hidden;
+}
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 75%; /* Aumentado para dar más espacio al iframe */
+    height: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.video-source-info {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.loading-message, .error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.loading-message {
+    animation: pulse 1.5s infinite;
+}
+
+.error-message {
+    background-color: rgba(220, 53, 69, 0.8);
+    max-width: 80%;
+}
+
+.error-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.retry-button, .open-external-button {
+    background-color: #6c5ce7;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+}
+
+.retry-button:hover {
+    background-color: #5649c0;
+}
+
+.open-external-button {
+    background-color: #e74c3c;
+}
+
+.open-external-button:hover {
+    background-color: #c0392b;
+}
+
+.netu-button {
+    background-color: #3498db;
+}
+
+.netu-button:hover {
+    background-color: #2980b9;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+.episode-info {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mark-watched {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.mark-watched:hover {
+    background-color: #ff4425;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.mark-watched.watched {
+    background-color: var(--watched-color);
+    animation: markWatchedPulse 0.5s ease-in-out;
+}
+
+@keyframes markWatchedPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+    }
+}
+
+.mark-watched::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: width 0.5s, height 0.5s, opacity 0.5s;
+}
+
+.mark-watched:active::before {
+    width: 300px;
+    height: 300px;
+    opacity: 1;
+    transition: 0s;
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 50; /* Menor que el z-index del header (100) */
+    transition: margin-top 0.3s ease-in-out;
+    padding-top: 1rem; /* Espacio adicional para evitar solapamiento */
+}
+
+.filter-button {
+    background-color: var(--card-color);
+    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px; /* Añadir bordes redondeados */
+}
+
+.filter-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Cambiar el color azul de los botones de filtro activos */
+.filter-button.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
+    border-color: transparent;
+    box-shadow: 0 4px 8px rgba(255, 94, 58, 0.4); /* Cambiado de rgba(106, 17, 203, 0.4) */
+    animation: pulse 1s ease-in-out;
+}
+
+/* Cambiar el color de la animación pulse */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 94, 58, 0.7); /* Cambiado de rgba(106, 17, 203, 0.7) */
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 94, 58, 0); /* Cambiado de rgba(106, 17, 203, 0) */
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 94, 58, 0); /* Cambiado de rgba(106, 17, 203, 0) */
+    }
+}
+
+/* Cambiar el color azul de los badges */
+.new-episode {
+    background-color: #ff7700; /* Cambiado de #2575fc (azul) */
+}
+
+.new-episode:hover {
+    background-color: #ff5e3a; /* Cambiado de #0b64ff (azul oscuro) */
+}
+
+.toggle-all-watched-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.toggle-all-watched-button:hover {
+    background-color: #ff7e5a;
+    transform: translateY(-2px);
+}
+
+.new-episode-badge {
+    background-color: #ff9800;
+    color: white;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    margin-left: 1rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+/* Estilos para la paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.pagination-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-button:hover {
+    background-color: var(--accent-color);
+}
+
+.page-info {
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+/* Ajustar para dispositivos móviles */
+@media (max-width: 575px) {
+    .pagination {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .pagination-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .page-info {
+        font-size: 0.8rem;
+        width: 100%;
+        text-align: center;
+        order: -1;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Estilo para episodios en modo desmarcar */
+.episode.unwatch-mode:hover {
+    background-color: #ff5252; /* Rojo para indicar que se va a desmarcar */
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3);
+}
+
+/* Estilo para episodios no lanzados (amarillo) */
+.new-episode {
+    background-color: #FFD700; /* Color amarillo para episodios no lanzados */
+    color: #000; /* Texto negro para mejor contraste */
+    position: relative;
+    overflow: hidden;
+}
+
+.new-episode:hover {
+    background-color: #FFC107; /* Un amarillo más oscuro al hacer hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
+}
+
+/* Estilo para el botón cuando está en modo mostrar solo vistos */
+.toggle-all-watched-button.showing-watched-only {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.new-episode-badge {
+    background-color: #ff9800; /* Color amarillo para episodios no lanzados */
+    color: #000; /* Texto negro para mejor contraste */
+    position: relative;
+    overflow: hidden;
+}
+
+.new-episode::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.new-episode:hover::after {
+    opacity: 0.2;
+}
+
+/* Estilos para el footer */
+.footer {
+    background-color: var(--card-color);
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    /* Eliminar cualquier margen o padding inferior que pueda causar el espacio negro */
+    margin-bottom: 0;
+    position: relative; /* Asegurar que no haya espacio debajo */
+    bottom: 0;
+}
+
+.footer-content {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.disclaimer {
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+/* Añadir la clase hidden para ocultar el header al hacer scroll */
+header.hidden {
+    transform: translateY(-100%);
+    box-shadow: none;
+}

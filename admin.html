@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Anime Viewer</title>
+    <style>
+        :root {
+            --background-color: #121212;
+            --card-color: #1e1e1e;
+            --secondary-color: #2a2a2a;
+            --accent-color: #bb86fc;
+            --text-color: #ffffff;
+            --watched-color: #4caf50;
+            --section-color: rgba(255, 255, 255, 0.05);
+            --hover-color: #3a3a3a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--card-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group:hover {
+            transform: translateY(-2px);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="url"], input[type="number"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-size: 16px;
+            box-sizing: border-box;
+            max-width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.3);
+            outline: none;
+        }
+        
+        /* Contenedor para los campos de entrada */
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .input-container label {
+            flex: 0 0 30%;
+            margin-bottom: 0;
+        }
+        
+        .input-container .input-wrapper {
+            flex: 0 0 70%;
+        }
+        
+        /* Estilo para las secciones */
+        .section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--section-color);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+        }
+        
+        .section h3 {
+            margin-top: 0;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #9d65e5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .preview {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 150px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-image:hover {
+            transform: scale(1.05);
+        }
+
+        .season-container {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: var(--section-color);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .season-container:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .season-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+        }
+
+        .episode-count {
+            color: #aaa;
+        }
+
+        .new-episode {
+            background-color: #FFD700;
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .copy-button {
+            background-color: #4caf50;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: #ff5252;
+            margin-top: 10px;
+            display: none;
+            padding: 10px;
+            background-color: rgba(255, 82, 82, 0.1);
+            border-radius: 5px;
+            border-left: 4px solid #ff5252;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--accent-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .season-form {
+            background-color: var(--section-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4caf50;
+            transition: all 0.3s ease;
+        }
+
+        .season-form:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        .add-button {
+            background-color: #4caf50;
+            margin-top: 10px;
+        }
+
+        .remove-button {
+            background-color: #f44336;
+            margin-top: 10px;
+        }
+
+        .tab {
+            overflow: hidden;
+            border-bottom: 1px solid var(--secondary-color);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .tab button {
+            background-color: inherit;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 12px 20px;
+            transition: 0.3s;
+            font-size: 16px;
+            margin: 0 5px;
+            color: var(--text-color);
+            border-radius: 5px 5px 0 0;
+            box-shadow: none;
+        }
+
+        .tab button:hover {
+            background-color: var(--secondary-color);
+            transform: none;
+        }
+
+        .tab button.active {
+            background-color: var(--accent-color);
+            color: #000;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 20px 0;
+            border-top: none;
+            animation: fadeEffect 0.5s;
+        }
+
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        small {
+            display: block;
+            margin-top: 5px;
+            color: #aaa;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Administrador de Animes</h1>
+        
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'basicInfo')">Información Básica</button>
+            <button class="tablinks" onclick="openTab(event, 'otros')">Otros</button>
+            <button class="tablinks" onclick="openTab(event, 'seasons')">Temporadas</button>
+            <button class="tablinks" onclick="openTab(event, 'preview')">Vista Previa</button>
+        </div>
+
+        <!-- Pestaña de Información Básica -->
+        <div id="basicInfo" class="tabcontent" style="display: block;">
+            <h2>Información Básica del Anime</h2>
+            
+            <div class="input-group">
+                <label for="anime-title">Título del Anime:</label>
+                <input type="text" id="anime-title" placeholder="Ej: One Piece">
+            </div>
+
+            <div class="input-group">
+                <label for="anime-id">ID del Anime:</label>
+                <input type="number" id="anime-id" min="1" value="6" placeholder="Ej: 6">
+                <small>La última ID en uso es 5</small>
+            </div>
+
+            <div class="input-group">
+                <label for="anime-image">URL de la Imagen:</label>
+                <input type="url" id="anime-image" placeholder="https://www3.animeflv.net/uploads/animes/covers/3.jpg">
+            </div>
+            
+            <button onclick="validateBasicInfo()">Siguiente: Temporadas</button>
+        </div>
+
+        <!-- Pestaña de Otros -->
+        <div id="otros" class="tabcontent">
+            <h2>Otras Opciones</h2>
+            
+            <div class="section">
+                <h3>Estado y Enlaces</h3>
+                <div class="input-group">
+                    <label for="anime-status">Estado del Anime:</label>
+                    <select id="anime-status">
+                        <option value="watching">Viendo</option>
+                        <option value="completed">Completado</option>
+                        <option value="pending" selected>Pendiente</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="anime-base-url">URL Base para Episodios:</label>
+                    <input type="url" id="anime-base-url" value="https://www3.animeflv.net/ver/" placeholder="https://www3.animeflv.net/ver/">
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>Valores Predeterminados</h3>
+                <div class="input-group">
+                    <label for="default-status">Estado predeterminado:</label>
+                    <select id="default-status">
+                        <option value="watching">Viendo</option>
+                        <option value="completed">Completado</option>
+                        <option value="pending" selected>Pendiente</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="default-base-url">URL base predeterminada:</label>
+                    <input type="url" id="default-base-url" value="https://www3.animeflv.net/ver/" placeholder="https://www3.animeflv.net/ver/">
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña de Temporadas -->
+        <div id="seasons" class="tabcontent">
+            <h2>Temporadas del Anime</h2>
+            <div id="seasons-container">
+                <!-- Aquí se añadirán dinámicamente los formularios de temporadas -->
+            </div>
+            
+            <button id="add-season-button" class="add-button">Añadir Temporada</button>
+            <button onclick="goToTab('preview')">Siguiente: Vista Previa</button>
+        </div>
+
+        <!-- Pestaña de Vista Previa -->
+        <div id="preview" class="tabcontent">
+            <h2>Vista Previa del Anime</h2>
+            
+            <div id="preview-container" class="preview" style="display: block;">
+                <img id="preview-image" class="preview-image" src="" alt="Portada del Anime">
+                <h3 id="preview-title"></h3>
+                <div id="preview-seasons"></div>
+            </div>
+
+            <div id="result" class="result">
+                <h3>Código para animes.js:</h3>
+                <pre id="result-code"></pre>
+                <button id="copy-button" class="copy-button">Copiar Código</button>
+            </div>
+
+            <button id="generate-button">Generar Código</button>
+        </div>
+
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        // Variables globales
+        let nextAnimeId = 6; // Valor predeterminado (último ID + 1)
+        let seasonCount = 0;
+        let existingAnimeIds = [1, 2, 3, 4, 5]; // IDs que ya existen en animes.js
+        
+        // Función para cargar los IDs desde animes.js
+        function loadAnimeIds() {
+            try {
+                // Crear una etiqueta script para cargar animes.js
+                const script = document.createElement('script');
+                script.src = 'animes.js';
+                script.onload = function() {
+                    // Una vez cargado, extraer los IDs
+                    if (typeof animeData !== 'undefined') {
+                        existingAnimeIds = animeData.map(anime => anime.id);
+                        // Encontrar el ID más alto y establecer nextAnimeId
+                        const maxId = Math.max(...existingAnimeIds);
+                        nextAnimeId = maxId + 1;
+                        
+                        // Actualizar el valor del campo ID
+                        document.getElementById('anime-id').value = nextAnimeId;
+                        
+                        // Actualizar el texto informativo
+                        const smallText = document.querySelector('#anime-id + small');
+                        smallText.textContent = `La última ID en uso es ${maxId}`;
+                    }
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                console.error('Error al cargar animes.js:', error);
+            }
+        }
+
+        // Llamar a la función al cargar la página
+        loadAnimeIds();
+        
+        // Función para validar si un ID ya existe
+        function isIdAlreadyUsed(id) {
+            return existingAnimeIds.includes(parseInt(id));
+        }
+        
+        // Elementos del DOM
+        const seasonsContainer = document.getElementById('seasons-container');
+        const addSeasonButton = document.getElementById('add-season-button');
+        const generateButton = document.getElementById('generate-button');
+        const previewImage = document.getElementById('preview-image');
+        const previewTitle = document.getElementById('preview-title');
+        const previewSeasons = document.getElementById('preview-seasons');
+        const resultDiv = document.getElementById('result');
+        const resultCode = document.getElementById('result-code');
+        const copyButton = document.getElementById('copy-button');
+        const errorDiv = document.getElementById('error');
+
+        // Función para cambiar entre pestañas
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+            
+            // Si se abre la pestaña de vista previa, generar automáticamente la vista previa
+            if (tabName === 'preview') {
+                const animeData = collectFormData();
+                if (animeData) {
+                    displayPreview(animeData);
+                    generateCode(animeData);
+                }
+            }
+        }
+
+        // Función para ir a una pestaña específica
+        function goToTab(tabName) {
+            const tabButton = document.querySelector(`.tablinks[onclick*="${tabName}"]`);
+            if (tabButton) {
+                tabButton.click();
+            }
+        }
+        
+        // Función para validar la información básica antes de pasar a la siguiente pestaña
+        function validateBasicInfo() {
+            // Obtener valores de los campos obligatorios
+            const title = document.getElementById('anime-title').value.trim();
+            const animeId = document.getElementById('anime-id').value.trim();
+            const image = document.getElementById('anime-image').value.trim();
+            
+            // Validar campos obligatorios
+            if (!title) {
+                showError('Por favor, introduce un título para el anime');
+                return;
+            }
+            
+            if (!animeId) {
+                showError('Por favor, introduce un ID para el anime');
+                return;
+            }
+            
+            // Validar que el ID sea un número válido
+            if (isNaN(parseInt(animeId)) || parseInt(animeId) < 1) {
+                showError('Por favor, introduce un ID válido (número entero positivo)');
+                return;
+            }
+            
+            // Validar que el ID no esté duplicado
+            if (isIdAlreadyUsed(parseInt(animeId))) {
+                showError(`El ID ${animeId} ya está en uso. Por favor, elige otro ID.`);
+                return;
+            }
+            
+            if (!image) {
+                showError('Por favor, introduce una URL de imagen válida');
+                return;
+            }
+            
+            // Si todo está correcto, pasar a la siguiente pestaña
+            goToTab('seasons');
+        }
+
+        // Función para añadir un formulario de temporada
+        function addSeasonForm() {
+            seasonCount++;
+            const seasonForm = document.createElement('div');
+            seasonForm.className = 'season-form';
+            seasonForm.id = `season-form-${seasonCount}`;
+            seasonForm.innerHTML = `
+                <h3>Temporada ${seasonCount}</h3>
+                
+                <div class="input-group">
+                    <label for="season-title-${seasonCount}">Título de la Temporada:</label>
+                    <input type="text" id="season-title-${seasonCount}" value="Temporada ${seasonCount}">
+                </div>
+
+                <div class="input-group">
+                    <label for="season-episodes-${seasonCount}">Número de Episodios:</label>
+                    <input type="number" id="season-episodes-${seasonCount}" min="1" value="12">
+                </div>
+
+                <div class="input-group">
+                    <label for="season-slug-${seasonCount}">Slug para URLs:</label>
+                    <input type="text" id="season-slug-${seasonCount}" placeholder="Ej: one-piece-tv o shingeki-no-kyojin-season-2">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <input type="checkbox" id="has-new-episode-${seasonCount}" onchange="toggleNewEpisodeFields(${seasonCount})">
+                        Tiene nuevo episodio programado
+                    </label>
+                </div>
+
+                <div id="new-episode-fields-${seasonCount}" style="display: none;">
+                    <div class="input-group">
+                        <label for="new-episode-status-${seasonCount}">Estado del Nuevo Episodio:</label>
+                        <input type="text" id="new-episode-status-${seasonCount}" value="Nuevo Episodio">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="new-episode-date-${seasonCount}">Fecha de Lanzamiento:</label>
+                        <input type="date" id="new-episode-date-${seasonCount}">
+                    </div>
+                </div>
+
+                ${seasonCount > 1 ? `<button class="remove-button" onclick="removeSeasonForm(${seasonCount})">Eliminar Temporada</button>` : ''}
+            `;
+            
+            seasonsContainer.appendChild(seasonForm);
+
+            // Establecer la fecha de hoy como valor predeterminado
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById(`new-episode-date-${seasonCount}`).value = today;
+        }
+
+        // Función para eliminar un formulario de temporada
+        function removeSeasonForm(id) {
+            const seasonForm = document.getElementById(`season-form-${id}`);
+            if (seasonForm) {
+                seasonForm.remove();
+            }
+        }
+
+        // Función para mostrar/ocultar campos de nuevo episodio
+        function toggleNewEpisodeFields(id) {
+            const checkbox = document.getElementById(`has-new-episode-${id}`);
+            const fields = document.getElementById(`new-episode-fields-${id}`);
+            
+            if (checkbox.checked) {
+                fields.style.display = 'block';
+            } else {
+                fields.style.display = 'none';
+            }
+        }
+
+        // Función para recopilar todos los datos del formulario
+        function collectFormData() {
+            const title = document.getElementById('anime-title').value.trim();
+            const animeId = parseInt(document.getElementById('anime-id').value);
+            const image = document.getElementById('anime-image').value.trim();
+            const status = document.getElementById('anime-status').value;
+            const baseUrl = document.getElementById('anime-base-url').value.trim();
+        
+            // Validar que el ID sea un número válido
+            if (isNaN(animeId) || animeId < 1) {
+                showError('Por favor, introduce un ID válido (número entero positivo)');
+                goToTab('basicInfo');
+                return null;
+            }
+        
+            // Validar que el ID no esté duplicado
+            if (isIdAlreadyUsed(animeId)) {
+                showError(`El ID ${animeId} ya está en uso. Por favor, elige otro ID.`);
+                goToTab('basicInfo');
+                return null;
+            }
+        
+            if (!title) {
+                showError('Por favor, introduce un título para el anime');
+                goToTab('basicInfo');
+                return null;
+            }
+        
+            if (!image) {
+                showError('Por favor, introduce una URL de imagen válida');
+                goToTab('basicInfo');
+                return null;
+            }
+
+            const seasons = [];
+            const seasonForms = document.querySelectorAll('.season-form');
+
+            if (seasonForms.length === 0) {
+                showError('Por favor, añade al menos una temporada');
+                goToTab('seasons');
+                return null;
+            }
+
+            for (let i = 0; i < seasonForms.length; i++) {
+                const id = i + 1;
+                const seasonTitle = document.getElementById(`season-title-${id}`).value.trim();
+                const episodeCount = parseInt(document.getElementById(`season-episodes-${id}`).value);
+                const slug = document.getElementById(`season-slug-${id}`).value.trim();
+                const hasNewEpisode = document.getElementById(`has-new-episode-${id}`).checked;
+
+                if (!seasonTitle) {
+                    showError(`Por favor, introduce un título para la Temporada ${id}`);
+                    goToTab('seasons');
+                    return null;
+                }
+
+                if (isNaN(episodeCount) || episodeCount < 1) {
+                    showError(`Por favor, introduce un número válido de episodios para la Temporada ${id}`);
+                    goToTab('seasons');
+                    return null;
+                }
+
+                if (!slug) {
+                    showError(`Por favor, introduce un slug para la Temporada ${id}`);
+                    goToTab('seasons');
+                    return null;
+                }
+
+                const season = {
+                    number: id,
+                    title: seasonTitle,
+                    episodes: episodeCount,
+                    slug: slug
+                };
+
+                if (hasNewEpisode) {
+                    const status = document.getElementById(`new-episode-status-${id}`).value.trim();
+                    const date = document.getElementById(`new-episode-date-${id}`).value;
+
+                    if (!status) {
+                        showError(`Por favor, introduce un estado para el nuevo episodio de la Temporada ${id}`);
+                        goToTab('seasons');
+                        return null;
+                    }
+
+                    if (!date) {
+                        showError(`Por favor, introduce una fecha para el nuevo episodio de la Temporada ${id}`);
+                        goToTab('seasons');
+                        return null;
+                    }
+
+                    season.newEpisode = {
+                        status: status,
+                        date: date
+                    };
+                }
+
+                seasons.push(season);
+            }
+
+            return {
+                id: animeId, // Usar el ID ingresado por el usuario
+                title: title,
+                image: image,
+                inMyList: false,
+                seasons: seasons,
+                status: status,
+                links: {
+                    baseUrl: baseUrl
+                }
+            };
+        }
+
+        // Función para mostrar la vista previa
+        function displayPreview(animeData) {
+            previewImage.src = animeData.image;
+            previewTitle.textContent = animeData.title;
+            
+            // Limpiar temporadas anteriores
+            previewSeasons.innerHTML = '';
+            
+            // Mostrar cada temporada
+            animeData.seasons.forEach(season => {
+                const seasonContainer = document.createElement('div');
+                seasonContainer.className = 'season-container';
+                
+                const seasonTitle = document.createElement('div');
+                seasonTitle.className = 'season-title';
+                seasonTitle.textContent = season.title;
+                
+                const episodeCount = document.createElement('div');
+                episodeCount.className = 'episode-count';
+                episodeCount.textContent = `${season.episodes} episodios`;
+                
+                seasonContainer.appendChild(seasonTitle);
+                seasonContainer.appendChild(episodeCount);
+                
+                // Si hay un nuevo episodio, mostrarlo
+                if (season.newEpisode) {
+                    const newEpisodeBadge = document.createElement('span');
+                    newEpisodeBadge.className = 'new-episode';
+                    newEpisodeBadge.textContent = `${season.newEpisode.status} - ${season.newEpisode.date}`;
+                    seasonTitle.appendChild(newEpisodeBadge);
+                }
+                
+                previewSeasons.appendChild(seasonContainer);
+            });
+        }
+
+        // Función para generar el código
+        // Función para generar el código
+        function generateCode(animeData) {
+            // Crear una copia del objeto para no modificar el original
+            const cleanData = {
+                id: animeData.id,
+                title: animeData.title,
+                image: animeData.image,
+                inMyList: animeData.inMyList,
+                seasons: animeData.seasons
+            };
+            
+            // Crear el código JavaScript
+            let code = JSON.stringify(cleanData, null, 4)
+                .replace(/'([^']+)':/g, '$1:') // Quitar comillas de las claves
+                .replace(/"([^"]+)":/g, '$1:') // Quitar comillas de las claves (dobles)
+                .replace(/"([^"]+)"/g, '"$1"'); // Mantener comillas en los valores string
+            
+            // Añadir espacios al inicio de cada línea y coma al final
+            code = code.replace(/^/gm, '            ');
+            code = code.replace(/}$/g, '},');
+            
+            // Mostrar el código
+            resultCode.textContent = code;
+            resultDiv.style.display = 'block';
+        }
+
+        // Función para mostrar errores
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Ocultar el error después de 5 segundos
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Event Listeners
+        addSeasonButton.addEventListener('click', addSeasonForm);
+
+        generateButton.addEventListener('click', () => {
+            errorDiv.style.display = 'none';
+            const animeData = collectFormData();
+            
+            if (animeData) {
+                displayPreview(animeData);
+                generateCode(animeData);
+            }
+        });
+
+        copyButton.addEventListener('click', () => {
+            const codeText = resultCode.textContent;
+            navigator.clipboard.writeText(codeText)
+                .then(() => {
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = '¡Copiado!';
+                    setTimeout(() => {
+                        copyButton.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    showError('Error al copiar: ' + err.message);
+                });
+        });
+
+        // Inicializar con una temporada
+        addSeasonForm();
+
+        // Establecer valores predeterminados para la fecha de hoy
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('input[type="date"]').forEach(input => {
+            input.value = today;
+        });
+    </script>
+</body>
+</html>
