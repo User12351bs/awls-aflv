@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página no encontrada - Anime Viewer</title>
-    <link rel="stylesheet" href="index.css">
+    <title>Página no encontrada - LutukiSolo</title>
+    <link rel="stylesheet" href="anime/index.css">
     <style>
         body {
             background-color: var(--background-color);
@@ -31,7 +31,7 @@
         .error-code {
             font-size: 10rem; /* Aumentado de 8rem */
             font-weight: bold;
-            background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
+            background: linear-gradient(135deg, #ff4b4b, #ff0000);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -54,9 +54,10 @@
         }
         
         .home-button {
-            background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
+            background: linear-gradient(135deg, #ff4b4b, #ff0000);
             color: white;
             border: none;
+            margin-top: 20px;
             padding: 1rem 2.5rem; /* Aumentado de 0.8rem 2rem */
             border-radius: 50px;
             font-size: 1.1rem; /* Aumentado de 1rem */
@@ -71,24 +72,28 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(255, 94, 58, 0.3); /* Cambiado de rgba(0, 0, 0, 0.2) */
         }
+		header {
+			background: linear-gradient(135deg, #ff4b4b, #ff0000);
+		}
     </style>
 </head>
 <body>
     <header>
-        <h1>Anime Viewer</h1>
+        <h1>Página no encontrada...</h1>
     </header>
 
     <div class="container">
         <div class="error-container">
             <div class="error-code">404</div>
             <p class="error-description">Lo sentimos, la página que estás buscando no existe o ha sido movida a otra ubicación.</p>
-            <a href="index.html" class="home-button">Volver al inicio</a>
+            <a href="index.html" class="home-button">Portafolio de LutukiSolo</a>
+            <a href="anime/index.html" class="home-button">Volver a Anime Viewer</a>
         </div>
     </div>
     
     <footer class="footer">
         <div class="footer-content">
-            Anime Viewer v0.0.2 - Developed by LutukiSolo
+            Developed by LutukiSolo
             <p class="disclaimer">No se almacena ningún archivo en nuestros servidores</p>
         </div>
     </footer>
