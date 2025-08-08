@@ -328,11 +328,17 @@
         
         // Función para actualizar la interfaz cuando cambia el episodio
         function updateToNewEpisode(newEpisodeNumber) {
-            if (newEpisodeNumber !== window.episodeNumber) {
+            console.log("Intentando actualizar al episodio", newEpisodeNumber, "desde", window.episodeNumber);
+            
+            // Convertir a número para asegurar comparación correcta
+            newEpisodeNumber = parseInt(newEpisodeNumber);
+            
+            if (newEpisodeNumber !== parseInt(window.episodeNumber)) {
                 console.log("Actualizando al episodio", newEpisodeNumber);
                 
                 // Actualizar variables locales
                 window.episodeNumber = newEpisodeNumber;
+                episodeNumber = newEpisodeNumber; // Actualizar también la variable local
                 
                 // Actualizar la URL del navegador sin recargar la página
                 const newUrl = `viewer.html?id=${animeId}&season=${seasonNumber}&episode=${newEpisodeNumber}`;
@@ -347,13 +353,29 @@
                 
                 // Actualizar botones de navegación
                 updateNavigationButtons();
+                
+                // Forzar actualización visual con un truco de DOM
+                const infoElement = document.getElementById('episode-info');
+                if (infoElement) {
+                    infoElement.style.display = 'none';
+                    setTimeout(() => {
+                        infoElement.style.display = 'block';
+                        // Forzar un reflow
+                        infoElement.offsetHeight;
+                    }, 10);
+                }
+                
+                console.log("Interfaz actualizada para el episodio", newEpisodeNumber);
             }
         }
         
         // Agregar un observador de URL para detectar cambios en la URL del iframe
         // Esta es una solución alternativa que intenta detectar cambios en la URL
         let lastSrc = animeIframe.src;
+        let lastContent = '';
+        
         setInterval(() => {
+            // Verificar cambios en la URL del iframe
             if (animeIframe.src !== lastSrc) {
                 console.log("Cambio detectado en iframe.src", animeIframe.src);
                 lastSrc = animeIframe.src;
@@ -362,8 +384,47 @@
                 const urlMatch = animeIframe.src.match(/\/ver\/[\w-]+-([0-9]+)/);
                 if (urlMatch && urlMatch[1]) {
                     const newEpisode = parseInt(urlMatch[1]);
+                    console.log("Nuevo episodio detectado desde URL:", newEpisode);
                     updateToNewEpisode(newEpisode);
+                } else {
+                    console.log("No se pudo extraer el número de episodio de la URL:", animeIframe.src);
                 }
+            }
+            
+            // Intentar acceder al contenido del iframe (esto puede fallar por CORS)
+            try {
+                // Intentar obtener el título de la página del iframe
+                const iframeDocument = animeIframe.contentDocument || animeIframe.contentWindow.document;
+                const iframeTitle = iframeDocument.title;
+                
+                // Buscar patrones como "Dandadan Episodio 4" en el título
+                const titleMatch = iframeTitle.match(/Episodio\s+([0-9]+)/i);
+                if (titleMatch && titleMatch[1]) {
+                    const newEpisode = parseInt(titleMatch[1]);
+                    if (newEpisode !== parseInt(window.episodeNumber)) {
+                        console.log("Nuevo episodio detectado desde título:", newEpisode);
+                        updateToNewEpisode(newEpisode);
+                    }
+                }
+                
+                // También intentar buscar en el contenido HTML
+                const iframeContent = iframeDocument.documentElement.innerHTML;
+                if (iframeContent !== lastContent) {
+                    lastContent = iframeContent;
+                    
+                    // Buscar patrones en el HTML que indiquen el número de episodio
+                    const contentMatch = iframeContent.match(/Episodio\s+([0-9]+)/i);
+                    if (contentMatch && contentMatch[1]) {
+                        const newEpisode = parseInt(contentMatch[1]);
+                        if (newEpisode !== parseInt(window.episodeNumber)) {
+                            console.log("Nuevo episodio detectado desde contenido HTML:", newEpisode);
+                            updateToNewEpisode(newEpisode);
+                        }
+                    }
+                }
+            } catch (error) {
+                // Error de CORS esperado, no hacer nada
+                // console.log("Error CORS al intentar acceder al contenido del iframe", error);
             }
         }, 1000); // Verificar cada segundo
         
