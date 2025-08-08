@@ -94,6 +94,27 @@
             background-color: rgba(255, 255, 255, 0.3);
         }
         
+        /* Botón de cambio de servidor */
+        #change-server {
+            position: fixed;
+            top: 70px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            display: none; /* Oculto por defecto */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        #change-server:hover {
+            background-color: var(--primary-color);
+        }
+        
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -124,6 +145,21 @@
         #anime-iframe.hidden {
             display: none;
         }
+        
+        /* Mensaje de error */
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 101;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -135,8 +171,15 @@
         <div class="loading-overlay" id="loading-overlay">
             <div class="spinner"></div>
         </div>
+        <div class="error-message" id="error-message">
+            Error al cargar el reproductor. <br>
+            <button id="retry-button" class="toolbar-button">Reintentar</button>
+        </div>
         <iframe id="anime-iframe" class="embed-container" allowfullscreen></iframe>
     </div>
+    
+    <!-- Botón para cambiar de servidor -->
+    <button id="change-server" class="toolbar-button">Probar otro servidor</button>
     
     <!-- Nuevo elemento para mostrar información del episodio -->
     <div class="episode-info" id="episode-info"></div>
@@ -155,6 +198,9 @@
         const nextEpisodeButton = document.getElementById('next-episode');
         const loadingOverlay = document.getElementById('loading-overlay');
         const episodeInfo = document.getElementById('episode-info');
+        const changeServerButton = document.getElementById('change-server');
+        const errorMessage = document.getElementById('error-message');
+        const retryButton = document.getElementById('retry-button');
         
         // Obtener parámetros de la URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -164,6 +210,22 @@
         
         // Crear una variable global para el número de episodio
         window.episodeNumber = episodeNumber;
+        
+        // Servidores disponibles
+        const availableServers = [
+            {
+                name: 'Netu/HQQ',
+                getUrl: (slug, episode) => `https://hqq.tv/player/embed_player.php?vid=${slug}-${episode}`,
+                isDefault: true
+            },
+            {
+                name: 'AnimeFlv',
+                getUrl: (slug, episode) => `https://www3.animeflv.net/ver/${slug}-${episode}`
+            }
+        ];
+        
+        // Índice del servidor actual
+        let currentServerIndex = 0;
         
         // Cargar datos del localStorage
         const WATCHED_EPISODES_KEY = 'animeflv-watched-episodes';
@@ -216,26 +278,36 @@
             }
         }
 
-        // Función para cargar el episodio
-        function loadEpisode() {
+        // Función para cargar el episodio con un servidor específico
+        function loadEpisodeWithServer(serverIndex) {
             if (!currentAnime || !currentSeason) {
                 alert('Anime o temporada no encontrados');
                 window.location.href = 'index.html';
                 return;
             }
             
+            // Actualizar el índice del servidor actual
+            currentServerIndex = serverIndex;
+            
             // Mostrar pantalla de carga
             loadingOverlay.style.display = 'flex';
+            errorMessage.style.display = 'none';
             
             // Construir la URL para el episodio
             const seasonSlug = currentSeason.slug || currentAnime.slug || currentAnime.title.toLowerCase().replace(/\s+/g, '-');
             
-            // Construir la URL que apunta a la página del episodio
-            const animeFlvUrl = `https://www3.animeflv.net/ver/${seasonSlug}-${window.episodeNumber}`;
+            // Obtener la URL del servidor seleccionado
+            const server = availableServers[serverIndex];
+            const videoUrl = server.getUrl(seasonSlug, window.episodeNumber);
+            
+            console.log(`Cargando episodio con servidor ${server.name}:`, videoUrl);
             
             // Cargar la URL directamente en el iframe
-            animeIframe.src = animeFlvUrl;
+            animeIframe.src = videoUrl;
             animeIframe.classList.remove('hidden');
+            
+            // Mostrar u ocultar el botón de cambio de servidor
+            changeServerButton.style.display = availableServers.length > 1 ? 'block' : 'none';
             
             // Marcar el episodio como visto
             const globalEpisodeNumber = getGlobalEpisodeNumber(currentAnime, seasonNumber, window.episodeNumber);
@@ -246,6 +318,26 @@
             
             // Actualizar la información del episodio
             updateEpisodeInfo();
+            
+            // Configurar un temporizador para mostrar el botón de cambio de servidor si tarda demasiado
+            setTimeout(() => {
+                if (loadingOverlay.style.display !== 'none') {
+                    changeServerButton.style.display = 'block';
+                }
+            }, 10000); // 10 segundos
+        }
+        
+        // Función para cargar el episodio (usa el servidor predeterminado)
+        function loadEpisode() {
+            // Buscar el servidor predeterminado
+            const defaultServerIndex = availableServers.findIndex(server => server.isDefault);
+            loadEpisodeWithServer(defaultServerIndex >= 0 ? defaultServerIndex : 0);
+        }
+        
+        // Función para cambiar al siguiente servidor disponible
+        function changeServer() {
+            const nextServerIndex = (currentServerIndex + 1) % availableServers.length;
+            loadEpisodeWithServer(nextServerIndex);
         }
         
         // Función para actualizar los botones de navegación
@@ -294,7 +386,7 @@
                 // Ir al primer episodio de la siguiente temporada
                 const nextSeason = currentAnime.seasons.find(season => season.number === seasonNumber + 1);
                 if (nextSeason) {
-                    window.location.href = `viewer.html?id=${animeId}&season=${seasonNumber + 1}&episode=1`;
+                    window.location.href = `viewer.html?id=${animeId}&season=${seasonNumber + 1}&episode=1}`;
                 }
             }
         }
@@ -304,35 +396,26 @@
             window.location.href = 'index.html';
         }
         
-        // Event listeners
-        animeIframe.addEventListener('load', () => {
-            // Ocultar pantalla de carga cuando el iframe se cargue
-            loadingOverlay.style.display = 'none';
-            
-            // No podemos acceder directamente al contenido del iframe por CORS
-            // Pero podemos escuchar mensajes del iframe si el sitio los envía
-            console.log("Iframe cargado, URL actual:", animeIframe.src);
-        });
-        
-        // Escuchar cambios en la URL del iframe indirectamente
-        // Esto requiere que estemos ejecutando en un servidor local
-        window.addEventListener('message', function(event) {
-            // Verificar origen por seguridad (opcional)
-            console.log("Mensaje recibido:", event.data);
-            
-            // Procesar mensajes si contienen información de navegación
-            if (event.data && event.data.newEpisode) {
-                updateToNewEpisode(event.data.newEpisode);
-            }
-        });
+        // Función para manejar errores de carga
+        function handleLoadError() {
+            console.log("Error al cargar el reproductor");
+            errorMessage.style.display = 'block';
+            changeServerButton.style.display = 'block';
+        }
         
         // Función para actualizar la interfaz cuando cambia el episodio
         function updateToNewEpisode(newEpisodeNumber) {
-            if (newEpisodeNumber !== window.episodeNumber) {
+            console.log("Intentando actualizar al episodio", newEpisodeNumber, "desde", window.episodeNumber);
+            
+            // Convertir a número para asegurar comparación correcta
+            newEpisodeNumber = parseInt(newEpisodeNumber);
+            
+            if (newEpisodeNumber !== parseInt(window.episodeNumber)) {
                 console.log("Actualizando al episodio", newEpisodeNumber);
                 
                 // Actualizar variables locales
                 window.episodeNumber = newEpisodeNumber;
+                episodeNumber = newEpisodeNumber; // Actualizar también la variable local
                 
                 // Actualizar la URL del navegador sin recargar la página
                 const newUrl = `viewer.html?id=${animeId}&season=${seasonNumber}&episode=${newEpisodeNumber}`;
@@ -347,13 +430,50 @@
                 
                 // Actualizar botones de navegación
                 updateNavigationButtons();
+                
+                // Forzar actualización visual con un truco de DOM
+                const infoElement = document.getElementById('episode-info');
+                if (infoElement) {
+                    infoElement.style.display = 'none';
+                    setTimeout(() => {
+                        infoElement.style.display = 'block';
+                        // Forzar un reflow
+                        infoElement.offsetHeight;
+                    }, 10);
+                }
+                
+                // Recargar el episodio con el servidor actual
+                loadEpisodeWithServer(currentServerIndex);
+                
+                console.log("Interfaz actualizada para el episodio", newEpisodeNumber);
             }
         }
         
+        // Event listeners
+        animeIframe.addEventListener('load', () => {
+            // Ocultar pantalla de carga cuando el iframe se cargue
+            loadingOverlay.style.display = 'none';
+            console.log("Iframe cargado, URL actual:", animeIframe.src);
+        });
+        
+        animeIframe.addEventListener('error', handleLoadError);
+        
+        // Escuchar cambios en la URL del iframe indirectamente
+        window.addEventListener('message', function(event) {
+            console.log("Mensaje recibido:", event.data);
+            
+            // Procesar mensajes si contienen información de navegación
+            if (event.data && event.data.newEpisode) {
+                updateToNewEpisode(event.data.newEpisode);
+            }
+        });
+        
         // Agregar un observador de URL para detectar cambios en la URL del iframe
-        // Esta es una solución alternativa que intenta detectar cambios en la URL
         let lastSrc = animeIframe.src;
+        let lastContent = '';
+        
         setInterval(() => {
+            // Verificar cambios en la URL del iframe
             if (animeIframe.src !== lastSrc) {
                 console.log("Cambio detectado en iframe.src", animeIframe.src);
                 lastSrc = animeIframe.src;
@@ -362,8 +482,47 @@
                 const urlMatch = animeIframe.src.match(/\/ver\/[\w-]+-([0-9]+)/);
                 if (urlMatch && urlMatch[1]) {
                     const newEpisode = parseInt(urlMatch[1]);
+                    console.log("Nuevo episodio detectado desde URL:", newEpisode);
                     updateToNewEpisode(newEpisode);
+                } else {
+                    console.log("No se pudo extraer el número de episodio de la URL:", animeIframe.src);
                 }
+            }
+            
+            // Intentar acceder al contenido del iframe (esto puede fallar por CORS)
+            try {
+                // Intentar obtener el título de la página del iframe
+                const iframeDocument = animeIframe.contentDocument || animeIframe.contentWindow.document;
+                const iframeTitle = iframeDocument.title;
+                
+                // Buscar patrones como "Dandadan Episodio 4" en el título
+                const titleMatch = iframeTitle.match(/Episodio\s+([0-9]+)/i);
+                if (titleMatch && titleMatch[1]) {
+                    const newEpisode = parseInt(titleMatch[1]);
+                    if (newEpisode !== parseInt(window.episodeNumber)) {
+                        console.log("Nuevo episodio detectado desde título:", newEpisode);
+                        updateToNewEpisode(newEpisode);
+                    }
+                }
+                
+                // También intentar buscar en el contenido HTML
+                const iframeContent = iframeDocument.documentElement.innerHTML;
+                if (iframeContent !== lastContent) {
+                    lastContent = iframeContent;
+                    
+                    // Buscar patrones en el HTML que indiquen el número de episodio
+                    const contentMatch = iframeContent.match(/Episodio\s+([0-9]+)/i);
+                    if (contentMatch && contentMatch[1]) {
+                        const newEpisode = parseInt(contentMatch[1]);
+                        if (newEpisode !== parseInt(window.episodeNumber)) {
+                            console.log("Nuevo episodio detectado desde contenido HTML:", newEpisode);
+                            updateToNewEpisode(newEpisode);
+                        }
+                    }
+                }
+            } catch (error) {
+                // Error de CORS esperado, no hacer nada
+                // console.log("Error CORS al intentar acceder al contenido del iframe", error);
             }
         }, 1000); // Verificar cada segundo
         
@@ -371,6 +530,11 @@
         prevEpisodeButton.addEventListener('click', goToPreviousEpisode);
         homeButton.addEventListener('click', goToHome);
         nextEpisodeButton.addEventListener('click', goToNextEpisode);
+        changeServerButton.addEventListener('click', changeServer);
+        retryButton.addEventListener('click', () => {
+            errorMessage.style.display = 'none';
+            loadEpisodeWithServer(currentServerIndex);
+        });
         
         // Cargar el episodio inicial
         loadEpisode();
