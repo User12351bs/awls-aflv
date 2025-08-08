@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Viewer</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anime Viewer">
+    <script src="animes.js"></script>
+    <style>
+        /* Estilos para desactivar el scroll en la página principal */
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Estilos específicos para el visor */
+        .viewer-container {
+            width: 100%;
+            height: calc(100vh - var(--header-height) - var(--toolbar-height));
+            position: relative;
+            background-color: var(--background-color);
+            overflow: hidden; /* Asegurarse de que el contenedor no tenga scroll */
+        }
+        
+        .embed-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            overflow: auto; /* Permitir scroll solo dentro del iframe */
+            background-color: #000; /* Fondo negro para el reproductor */
+        }
+        
+        /* Ajustes para el reproductor embebido */
+        #anime-iframe {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        /* Estilos para el título del episodio */
+        .episode-info {
+            position: fixed;
+            bottom: var(--toolbar-height);
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 999;
+            border-top: 1px solid var(--accent-color);
+        }
+        
+        /* Barra de herramientas */
+        :root {
+            --toolbar-height: 60px;
+        }
+        
+        .toolbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--toolbar-height);
+            background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .toolbar-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .toolbar-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Ocultar iframe hasta que se cargue */
+        #anime-iframe.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Anime Viewer</h1>
+    </header>
+
+    <div class="viewer-container" id="viewer-container">
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="spinner"></div>
+        </div>
+        <iframe id="anime-iframe" class="embed-container" allowfullscreen></iframe>
+    </div>
+    
+    <!-- Nuevo elemento para mostrar información del episodio -->
+    <div class="episode-info" id="episode-info"></div>
+    
+    <div class="toolbar">
+        <button class="toolbar-button" id="prev-episode">Episodio Anterior</button>
+        <button class="toolbar-button" id="home-button">Inicio</button>
+        <button class="toolbar-button" id="next-episode">Episodio Siguiente</button>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const animeIframe = document.getElementById('anime-iframe');
+        const prevEpisodeButton = document.getElementById('prev-episode');
+        const homeButton = document.getElementById('home-button');
+        const nextEpisodeButton = document.getElementById('next-episode');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const episodeInfo = document.getElementById('episode-info');
+        
+        // Obtener parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const animeId = urlParams.get('id');
+        const seasonNumber = parseInt(urlParams.get('season')) || 1;
+        let episodeNumber = parseInt(urlParams.get('episode')) || 1;
+        
+        // Crear una variable global para el número de episodio
+        window.episodeNumber = episodeNumber;
+        
+        // Cargar datos del localStorage
+        const WATCHED_EPISODES_KEY = 'animeflv-watched-episodes';
+        const watchedEpisodes = JSON.parse(localStorage.getItem(WATCHED_EPISODES_KEY)) || {};
+        
+        // Encontrar el anime actual
+        const currentAnime = animeData.find(anime => anime.id.toString() === animeId);
+        const currentSeason = currentAnime ? currentAnime.seasons.find(season => season.number === seasonNumber) : null;
+        
+        // Función para marcar episodio como visto
+        function markEpisodeAsWatched(animeId, episodeNumber) {
+            if (!watchedEpisodes[animeId]) {
+                watchedEpisodes[animeId] = [];
+            }
+            
+            if (!watchedEpisodes[animeId].includes(episodeNumber)) {
+                watchedEpisodes[animeId].push(episodeNumber);
+                localStorage.setItem(WATCHED_EPISODES_KEY, JSON.stringify(watchedEpisodes));
+                
+                // También actualizar watchingAnimes si es necesario
+                const WATCHING_ANIMES_KEY = 'animeflv-watching-animes';
+                let watchingAnimes = JSON.parse(localStorage.getItem(WATCHING_ANIMES_KEY)) || [];
+                
+                if (!watchingAnimes.includes(animeId)) {
+                    watchingAnimes.push(animeId);
+                    localStorage.setItem(WATCHING_ANIMES_KEY, JSON.stringify(watchingAnimes));
+                }
+            }
+        }
+        
+        // Función para obtener el número global del episodio
+        function getGlobalEpisodeNumber(anime, seasonNumber, episodeNumber) {
+            let globalEpisode = episodeNumber;
+            
+            for (let i = 0; i < anime.seasons.length; i++) {
+                const season = anime.seasons[i];
+                if (season.number < seasonNumber) {
+                    globalEpisode += season.episodes;
+                }
+            }
+            
+            return globalEpisode;
+        }
+        
+        // Nueva función para actualizar la información del episodio
+        function updateEpisodeInfo() {
+            if (currentAnime && currentSeason) {
+                const seasonTitle = currentSeason.title || `Temporada ${seasonNumber}`;
+                episodeInfo.textContent = `${currentAnime.title} - ${seasonTitle} - Episodio ${window.episodeNumber}`;
+            }
+        }
+
+        // Función para cargar el episodio
+        function loadEpisode() {
+            if (!currentAnime || !currentSeason) {
+                alert('Anime o temporada no encontrados');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Mostrar pantalla de carga
+            loadingOverlay.style.display = 'flex';
+            
+            // Construir la URL para el episodio
+            const seasonSlug = currentSeason.slug || currentAnime.slug || currentAnime.title.toLowerCase().replace(/\s+/g, '-');
+            
+            // Construir la URL que apunta a la página del episodio
+            const animeFlvUrl = `https://www3.animeflv.net/ver/${seasonSlug}-${window.episodeNumber}`;
+            
+            // Cargar la URL directamente en el iframe
+            animeIframe.src = animeFlvUrl;
+            animeIframe.classList.remove('hidden');
+            
+            // Marcar el episodio como visto
+            const globalEpisodeNumber = getGlobalEpisodeNumber(currentAnime, seasonNumber, window.episodeNumber);
+            markEpisodeAsWatched(currentAnime.id, globalEpisodeNumber);
+            
+            // Actualizar estado de los botones de navegación
+            updateNavigationButtons();
+            
+            // Actualizar la información del episodio
+            updateEpisodeInfo();
+        }
+        
+        // Función para actualizar los botones de navegación
+        function updateNavigationButtons() {
+            // Episodio anterior
+            if (window.episodeNumber > 1) {
+                prevEpisodeButton.disabled = false;
+            } else if (seasonNumber > 1) {
+                // Verificar si hay temporada anterior
+                const prevSeason = currentAnime.seasons.find(season => season.number === seasonNumber - 1);
+                prevEpisodeButton.disabled = !prevSeason;
+            } else {
+                prevEpisodeButton.disabled = true;
+            }
+            
+            // Episodio siguiente
+            if (window.episodeNumber < currentSeason.episodes) {
+                nextEpisodeButton.disabled = false;
+            } else {
+                // Verificar si hay temporada siguiente
+                const nextSeason = currentAnime.seasons.find(season => season.number === seasonNumber + 1);
+                nextEpisodeButton.disabled = !nextSeason;
+            }
+        }
+        
+        // Función para navegar al episodio anterior
+        function goToPreviousEpisode() {
+            if (window.episodeNumber > 1) {
+                // Ir al episodio anterior en la misma temporada
+                window.location.href = `viewer.html?id=${animeId}&season=${seasonNumber}&episode=${window.episodeNumber - 1}`;
+            } else if (seasonNumber > 1) {
+                // Ir al último episodio de la temporada anterior
+                const prevSeason = currentAnime.seasons.find(season => season.number === seasonNumber - 1);
+                if (prevSeason) {
+                    window.location.href = `viewer.html?id=${animeId}&season=${seasonNumber - 1}&episode=${prevSeason.episodes}`;
+                }
+            }
+        }
+        
+        // Función para navegar al episodio siguiente
+        function goToNextEpisode() {
+            if (window.episodeNumber < currentSeason.episodes) {
+                // Ir al siguiente episodio en la misma temporada
+                window.location.href = `viewer.html?id=${animeId}&season=${seasonNumber}&episode=${window.episodeNumber + 1}`;
+            } else {
+                // Ir al primer episodio de la siguiente temporada
+                const nextSeason = currentAnime.seasons.find(season => season.number === seasonNumber + 1);
+                if (nextSeason) {
+                    window.location.href = `viewer.html?id=${animeId}&season=${seasonNumber + 1}&episode=1`;
+                }
+            }
+        }
+        
+        // Función para volver a la página de inicio
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+        
+        // Event listeners
+        animeIframe.addEventListener('load', () => {
+            // Ocultar pantalla de carga cuando el iframe se cargue
+            loadingOverlay.style.display = 'none';
+            
+            // No podemos acceder directamente al contenido del iframe por CORS
+            // Pero podemos escuchar mensajes del iframe si el sitio los envía
+            console.log("Iframe cargado, URL actual:", animeIframe.src);
+        });
+        
+        // Escuchar cambios en la URL del iframe indirectamente
+        // Esto requiere que estemos ejecutando en un servidor local
+        window.addEventListener('message', function(event) {
+            // Verificar origen por seguridad (opcional)
+            console.log("Mensaje recibido:", event.data);
+            
+            // Procesar mensajes si contienen información de navegación
+            if (event.data && event.data.newEpisode) {
+                updateToNewEpisode(event.data.newEpisode);
+            }
+        });
+        
+        // Función para actualizar la interfaz cuando cambia el episodio
+        function updateToNewEpisode(newEpisodeNumber) {
+            if (newEpisodeNumber !== window.episodeNumber) {
+                console.log("Actualizando al episodio", newEpisodeNumber);
+                
+                // Actualizar variables locales
+                window.episodeNumber = newEpisodeNumber;
+                
+                // Actualizar la URL del navegador sin recargar la página
+                const newUrl = `viewer.html?id=${animeId}&season=${seasonNumber}&episode=${newEpisodeNumber}`;
+                window.history.pushState({}, '', newUrl);
+                
+                // Marcar el nuevo episodio como visto
+                const globalEpisodeNumber = getGlobalEpisodeNumber(currentAnime, seasonNumber, newEpisodeNumber);
+                markEpisodeAsWatched(currentAnime.id, globalEpisodeNumber);
+                
+                // Actualizar la información del episodio
+                updateEpisodeInfo();
+                
+                // Actualizar botones de navegación
+                updateNavigationButtons();
+            }
+        }
+        
+        // Agregar un observador de URL para detectar cambios en la URL del iframe
+        // Esta es una solución alternativa que intenta detectar cambios en la URL
+        let lastSrc = animeIframe.src;
+        setInterval(() => {
+            if (animeIframe.src !== lastSrc) {
+                console.log("Cambio detectado en iframe.src", animeIframe.src);
+                lastSrc = animeIframe.src;
+                
+                // Intentar extraer el número de episodio de la URL
+                const urlMatch = animeIframe.src.match(/\/ver\/[\w-]+-([0-9]+)/);
+                if (urlMatch && urlMatch[1]) {
+                    const newEpisode = parseInt(urlMatch[1]);
+                    updateToNewEpisode(newEpisode);
+                }
+            }
+        }, 1000); // Verificar cada segundo
+        
+        // Botones de navegación
+        prevEpisodeButton.addEventListener('click', goToPreviousEpisode);
+        homeButton.addEventListener('click', goToHome);
+        nextEpisodeButton.addEventListener('click', goToNextEpisode);
+        
+        // Cargar el episodio inicial
+        loadEpisode();
+    </script>
+</body>
+</html>

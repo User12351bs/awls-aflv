@@ -338,23 +338,17 @@
 
         // Abrir episodio directamente en AnimeFlv y marcarlo como visto
         function openEpisode(anime, episodeGlobalNumber, seasonNumber, episodeInSeason, seasonSlug) {
-            // Construir la URL para el episodio específico en AnimeFlv
-            // Usar el slug de la temporada si está disponible, de lo contrario usar el slug del anime
-            const season = anime.seasons.find(s => s.number === seasonNumber);
-            const animeSlug = season && season.slug ? season.slug : (anime.slug || anime.title.toLowerCase().replace(/\s+/g, '-'));
+            // En lugar de abrir AnimeFlv directamente, abrimos nuestro emulador
+            const viewerUrl = `viewer.html?id=${anime.id}&season=${seasonNumber}&episode=${episodeInSeason}`;
             
-            // Usar el número de episodio dentro de la temporada en lugar del número global
-            // Usar animeConfig.defaultLinks.baseUrl en lugar de anime.links.baseUrl
-            const animeFlvUrl = `${animeConfig.defaultLinks.baseUrl}${animeSlug}-${episodeInSeason}`;
-            
-            // Marcar el episodio como visto automáticamente (seguimos usando el número global para el tracking interno)
+            // Marcar el episodio como visto automáticamente
             markEpisodeAsWatched(anime.id, episodeGlobalNumber);
             
             // Actualizar la interfaz para reflejar que el episodio ha sido visto
             displayAnimes();
             
-            // Abrir AnimeFlv en una nueva pestaña
-            window.open(animeFlvUrl, '_blank');
+            // Abrir nuestro emulador en la misma pestaña
+            window.location.href = viewerUrl;
         }
         
         // Abrir vista detallada del anime
@@ -532,10 +526,9 @@
                                 return;
                             }
                             
-                            // Comportamiento normal
-                            const animeBaseUrl = anime.links.baseUrl.replace('/ver/', '/anime/');
-                            const seasonSlug = season.slug || anime.slug || anime.title.toLowerCase().replace(/\s+/g, '-');
-                            window.open(`${animeBaseUrl}${seasonSlug}`, '_blank');
+                            // En lugar de abrir AnimeFlv directamente, abrimos nuestro emulador
+                            const viewerUrl = `viewer.html?id=${anime.id}&season=${season.number}&episode=${i}`;
+                            window.location.href = viewerUrl;
                         });
                     } else {
                         episode.addEventListener('click', (e) => {
