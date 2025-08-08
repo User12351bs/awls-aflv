@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="animes.js">
     <!-- Añadir estas líneas para soporte de iOS -->
     <link rel="apple-touch-icon" href="logo.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="no">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Anime Viewer">
     <!-- Fin de las líneas añadidas -->
@@ -17,6 +17,20 @@
 
 </head>
 <body>
+    <!-- Notificación grande con botón de cierre -->
+    <div class="notification-overlay" id="first-visit-notification">
+        <div class="notification-container">
+            <span class="notification-close">&times;</span>
+            <h2>¡Bienvenido a Anime Viewer!</h2>
+            <div class="notification-content">
+                <p><strong>Recomendamos encarecidamente usar un bloqueador de anuncios</strong> en cualquier dispositivo que utilices (iPhone, Android, ordenador, tablet...).</p>
+                <p>No recomendamos usar el sistema de navegación entre episodios de AnimeFlv. En su lugar, utiliza los botones de navegación de nuestra aplicación para una mejor experiencia.</p>
+                <hr>
+                <p class="disclaimer">Todo el contenido de esta página proviene de AnimeFlv. El objetivo de Anime Viewer es únicamente evitar la publicidad y ofrecer mayor comodidad con funciones como "Mi lista" o marcar episodios como "Vistos", características que no están disponibles en AnimeFlv.</p>
+            </div>
+        </div>
+    </div>
+    
     <header>
         <h1>Anime Viewer</h1>
         <div class="export-button" id="export-import-button">
@@ -801,7 +815,31 @@
 
         // Initial display
         displayAnimes();
-    </script>
+
+    // Código para la notificación de primera visita
+    document.addEventListener('DOMContentLoaded', function() {
+        const NOTIFICATION_SHOWN_KEY = 'animeflv-notification-shown';
+        const notificationOverlay = document.getElementById('first-visit-notification');
+        const notificationClose = document.querySelector('.notification-close');
+        
+        // Verificar si es la primera visita
+        const hasSeenNotification = localStorage.getItem(NOTIFICATION_SHOWN_KEY);
+        
+        if (!hasSeenNotification) {
+            // Mostrar la notificación con un pequeño retraso para mejor experiencia
+            setTimeout(() => {
+                notificationOverlay.classList.add('show');
+            }, 500);
+        }
+        
+        // Cerrar la notificación al hacer clic en la X
+        notificationClose.addEventListener('click', () => {
+            notificationOverlay.classList.remove('show');
+            // Marcar como vista en localStorage
+            localStorage.setItem(NOTIFICATION_SHOWN_KEY, 'true');
+        });
+    });
+</script>
     
     <footer class="footer">
         <div class="footer-content">
@@ -809,5 +847,7 @@
             <p class="disclaimer">No se almacena ningún archivo en nuestros servidores. - El contenido proviene de AnimeFLV, no nos hacemos responsables.</p>
         </div>
     </footer>
+</body>
+</html>
 </body>
 </html>
