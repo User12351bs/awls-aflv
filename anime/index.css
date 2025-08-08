@@ -970,7 +970,7 @@ header.hidden {
 
 .notification-content {
     padding: 1.5rem;
-    color: var(--text-color);
+    color: #e0e0e0; /* Color de texto más suave que el blanco puro */
     font-size: 1.1rem;
     line-height: 1.6;
 }
@@ -1008,6 +1008,6 @@ header.hidden {
 
 /* Destacar texto importante */
 .notification-content strong {
-    color: var(--accent-color);
+    color: #ffb74d; /* Color naranja más suave y menos intenso */
     font-weight: bold;
 }
