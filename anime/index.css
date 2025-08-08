@@ -911,3 +911,103 @@ header.hidden {
     transform: translateY(-100%);
     box-shadow: none;
 }
+/* Añadir después de los estilos existentes */
+
+/* Estilos para la notificación de primera visita */
+.notification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.notification-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.notification-container {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    animation: notification-appear 0.5s ease forwards;
+}
+
+@keyframes notification-appear {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.notification-container h2 {
+    background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
+    color: white;
+    padding: 1.2rem;
+    margin: 0;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.notification-content {
+    padding: 1.5rem;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.notification-content p {
+    margin-bottom: 1rem;
+}
+
+.notification-content hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 1.5rem 0;
+}
+
+.notification-content .disclaimer {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+.notification-close {
+    position: absolute;
+    top: 0.8rem;
+    right: 1rem;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s ease;
+}
+
+.notification-close:hover {
+    transform: scale(1.2);
+}
+
+/* Destacar texto importante */
+.notification-content strong {
+    color: var(--accent-color);
+    font-weight: bold;
+}
