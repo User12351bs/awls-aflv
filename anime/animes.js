@@ -29,11 +29,11 @@
                     {
                         number: 2,
                         title: "Temporada 2",
-                        episodes: 6,
+                        episodes: 7,
                         slug: "dandadan-2nd-season", // Slug personalizado para esta temporada
                         newEpisode: {
                             status: "Nuevo Episodio",
-                            date: "2025-08-07"
+                            date: "2025-08-14"
                         }
                     }
                 ]
