@@ -168,31 +168,10 @@
         window.episodeNumber = episodeNumber;
         
         // Cargar datos del localStorage
-        const watchedEpisodes = JSON.parse(localStorage.getItem(WATCHED_EPISODES_KEY)) || {};
         
         // Encontrar el anime actual
         const currentAnime = animeData.find(anime => anime.id.toString() === animeId);
         const currentSeason = currentAnime ? currentAnime.seasons.find(season => season.number === seasonNumber) : null;
-        
-        // Función para marcar episodio como visto
-        function markEpisodeAsWatched(animeId, episodeNumber) {
-            if (!watchedEpisodes[animeId]) {
-                watchedEpisodes[animeId] = [];
-            }
-            
-            if (!watchedEpisodes[animeId].includes(episodeNumber)) {
-                watchedEpisodes[animeId].push(episodeNumber);
-                localStorage.setItem(WATCHED_EPISODES_KEY, JSON.stringify(watchedEpisodes));
-                
-                // También actualizar watchingAnimes si es necesario
-                let watchingAnimes = JSON.parse(localStorage.getItem(WATCHING_ANIMES_KEY)) || [];
-                
-                if (!watchingAnimes.includes(animeId)) {
-                    watchingAnimes.push(animeId);
-                    localStorage.setItem(WATCHING_ANIMES_KEY, JSON.stringify(watchingAnimes));
-                }
-            }
-        }
         
         // Función para obtener el número global del episodio
         function getGlobalEpisodeNumber(anime, seasonNumber, episodeNumber) {
@@ -343,14 +322,7 @@
                 // Actualizar variables locales
                 window.episodeNumber = newEpisodeNumber;
                 episodeNumber = newEpisodeNumber; // Actualizar también la variable local
-                
-                // Actualizar la URL del navegador sin recargar la página
-                const newUrl = `viewer.html?id=${animeId}&season=${seasonNumber}&episode=${newEpisodeNumber}`;
-                window.history.pushState({}, '', newUrl);
-                
-                // Marcar el nuevo episodio como visto
-                const globalEpisodeNumber = getGlobalEpisodeNumber(currentAnime, seasonNumber, newEpisodeNumber);
-                markEpisodeAsWatched(currentAnime.id, globalEpisodeNumber);
+             
                 
                 // Actualizar la información del episodio
                 updateEpisodeInfo();
