@@ -3,11 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Consolidamos las políticas CSP en una sola meta etiqueta -->
+  <!-- Política CSP optimizada -->
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; frame-ancestors 'self' https://lutukisolo.me https: http:" />
-  <!-- Añadimos permisos para las funcionalidades que están siendo bloqueadas -->
+  <!-- Política de permisos explícita -->
   <meta http-equiv="Permissions-Policy" content="autoplay=*, encrypted-media=*, accelerometer=*, gyroscope=*, clipboard-write=*" />
-  <title>Emulador — saidochesto</title>
+  <!-- Añadimos CORS headers via meta -->
+  <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+  <meta http-equiv="Access-Control-Allow-Methods" content="GET, POST, OPTIONS" />
+  <meta http-equiv="Access-Control-Allow-Headers" content="*" />
+  <title>Reproductor — saidochesto</title>
   <style>
     html, body { height: 100%; margin: 0; }
     body { display: flex; flex-direction: column; background: #0b0f14; color: #e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
@@ -21,25 +25,30 @@
     .btn:active { transform: translateY(0); box-shadow: 0 6px 18px rgba(34,197,94,.3); }
     .muted { font-size: 12px; color: #94a3b8; }
     .log { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; color: #a5b4fc; }
+    .error-message { display: none; padding: 10px; background: rgba(220, 38, 38, 0.1); color: #ef4444; border: 1px solid rgba(220, 38, 38, 0.2); border-radius: 8px; margin: 10px 0; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Emulador: saidochesto.top/embed.php?id=45878</h1>
+    <h1>Reproductor: saidochesto.top</h1>
   </header>
 
   <div class="frame-wrap">
-    <!--
-      IMPORTANTE:
-      - Añadimos "allow-same-origin" para permitir acceso a localStorage
-      - Mantenemos "allow-popups" y "allow-top-navigation-by-user-activation" para controlar popups
-      - Añadimos más permisos para solucionar los errores de política de permisos
+    <div id="error-message" class="error-message"></div>
+    <!-- 
+      Configuración optimizada del iframe:
+      1. Añadimos todos los permisos necesarios en el atributo allow
+      2. Mantenemos sandbox con los permisos necesarios
+      3. Añadimos loading="lazy" para mejorar rendimiento
+      4. Añadimos importance="high" para priorizar la carga
     -->
     <iframe id="emulador" 
             src="https://saidochesto.top/embed.php?id=45878"
             sandbox="allow-scripts allow-forms allow-popups allow-pointer-lock allow-top-navigation-by-user-activation allow-same-origin"
             referrerpolicy="no-referrer"
-            allow="fullscreen; autoplay; encrypted-media; accelerometer; gyroscope; clipboard-write">
+            allow="fullscreen; autoplay *; encrypted-media *; accelerometer *; gyroscope *; clipboard-write *"
+            loading="lazy"
+            importance="high">
     </iframe>
   </div>
 
@@ -49,50 +58,45 @@
   </div>
 
   <script>
-    // Botón Volver ➜ Google.es
+    // Configuración de referrer para ayudar con CORS
+    const meta = document.createElement('meta');
+    meta.name = 'referrer';
+    meta.content = 'origin';
+    document.head.appendChild(meta);
+
+    // Botón Volver
     document.getElementById('volver').addEventListener('click', () => {
-      // Usamos location.assign para mantener el histórico del usuario.
       location.assign('https://www.google.es');
     });
 
-    // --- Gestión proactiva de popups/"anuncios" abiertos desde el iframe ---
-    // NOTA sobre limitaciones de navegador:
-    //  - Sólo podemos cerrar automáticamente ventanas que el contenido intente abrir usando window.top.open.
-    //  - Si el anuncio se abre como resultado de un <a target="_blank"> dentro del iframe (mismo contexto del iframe),
-    //    por políticas de seguridad de origen cruzado no podremos cerrarlo desde aquí.
-    //  - Aun así, este hook cubre muchos casos comunes de scripts de publicidad que llaman a top.open(...).
-
+    // Gestión proactiva de popups/anuncios
     (function hardenTopOpen(){
       const originalOpen = window.open;
 
-      // Reemplazamos window.open en el contexto superior.
       function trapOpen(url, name, specs) {
         let popupRef = null;
         try {
           popupRef = originalOpen.call(window, url, name, specs);
         } catch(err) {
-          // Algunos navegadores lanzan si el popup es bloqueado; lo tratamos como anuncio "cerrado".
+          console.log('Popup bloqueado:', err.message);
         }
 
-        // Si se abrió, lo cerramos inmediatamente.
         if (popupRef && typeof popupRef.close === 'function') {
           try { popupRef.close(); } catch(_) {}
         }
 
-        try { console.log('anuncio cerrado correctamente'); } catch(_) {}
-        // Devolvemos null para disuadir uso posterior del handler de la página de anuncios.
+        console.log('Anuncio interceptado y cerrado');
         return null;
       }
 
-      // Instalamos el gancho y lo hacemos difícil de sobreescribir.
+      // Instalamos el gancho y lo hacemos difícil de sobreescribir
       Object.defineProperty(window, 'open', {
         configurable: false,
         enumerable: true,
         get: () => trapOpen,
-        set: () => true // Ignoramos intentos de reasignación.
+        set: () => true
       });
 
-      // Defensa adicional: también bloqueamos window.top.open si alguien accede vía top.
       try {
         Object.defineProperty(window.top, 'open', {
           configurable: false,
@@ -100,33 +104,66 @@
           get: () => trapOpen,
           set: () => true
         });
-      } catch(_) {
-        // En algunos entornos no es necesario/posible.
-      }
+      } catch(_) {}
 
-      // Como refuerzo, prevenimos intentos directos mediante llamadas históricas a window.opener.
       try { window.opener = null; } catch(_) {}
 
-      // Por si algún script intenta disparar popunder al perder foco.
       window.addEventListener('blur', () => {
-        // No podemos enumerar ventanas externas por políticas de seguridad,
-        // pero mantenemos el log para auditar intentos.
-        console.log('anuncio cerrado correctamente');
+        console.log('Posible intento de popunder detectado');
       });
     })();
 
-    // Protección suave: si el usuario hace clic dentro del documento, temporalmente
-    // bloqueamos cualquier intento de abrir una ventana en el siguiente tick.
+    // Protección para clics
     document.addEventListener('click', () => {
       const savedOpen = window.open;
-      window.open = function() { console.log('anuncio cerrado correctamente'); return null; };
+      window.open = function() { console.log('Intento de apertura bloqueado'); return null; };
       setTimeout(() => { window.open = savedOpen; }, 0);
     }, true);
 
-    // Añadimos un manejador para errores de JavaScript
+    // Manejador de errores mejorado
     window.addEventListener('error', function(event) {
       console.log('Error capturado:', event.message);
+      
+      // Ignoramos errores específicos que no afectan la funcionalidad
+      if (event.message.includes('cookieIndex') || 
+          event.message.includes('.onion') || 
+          event.message.includes('CORS')) {
+        event.preventDefault();
+        return;
+      }
+      
+      // Mostramos errores críticos al usuario
+      const errorDiv = document.getElementById('error-message');
+      if (errorDiv && event.message) {
+        errorDiv.textContent = 'Error: ' + event.message;
+        errorDiv.style.display = 'block';
+      }
     });
+
+    // Definimos cookieIndex para evitar el error
+    window.cookieIndex = {};
+    
+    // Manejador para mensajes del iframe
+    window.addEventListener('message', function(event) {
+      // Verificamos origen para seguridad
+      if (event.origin.includes('saidochesto.top')) {
+        console.log('Mensaje recibido del iframe:', event.data);
+      }
+    });
+
+    // Recargar iframe si hay problemas
+    let iframeLoadAttempts = 0;
+    const iframe = document.getElementById('emulador');
+    
+    iframe.onerror = function() {
+      if (iframeLoadAttempts < 3) {
+        console.log('Error al cargar iframe, reintentando...');
+        setTimeout(() => {
+          iframe.src = iframe.src;
+          iframeLoadAttempts++;
+        }, 1000);
+      }
+    };
   </script>
 </body>
 </html>
