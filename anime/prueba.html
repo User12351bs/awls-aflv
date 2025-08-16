@@ -167,7 +167,9 @@
         // Crear una variable global para el número de episodio
         window.episodeNumber = episodeNumber;
         
-        // Cargar datos del localStorag        
+        // Cargar datos del localStorage
+        const watchedEpisodes = JSON.parse(localStorage.getItem(WATCHED_EPISODES_KEY)) || {};
+        
         // Encontrar el anime actual
         const currentAnime = animeData.find(anime => anime.id.toString() === animeId);
         const currentSeason = currentAnime ? currentAnime.seasons.find(season => season.number === seasonNumber) : null;
@@ -220,7 +222,7 @@
 			loadingOverlay.style.display = 'flex';
 
 			// Enlace fijo para la prueba
-			const animeFlvUrl = "https://www3.animeflv.net/ver/koujo-denka-no-kateikyoushi-7";
+			const animeFlvUrl = "https://saidochesto.top/embed.php?id=45878";
 
 			// Cargar la URL directamente en el iframe
 			animeIframe.src = animeFlvUrl;
@@ -440,4 +442,3 @@
     </script>
 </body>
 </html>
-
