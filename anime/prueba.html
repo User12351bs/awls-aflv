@@ -167,9 +167,7 @@
         // Crear una variable global para el número de episodio
         window.episodeNumber = episodeNumber;
         
-        // Cargar datos del localStorage
-        const watchedEpisodes = JSON.parse(localStorage.getItem(WATCHED_EPISODES_KEY)) || {};
-        
+        // Cargar datos del localStorag        
         // Encontrar el anime actual
         const currentAnime = animeData.find(anime => anime.id.toString() === animeId);
         const currentSeason = currentAnime ? currentAnime.seasons.find(season => season.number === seasonNumber) : null;
@@ -442,3 +440,4 @@
     </script>
 </body>
 </html>
+
