@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Emulador — saidochesto</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; background: #0b0f14; color: #e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    header { padding: 12px 16px; background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    header h1 { font-size: 14px; margin: 0; font-weight: 600; letter-spacing: .2px; color: #cbd5e1; }
+    .frame-wrap { position: relative; flex: 1; }
+    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #0b0f14; }
+    .footer { display:flex; gap:12px; justify-content:center; align-items:center; padding: 12px; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.06); }
+    .btn { appearance: none; border: 0; padding: 10px 16px; border-radius: 14px; font-weight: 600; cursor: pointer; background: #22c55e; color: #06210f; box-shadow: 0 8px 24px rgba(34,197,94,.25); transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(34,197,94,.35); }
+    .btn:active { transform: translateY(0); box-shadow: 0 6px 18px rgba(34,197,94,.3); }
+    .muted { font-size: 12px; color: #94a3b8; }
+    .log { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; color: #a5b4fc; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Emulador: saidochesto.top/embed.php?id=45878</h1>
+  </header>
+
+  <div class="frame-wrap">
+    <!--
+      IMPORTANTE:
+      - Dejamos "allow-popups" y "allow-top-navigation-by-user-activation" para que si el contenido intenta usar window.top.open,
+        podamos interceptarlo y cerrarlo desde la página superior (este documento).
+      - Si quieres BLOQUEAR popups por completo (sin siquiera abrirse), elimina "allow-popups" del atributo sandbox.
+    -->
+    <iframe id="emulador" src="https://saidochesto.top/embed.php?id=45878"
+            sandbox="allow-scripts allow-forms allow-popups allow-pointer-lock allow-top-navigation-by-user-activation"
+            referrerpolicy="no-referrer">
+    </iframe>
+  </div>
+
+  <div class="footer">
+    <button class="btn" id="volver">Volver</button>
+    <span class="muted">Consejo: abre la consola del navegador para ver los mensajes de control <span class="log">(console.log)</span>.</span>
+  </div>
+
+  <script>
+    // Botón Volver ➜ Google.es
+    document.getElementById('volver').addEventListener('click', () => {
+      // Usamos location.assign para mantener el histórico del usuario.
+      location.assign('https://www.google.es');
+    });
+
+    // --- Gestión proactiva de popups/"anuncios" abiertos desde el iframe ---
+    // NOTA sobre limitaciones de navegador:
+    //  - Sólo podemos cerrar automáticamente ventanas que el contenido intente abrir usando window.top.open.
+    //  - Si el anuncio se abre como resultado de un <a target="_blank"> dentro del iframe (mismo contexto del iframe),
+    //    por políticas de seguridad de origen cruzado no podremos cerrarlo desde aquí.
+    //  - Aun así, este hook cubre muchos casos comunes de scripts de publicidad que llaman a top.open(...).
+
+    (function hardenTopOpen(){
+      const originalOpen = window.open;
+
+      // Reemplazamos window.open en el contexto superior.
+      function trapOpen(url, name, specs) {
+        let popupRef = null;
+        try {
+          popupRef = originalOpen.call(window, url, name, specs);
+        } catch(err) {
+          // Algunos navegadores lanzan si el popup es bloqueado; lo tratamos como anuncio "cerrado".
+        }
+
+        // Si se abrió, lo cerramos inmediatamente.
+        if (popupRef && typeof popupRef.close === 'function') {
+          try { popupRef.close(); } catch(_) {}
+        }
+
+        try { console.log('anuncio cerrado correctamente'); } catch(_) {}
+        // Devolvemos null para disuadir uso posterior del handler de la página de anuncios.
+        return null;
+      }
+
+      // Instalamos el gancho y lo hacemos difícil de sobreescribir.
+      Object.defineProperty(window, 'open', {
+        configurable: false,
+        enumerable: true,
+        get: () => trapOpen,
+        set: () => true // Ignoramos intentos de reasignación.
+      });
+
+      // Defensa adicional: también bloqueamos window.top.open si alguien accede vía top.
+      try {
+        Object.defineProperty(window.top, 'open', {
+          configurable: false,
+          enumerable: true,
+          get: () => trapOpen,
+          set: () => true
+        });
+      } catch(_) {
+        // En algunos entornos no es necesario/posible.
+      }
+
+      // Como refuerzo, prevenimos intentos directos mediante llamadas históricas a window.opener.
+      try { window.opener = null; } catch(_) {}
+
+      // Por si algún script intenta disparar popunder al perder foco.
+      window.addEventListener('blur', () => {
+        // No podemos enumerar ventanas externas por políticas de seguridad,
+        // pero mantenemos el log para auditar intentos.
+        console.log('anuncio cerrado correctamente');
+      });
+    })();
+
+    // Protección suave: si el usuario hace clic dentro del documento, temporalmente
+    // bloqueamos cualquier intento de abrir una ventana en el siguiente tick.
+    document.addEventListener('click', () => {
+      const savedOpen = window.open;
+      window.open = function() { console.log('anuncio cerrado correctamente'); return null; };
+      setTimeout(() => { window.open = savedOpen; }, 0);
+    }, true);
+  </script>
+</body>
+</html>
