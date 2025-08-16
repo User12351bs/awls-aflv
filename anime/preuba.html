@@ -3,7 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <!-- Consolidamos las políticas CSP en una sola meta etiqueta -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; frame-ancestors 'self' https://lutukisolo.me https: http:" />
+  <!-- Añadimos permisos para las funcionalidades que están siendo bloqueadas -->
+  <meta http-equiv="Permissions-Policy" content="autoplay=*, encrypted-media=*, accelerometer=*, gyroscope=*, clipboard-write=*" />
   <title>Emulador — saidochesto</title>
   <style>
     html, body { height: 100%; margin: 0; }
@@ -22,7 +25,7 @@
 </head>
 <body>
   <header>
-    <h1>Emulador: saidochesto.top/embed.php?id=45878</h1>
+    <h1>Emulador: netuplayer.top/embed.php?id=45878</h1>
   </header>
 
   <div class="frame-wrap">
@@ -30,11 +33,13 @@
       IMPORTANTE:
       - Añadimos "allow-same-origin" para permitir acceso a localStorage
       - Mantenemos "allow-popups" y "allow-top-navigation-by-user-activation" para controlar popups
+      - Añadimos más permisos para solucionar los errores de política de permisos
     -->
-    <iframe id="emulador" src="https://saidochesto.top/embed.php?id=45878"
+    <iframe id="emulador" 
+            src="https://netuplayer.top/embed.php?id=45878"
             sandbox="allow-scripts allow-forms allow-popups allow-pointer-lock allow-top-navigation-by-user-activation allow-same-origin"
             referrerpolicy="no-referrer"
-            allow="fullscreen">
+            allow="fullscreen; autoplay; encrypted-media; accelerometer; gyroscope; clipboard-write">
     </iframe>
   </div>
 
@@ -117,6 +122,11 @@
       window.open = function() { console.log('anuncio cerrado correctamente'); return null; };
       setTimeout(() => { window.open = savedOpen; }, 0);
     }, true);
+
+    // Añadimos un manejador para errores de JavaScript
+    window.addEventListener('error', function(event) {
+      console.log('Error capturado:', event.message);
+    });
   </script>
 </body>
 </html>
