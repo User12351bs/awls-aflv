@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
   <title>Emulador — saidochesto</title>
   <style>
     html, body { height: 100%; margin: 0; }
@@ -27,13 +28,13 @@
   <div class="frame-wrap">
     <!--
       IMPORTANTE:
-      - Dejamos "allow-popups" y "allow-top-navigation-by-user-activation" para que si el contenido intenta usar window.top.open,
-        podamos interceptarlo y cerrarlo desde la página superior (este documento).
-      - Si quieres BLOQUEAR popups por completo (sin siquiera abrirse), elimina "allow-popups" del atributo sandbox.
+      - Añadimos "allow-same-origin" para permitir acceso a localStorage
+      - Mantenemos "allow-popups" y "allow-top-navigation-by-user-activation" para controlar popups
     -->
     <iframe id="emulador" src="https://saidochesto.top/embed.php?id=45878"
-            sandbox="allow-scripts allow-forms allow-popups allow-pointer-lock allow-top-navigation-by-user-activation"
-            referrerpolicy="no-referrer">
+            sandbox="allow-scripts allow-forms allow-popups allow-pointer-lock allow-top-navigation-by-user-activation allow-same-origin"
+            referrerpolicy="no-referrer"
+            allow="fullscreen">
     </iframe>
   </div>
 
