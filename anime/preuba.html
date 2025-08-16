@@ -1,164 +1,98 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Configuración optimizada para evitar detección de sandbox -->
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-  <meta http-equiv="Permissions-Policy" content="autoplay=*, encrypted-media=*, accelerometer=*, gyroscope=*, clipboard-write=*" />
-  <meta name="referrer" content="no-referrer-when-downgrade" />
-  <title>Reproductor — saidochesto</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Player Limpio</title>
   <style>
-    html, body { height: 100%; margin: 0; }
-    body { display: flex; flex-direction: column; background: #0b0f14; color: #e5e7eb; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
-    header { padding: 12px 16px; background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    header h1 { font-size: 14px; margin: 0; font-weight: 600; letter-spacing: .2px; color: #cbd5e1; }
-    .frame-wrap { position: relative; flex: 1; }
-    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #0b0f14; }
-    .footer { display:flex; gap:12px; justify-content:center; align-items:center; padding: 12px; background: #0f172a; border-top: 1px solid rgba(255,255,255,0.06); }
-    .btn { appearance: none; border: 0; padding: 10px 16px; border-radius: 14px; font-weight: 600; cursor: pointer; background: #22c55e; color: #06210f; box-shadow: 0 8px 24px rgba(34,197,94,.25); transition: transform .08s ease, box-shadow .2s ease, opacity .2s ease; }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(34,197,94,.35); }
-    .btn:active { transform: translateY(0); box-shadow: 0 6px 18px rgba(34,197,94,.3); }
-    .muted { font-size: 12px; color: #94a3b8; }
-    .log { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; color: #a5b4fc; }
-    .error-message { display: none; padding: 10px; background: rgba(220, 38, 38, 0.1); color: #ef4444; border: 1px solid rgba(220, 38, 38, 0.2); border-radius: 8px; margin: 10px 0; }
+    body { margin:0; font-family: Arial, sans-serif; background:#0b0f14; color:#e5e7eb; display:flex; flex-direction:column; min-height:100vh; }
+    header { background:#0f172a; padding:12px; text-align:center; border-bottom:1px solid rgba(255,255,255,.1); }
+    header h1 { margin:0; font-size:16px; color:#cbd5e1; }
+    .selector { display:flex; justify-content:center; gap:10px; padding:10px; background:#1e293b; }
+    .selector button { padding:6px 14px; border:none; border-radius:8px; cursor:pointer; background:#334155; color:#fff; }
+    .selector button.active { background:#22c55e; color:#06210f; font-weight:bold; }
+    .servers { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; padding:12px; background:#111827; }
+    .servers button { padding:8px 14px; border:none; border-radius:8px; cursor:pointer; background:#2563eb; color:#fff; }
+    .servers button:hover { background:#1d4ed8; }
+    #player { flex:1; display:flex; align-items:center; justify-content:center; background:#000; }
+    #player iframe { width:100%; height:100%; border:0; }
+    footer { background:#0f172a; padding:12px; text-align:center; border-top:1px solid rgba(255,255,255,.1); }
+    footer button { padding:10px 16px; border:none; border-radius:12px; background:#22c55e; color:#06210f; font-weight:bold; cursor:pointer; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Reproductor: saidochesto.top</h1>
+    <h1>Reproductor Limpio — Dandadan Capítulo</h1>
   </header>
 
-  <div class="frame-wrap">
-    <div id="error-message" class="error-message"></div>
-    <div id="player-container"></div>
+  <!-- Selector de idioma -->
+  <div class="selector">
+    <button class="active" onclick="selectLang('SUB', this)">SUB</button>
+    <button onclick="selectLang('LAT', this)">LAT</button>
+    <button onclick="selectLang('ES', this)">ES</button>
   </div>
 
-  <div class="footer">
-    <button class="btn" id="volver">Volver</button>
-    <span class="muted">Consejo: abre la consola del navegador para ver los mensajes de control <span class="log">(console.log)</span>.</span>
+  <!-- Servidores -->
+  <div class="servers" id="server-list"></div>
+
+  <!-- Contenedor del reproductor -->
+  <div id="player">
+    <p>Elige un servidor para empezar a ver el capítulo</p>
   </div>
+
+  <footer>
+    <button onclick="window.location.href='https://www.google.es'">Volver</button>
+  </footer>
 
   <script>
-    // Definimos variables globales para evitar errores
-    window.cookieIndex = {};
-    
-    // Simulamos un entorno no sandbox
-    const userAgent = navigator.userAgent;
-    const platform = navigator.platform;
-    const plugins = navigator.plugins;
-    const mimeTypes = navigator.mimeTypes;
-    
-    // Función para crear el iframe de manera que evite detección
-    function createPlayerFrame() {
-      // Creamos el iframe dinámicamente para evitar detección de sandbox
-      const iframe = document.createElement('iframe');
-      iframe.id = 'emulador';
-      iframe.src = 'https://saidochesto.top/embed.php?id=45878';
-      iframe.allow = 'fullscreen; autoplay; encrypted-media; accelerometer; gyroscope; clipboard-write';
-      iframe.setAttribute('allowfullscreen', '');
-      iframe.style.position = 'absolute';
-      iframe.style.inset = '0';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = '0';
-      iframe.style.background = '#0b0f14';
-      iframe.importance = 'high';
-      
-      // Añadimos el iframe al contenedor
-      document.getElementById('player-container').appendChild(iframe);
-      
-      return iframe;
+    // URLs de servidores por idioma
+    const servers = {
+      SUB: {
+        Mixdrop: "https://mixdropjmk.pw/e/qle6dj8qiq1r00",
+        Streamtape: "https://streamtape.com/e/9evVZJ889bsar0j",
+        Netu: "https://netuplayer.top/e/alByaEx2b1lib3dMM3ZzSThMNStHQT09"
+      },
+      LAT: {
+        Mixdrop: "https://mixdropjmk.pw/e/6q6dr1m1t11en7",
+        Streamtape: "https://streamtape.com/e/grxOLxVGyDIqKrP",
+        Netu: "https://netuplayer.top/e/dVRGU0xJeWVjZjVUUWNGK0Z4K0J4Zz09"
+      },
+      ES: {
+        Mixdrop: "https://mixdropjmk.pw/e/rwqn77jvu166zo",
+        Streamtape: "https://streamtape.com/e/JqZ6eYxgBYtjBM7",
+        Netu: "https://netuplayer.top/e/blNTdDk0Q29OKzlzZ2JEY2RLZ0xtQT09"
+      }
+    };
+
+    let currentLang = "SUB";
+
+    function selectLang(lang, btn) {
+      currentLang = lang;
+      document.querySelectorAll('.selector button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderServers();
     }
-    
-    // Creamos el iframe
-    const iframe = createPlayerFrame();
-    
-    // Botón Volver
-    document.getElementById('volver').addEventListener('click', () => {
-      location.assign('https://www.google.es');
-    });
-    
-    // Anti-detección de sandbox
-    (function disableSandboxDetection() {
-      // Simulamos propiedades que suelen estar bloqueadas en sandbox
-      try {
-        // Simulamos localStorage
-        const originalLocalStorage = window.localStorage;
-        Object.defineProperty(window, 'localStorage', {
-          get: function() { return originalLocalStorage; }
-        });
-        
-        // Simulamos sessionStorage
-        const originalSessionStorage = window.sessionStorage;
-        Object.defineProperty(window, 'sessionStorage', {
-          get: function() { return originalSessionStorage; }
-        });
-        
-        // Simulamos indexedDB
-        const originalIndexedDB = window.indexedDB;
-        Object.defineProperty(window, 'indexedDB', {
-          get: function() { return originalIndexedDB; }
-        });
-      } catch(e) {
-        console.log('Error al configurar almacenamiento:', e);
-      }
-    })();
-    
-    // Interceptamos y modificamos mensajes de error para ocultar pistas de sandbox
-    window.addEventListener('error', function(event) {
-      // Prevenimos que se muestren errores relacionados con sandbox
-      if (event.message && (event.message.includes('sandbox') || 
-                           event.message.includes('cookieIndex') || 
-                           event.message.includes('.onion') || 
-                           event.message.includes('CORS'))) {
-        event.preventDefault();
-        return false;
-      }
-      
-      // Mostramos otros errores críticos
-      const errorDiv = document.getElementById('error-message');
-      if (errorDiv && event.message && !event.message.includes('script')) {
-        errorDiv.textContent = 'Error: ' + event.message;
-        errorDiv.style.display = 'block';
-      }
-    }, true);
-    
-    // Manejador para mensajes del iframe
-    window.addEventListener('message', function(event) {
-      if (event.origin.includes('saidochesto.top') || event.origin.includes('netuplayer.top')) {
-        console.log('Mensaje recibido:', event.data);
-        
-        // Si recibimos un mensaje para recargar, lo hacemos
-        if (event.data && typeof event.data === 'string' && event.data.includes('reload')) {
-          location.reload();
-        }
-      }
-    });
-    
-    // Función para recargar el iframe si hay problemas
-    let iframeLoadAttempts = 0;
-    function reloadIframeIfNeeded() {
-      if (iframeLoadAttempts < 3) {
-        console.log('Recargando iframe...');
-        const container = document.getElementById('player-container');
-        container.innerHTML = '';
-        createPlayerFrame();
-        iframeLoadAttempts++;
-      }
+
+    function renderServers() {
+      const list = document.getElementById('server-list');
+      list.innerHTML = '';
+      Object.keys(servers[currentLang]).forEach(name => {
+        const url = servers[currentLang][name];
+        const btn = document.createElement('button');
+        btn.textContent = name;
+        btn.onclick = () => loadPlayer(url);
+        list.appendChild(btn);
+      });
     }
-    
-    // Comprobamos periódicamente si el iframe está cargado correctamente
-    setTimeout(function checkIframe() {
-      try {
-        if (iframe.contentWindow && iframe.contentWindow.document) {
-          console.log('Iframe cargado correctamente');
-        }
-      } catch(e) {
-        console.log('Error al acceder al iframe, recargando...');
-        reloadIframeIfNeeded();
-      }
-    }, 5000);
+
+    function loadPlayer(url) {
+      document.getElementById('player').innerHTML = `
+        <iframe src="${url}" allowfullscreen></iframe>
+      `;
+    }
+
+    // Inicializa la lista de servidores al cargar
+    renderServers();
   </script>
 </body>
 </html>
