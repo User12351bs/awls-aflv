@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Listas - Ureshii Anime</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ureshii Anime">
+    <script src="glob/localstorage.js"></script>
+    <script src="animes.js"></script>
+    <link rel="stylesheet" href="glob/header.css">
+    <script src="glob/header.js"></script>
+    <link rel="stylesheet" href="glob/cards.css">
+    <script src="glob/cards.js"></script>
+
+    <style>
+        /* Estilos para el título centrado con SVG */
+        .title-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px !important;
+            margin-top: 30px !important; /* Añadir margen superior fijo */
+        }
+        
+        .title-icon {
+            margin-right: 10px;
+            width: 30px;
+            height: 30px;
+            fill: white; /* Hacer el SVG de color blanco */
+            position: relative;
+            top: -12px !important; /* Ajustar verticalmente el SVG con el título */
+        }
+        
+        /* Quitar negrita del título y hacerlo más grande */
+        h2.section-title {
+            font-weight: normal;
+            font-size: 28px; /* Hacer el título más grande */
+        }
+
+        /* Estilos para resoluciones grandes */
+        @media (min-width: 1600px) {
+            /* Aumentar tamaño del título principal */
+            h2.section-title {
+                font-size: 42px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño del icono del título */
+            .title-icon {
+                width: 45px !important; /* Forzar con !important */
+                height: 45px !important; /* Forzar con !important */
+                top: -18px !important; /* Forzar con !important */
+                margin-right: 15px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño de los botones de pestañas (selector URESHIILISTS/FAVORITOS) */
+            .tab-button {
+                font-size: 28px !important; /* Forzar con !important */
+                padding: 20px 35px !important; /* Forzar con !important */
+                font-weight: 500 !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar el grosor de la línea indicadora de pestaña activa */
+            .tab-button.active::after {
+                height: 5px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño de los mensajes vacíos */
+            .empty-message {
+                font-size: 1.8rem !important; /* Forzar con !important */
+                max-width: 900px !important; /* Forzar con !important */
+                padding: 3rem 2rem 1.5rem 2rem !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño de los mensajes de error */
+            .error-message,
+            #ureshii-error-notification {
+                font-size: 16px !important; /* Forzar con !important */
+                padding: 12px 18px !important; /* Forzar con !important */
+                max-width: 450px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño de las tarjetas horizontales */
+            .horizontal-list-card {
+                padding: 25px 30px !important; /* Forzar con !important */
+                margin-bottom: 20px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño del título de la lista */
+            .list-info h3 {
+                font-size: 28px !important; /* Forzar con !important */
+                margin: 0 0 10px 0 !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño del contador de la lista */
+            .list-count {
+                font-size: 20px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño del botón de crear lista */
+            .create-list-button {
+                font-size: 24px !important; /* Forzar con !important */
+                padding: 18px 30px !important; /* Forzar con !important */
+                border-radius: 8px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño del contador de listas */
+            .list-counter {
+                font-size: 24px !important; /* Forzar con !important */
+                font-weight: 500 !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño de los elementos del menú desplegable */
+            .dropdown-item {
+                font-size: 20px !important; /* Forzar con !important */
+                padding: 18px 25px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar tamaño del icono del menú desplegable */
+            .dropdown-trigger__icon {
+                width: 30px !important;
+                height: 30px !important;
+            }
+            
+            /* Aumentar tamaño del contenido del modal */
+            .modal-content {
+                max-width: 600px !important;
+                padding: 30px !important;
+            }
+            
+            /* Aumentar tamaño del título del modal */
+            .modal-header h3 {
+                font-size: 24px !important;
+            }
+            
+            /* Aumentar tamaño de los campos de formulario */
+            .form-control {
+                font-size: 18px !important;
+                padding: 12px !important;
+            }
+            
+            /* Aumentar tamaño de las etiquetas de formulario */
+            .form-group label {
+                font-size: 18px !important;
+                margin-bottom: 10px !important;
+            }
+            
+            /* Aumentar tamaño de los botones del modal */
+            .modal-button {
+                font-size: 18px !important;
+                padding: 12px 24px !important;
+            }
+            
+            /* Aumentar tamaño del botón de crear nueva lista */
+            .create-new-list-button {
+                font-size: 22px !important; /* Forzar con !important */
+                padding: 15px !important; /* Forzar con !important */
+                border-radius: 6px !important; /* Forzar con !important */
+            }
+            
+            /* Aumentar el espacio entre elementos del grid */
+            .anime-grid {
+                gap: 15px !important;
+                padding: 0 30px !important;
+            }
+        }
+        
+        
+        /* Estilos para el selector horizontal */
+        .tab-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+        
+        .tab-button {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 12px 20px;
+            font-size: 16px;
+            color: var(--text-color);
+            position: relative;
+            transition: all 0.3s ease;
+            font-weight: normal; /* Quitar negrita de los botones */
+            text-transform: uppercase; /* Mantener mayúsculas sin distorsión */
+        }
+        
+        .tab-button:hover {
+            color: var(--accent-color);
+        }
+        
+        .tab-button.active {
+            color: var(--accent-color);
+            font-weight: normal; /* Quitar negrita incluso cuando está activo */
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px 3px 0 0;
+        }
+        
+        /* Contenedores para las diferentes secciones */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        
+        /* Añadir esta regla para cuando el grid contiene mensajes de error */
+        .anime-grid.empty-results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+        
+        /* Estilo para el mensaje cuando no hay favoritos */
+        .empty-message {
+            text-align: center;
+            padding: 2rem 1rem 0.5rem 1rem;
+            color: #aaa;
+            font-size: 1.2rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            display: block;
+            line-height: 1.4;
+            min-height: auto;
+            background-color: transparent;
+            border-radius: 0;
+        }
+        
+        /* Estilo para el mensaje de error en los formularios */
+        .error-message {
+            color: #fff;
+            font-size: 11px; /* Reducir aún más el tamaño de fuente */
+            padding: 6px 12px; /* Reducir aún más el padding */
+            background-color: rgba(255, 59, 48, 0.9);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 59, 48, 0.7);
+            border-radius: 6px; /* Reducir más los bordes redondeados */
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            font-weight: 500;
+            width: 70%; /* Reducir más el ancho */
+            max-width: 300px; /* Reducir más el ancho máximo */
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -100px;
+            z-index: 1000;
+            transition: bottom 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .error-message.show {
+            bottom: 10px; /* Reducir la distancia desde abajo */
+            opacity: 1;
+        }
+        
+        /* Sobrescribir los estilos de error-message de index.css */
+        .modal .error-message {
+            position: static; /* Anular position:absolute de index.css */
+            transform: none; /* Anular transform de index.css */
+            top: auto;
+            left: auto;
+            font-size: 11px;
+            padding: 6px 12px;
+            background-color: rgba(255, 59, 48, 0.9);
+            border: 1px solid rgba(255, 59, 48, 0.7);
+            border-radius: 6px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            width: auto;
+            max-width: none;
+            display: none; /* Oculto por defecto */
+        }
+        
+        .modal .error-message.show {
+            display: block; /* Mostrar cuando tiene la clase show */
+        }
+        
+        /* Estilo para notificación flotante (fuera del modal) */
+        #ureshii-error-notification {
+            color: #fff;
+            font-size: 11px;
+            padding: 6px 12px;
+            background-color: rgba(255, 59, 48, 0.9);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 59, 48, 0.7);
+            border-radius: 6px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            font-weight: 500;
+            width: 70%;
+            max-width: 300px;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -100px;
+            z-index: 1000;
+            transition: bottom 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none; /* Permite que los clics pasen a través */
+        }
+        
+        #ureshii-error-notification.show {
+            bottom: 10px;
+            opacity: 1;
+        }
+        
+        /* Estilo para el botón dentro del mensaje vacío */
+        .empty-message .create-list-button {
+            margin-top: 20px;
+            display: inline-block;
+        }
+        
+        /* Estilos para el botón de crear lista en mensaje vacío */
+        @media (max-width: 768px) {
+            .empty-message .create-list-button {
+                width: 90%;
+                max-width: 300px;
+                padding: 12px 16px;
+                margin-top: 20px;
+            }
+            
+            .empty-message {
+                padding-bottom: 80px;
+            }
+        }
+        
+        .empty-message p {
+            margin: 5px 0;
+        }
+        
+        /* Estilo para el mensaje de eliminado de favoritos */
+        .removed-message {
+            text-align: center;
+            padding: 1rem;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 1rem auto;
+            display: none; /* Oculto por defecto */
+            line-height: 1.4;
+            background-color: rgba(255, 69, 58, 0.1);
+            border-radius: 8px;
+            animation: fadeOut 3s forwards;
+            animation-delay: 2s;
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; display: none; }
+        }
+
+        /* Quitar subrayado de los enlaces */
+        a {
+            text-decoration: none;
+        }
+
+        /* Estilos para el botón de crear lista */
+        .create-list-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+        
+        .create-list-button {
+            background-color: #FF6B00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .create-list-button:hover {
+            background-color: #FF9D4D;
+        }
+        
+        .list-counter {
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        /* Estilos para versión móvil del botón de crear lista */
+        @media (max-width: 768px) {
+            .create-list-container {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                justify-content: center;
+                padding: 15px 0 25px 0; /* Aumentar el padding inferior */
+                margin: 0;
+                background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%); /* Degradado más suave */
+                z-index: 10;
+            }
+            
+            /* Ocultar el contador original */
+            .list-counter {
+                display: none;
+            }
+            
+            /* Crear un nuevo contador encima de las cards */
+            #mylist::before {
+                content: attr(data-list-count);
+                display: block;
+                color: #aaa;
+                font-size: 14px;
+                margin: 0 0 15px 10px;
+                text-align: left;
+            }
+            
+            .create-list-button {
+                width: 90%;
+                max-width: 300px;
+                padding: 12px 16px;
+            }
+            
+            /* Añadir padding al fondo para que el contenido no quede detrás del botón fijo */
+            #mylist {
+                padding-bottom: 100px; /* Aumentar el padding inferior */
+            }
+        }
+
+        /* Estilos para los modales */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        .modal-content {
+            background-color: var(--card-color);
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: var(--accent-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background-color: #333;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        
+        .confirm-button {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .cancel-button {
+            background-color: #444;
+            color: white;
+        }
+        
+        .create-new-list-button {
+            width: 100%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        
+        .lists-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #444;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-name {
+            color: var(--text-color);
+        }
+        
+        .list-count {
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        .add-to-list-button {
+            background-color: transparent;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Estilo para el poster de la lista */
+        .list-poster {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+    
+        .horizontal-list-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background-color: var(--card-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            z-index: 1;
+        }
+        
+        .horizontal-list-card:hover {
+            background-color: var(--card-hover-color, #2a2a2a);
+        }
+        
+        .list-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .list-info h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+        }
+        
+        .list-count {
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        /* Estilos para el menú desplegable */
+        .dropdown {
+            position: relative;
+            z-index: 9999 !important; /* Aumentar significativamente el z-index */
+        }
+        
+        .dropdown-trigger {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: color 0.2s ease;
+            position: relative; /* Asegurar posicionamiento relativo */
+        }
+        
+        .dropdown-trigger__icon:hover {
+            color: #fff;
+            background-color: transparent; /* Eliminamos el fondo al hacer hover */
+        }
+        
+        .dropdown-trigger__icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+            color: #aaa;
+            transition: color 0.2s ease;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: var(--card-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            min-width: 150px;
+            z-index: 9999 !important; /* Aumentar significativamente el z-index */
+            visibility: hidden; /* Inicialmente invisible */
+            opacity: 0; /* Inicialmente transparente */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            overflow: hidden; /* Para que los items respeten el border-radius */
+            transform: translateZ(0); /* Forzar un nuevo contexto de apilamiento */
+            will-change: transform; /* Optimización para navegadores modernos */
+            isolation: isolate; /* Crear un nuevo contexto de apilamiento */
+        }
+        
+        .dropdown-menu.show {
+            visibility: visible; /* Hacemos visible el menú */
+            opacity: 1; /* Mostramos con opacidad completa */
+            z-index: 9999 !important;
+        }
+        
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+        
+        /* Redondear las esquinas del primer y último elemento */
+        .dropdown-item:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        
+        /* Estilos para el grid de anime */
+        .anime-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 20px;
+            z-index: 1;
+            position: relative; /* Asegurar que el grid tenga posición relativa */
+        }
+        
+        /* Asegurar que las tarjetas tengan un z-index menor que los menús desplegables */
+        .anime-card.horizontal-list-card {
+            position: relative;
+            z-index: 1; /* Z-index bajo para las tarjetas */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="menu-button" id="menu-toggle">
+            <svg class="menu-ab-svg--wDGx3 header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="menu-svg" aria-hidden="true" role="img"><path class="menu-ab-svg__top--Xgjtj" d="M20 5H4V7H20V5Z"></path><path class="menu-ab-svg__middle--vsB5D" d="M4 11H20V13H4V11Z"></path><path class="menu-ab-svg__bottom--6yklx" d="M20 17H4V19H20V17Z"></path></svg>
+        </div>
+        <a href="index.html" class="header-logo">
+            <picture>
+                <source media="(max-width: 768px)" srcset="logo.png">
+                <source media="(min-width: 769px)" srcset="horizontal-logo.png">
+                <img src="horizontal-logo.png" alt="Ureshii Anime" class="logo-img">
+            </picture>
+        </a>
+        <div class="nav-categories">
+            <a href="index.html" class="nav-category">Catálogo</a>
+            <a href="novedades.html" class="nav-category">Novedades</a>
+        </div>
+        <div class="header-buttons">
+            <a href="search.html" class="header-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="search-svg" aria-hidden="true" role="img"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 19C12.4879 19 14.3164 18.3176 15.7641 17.1742L21.2927 22.7069L22.7074 21.2931L17.1778 15.7595C18.319 14.3126 19 12.4858 19 10.5C19 5.80558 15.1944 2 10.5 2C5.80558 2 2 5.80558 2 10.5C2 15.1944 5.80558 19 10.5 19ZM10.5 17C14.0899 17 17 14.0899 17 10.5C17 6.91015 14.0899 4 10.5 4C6.91015 4 4 6.91015 4 10.5C4 14.0899 6.91015 17 10.5 17Z"></path></svg>
+            </a>
+            <a href="ureshiilists.html" class="header-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="watchlist-svg" aria-hidden="true" role="img"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.0001 20.5858C19.0001 21.4767 17.9229 21.9229 17.293 21.2929L12.0001 16L6.7071 21.2929C6.07714 21.9229 5 21.4767 5 20.5858L5.00006 3H19.0001V20.5858ZM7.00001 18.1716L7.00006 5H17.0001V18.1716L12.0001 13.1716L7.00001 18.1716Z"></path></svg>
+            </a>
+            <a href="account.html" class="export-button" id="export-import-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="user-settings-svg" aria-hidden="true" role="img"><path d="M12 20a6.01 6.01 0 0 1-5.966-5.355L12 12.088l5.966 2.557A6.01 6.01 0 0 1 12 20m0-16c1.654 0 3 1.346 3 3s-1.345 3-2.999 3h-.002A3.003 3.003 0 0 1 9 7c0-1.654 1.346-3 3-3m7.394 9.081l-4.572-1.959A4.997 4.997 0 0 0 17 7c0-2.757-2.243-5-5-5S7 4.243 7 7c0 1.71.865 3.22 2.178 4.122l-4.572 1.959A.999.999 0 0 0 4 14c0 4.411 3.589 8 8 8s8-3.589 8-8c0-.4-.238-.762-.606-.919"></path></svg>
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Título centrado con SVG de "añadir a la lista" (versión vacía) -->
+        <div class="title-container">
+            <svg class="title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="watchlist-svg" aria-hidden="true" role="img">
+                <path d="M17 18.113l-3.256-2.326A2.989 2.989 0 0 0 12 15.228c-.629 0-1.232.194-1.744.559L7 18.113V4h10v14.113zM18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z"></path>
+            </svg>
+            <h2 class="section-title">Mis Listas</h2>
+        </div>
+        
+        <div class="tab-selector">
+            <button class="tab-button active" data-tab="mylist">URESHIILISTS</button>
+            <a href="watchlist.html" class="tab-button" style="text-decoration: none !important;">FAVORITOS</a>
+        </div>
+        
+        <!-- Modal para crear nueva UreshiiLista -->
+        <div id="create-list-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="modal-header">
+                    <h3>Crear UreshiiLista</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="list-name">Nombre de la Lista</label>
+                        <input type="text" id="list-name" class="form-control" placeholder="Ingresa un nombre para tu lista">
+                        <div id="create-list-error" class="error-message">Por favor, introduce un nombre para la lista</div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="create-list-confirm" class="modal-button confirm-button">CREAR LISTA</button>
+                        <button id="create-list-cancel" class="modal-button cancel-button">CANCELAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal para añadir a UreshiiLista existente -->
+        <div id="add-to-list-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="modal-header">
+                    <h3>Añadir a CrunchyLista</h3>
+                </div>
+                <div class="modal-body">
+                    <button id="create-new-list-button" class="create-new-list-button">CREAR UNA NUEVA LISTA</button>
+                    <div id="lists-container" class="lists-container">
+                        <!-- Las listas se generarán dinámicamente aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="create-list-container">
+            <button id="create-list-button" class="create-list-button">CREAR UNA NUEVA LISTA</button>
+            <div class="list-counter">Cargando...</div>
+        </div>
+        
+        <!-- Contenido de las pestañas -->
+        <div id="mylist" class="tab-content active">
+            <div class="anime-grid" id="anime-grid"></div>
+        </div>
+        
+        <div id="favorites" class="tab-content">
+            <div class="anime-grid" id="favorites-grid"></div>
+        </div>
+    </div>
+
+    <!-- Modal para exportar/importar datos -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-content-container"></div>
+        </div>
+    </div>
+
+    <div id="favorites-notification" class="favorites-notification">
+        <div class="favorites-notification-content">
+            Se ha eliminado de favoritos correctamente
+        </div>
+    </div>
+
+    <!-- Modal para renombrar lista -->
+    <div id="rename-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <h3>Renombrar UreshiiLista</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="rename-list-name">Nombre de la Lista</label>
+                    <input type="text" id="rename-list-name" class="form-control" placeholder="Ingresa un nuevo nombre para tu lista">
+                    <div id="rename-list-error" class="error-message">Por favor, introduce un nombre para la lista</div>
+                    <input type="hidden" id="rename-list-id">
+                </div>
+                <div class="modal-buttons">
+                    <button id="rename-list-confirm" class="modal-button confirm-button">RENOMBRAR LISTA</button>
+                    <button id="rename-list-cancel" class="modal-button cancel-button">CANCELAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para eliminar lista -->
+    <div id="delete-list-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <h3>Eliminar UreshiiLista</h3>
+            </div>
+            <div class="modal-body">
+                <p>¿De verdad quieres borrar esta UreshiiLista?</p>
+                <p>No podrás deshacer esto.</p>
+                <input type="hidden" id="delete-list-id">
+                <div class="modal-buttons">
+                    <button id="delete-list-confirm" class="modal-button confirm-button">BORRAR LISTA</button>
+                    <button id="delete-list-cancel" class="modal-button cancel-button">CANCELAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    // Cargar UreshiiListas del localStorage
+    let ureshiiLists = JSON.parse(localStorage.getItem(URESHII_LISTS_KEY)) || [];
+    
+    // Elementos del DOM
+    const createListButton = document.getElementById('create-list-button');
+    const createListModal = document.getElementById('create-list-modal');
+    const addToListModal = document.getElementById('add-to-list-modal');
+    const listNameInput = document.getElementById('list-name');
+    const createListConfirm = document.getElementById('create-list-confirm');
+    const createListCancel = document.getElementById('create-list-cancel');
+    const createNewListButton = document.getElementById('create-new-list-button');
+    const listsContainer = document.getElementById('lists-container');
+    const listCounter = document.querySelector('.list-counter');
+    const closeButtons = document.querySelectorAll('.close');
+    
+    // Crear elemento para notificaciones flotantes de error
+    let errorNotification = document.createElement('div');
+    errorNotification.id = 'ureshii-error-notification';
+    document.body.appendChild(errorNotification);
+    
+    // Función para actualizar el contador de listas
+    function updateListCounter() {
+        const listCounter = document.querySelector('.list-counter');
+        const mylistTab = document.getElementById('mylist');
+        const count = ureshiiLists.length;
+        const text = `${count} / ∞ UreshiiListas`;
+        
+        listCounter.textContent = text;
+        mylistTab.setAttribute('data-list-count', text); // Añadir el contador como atributo para móvil
+    }
+    
+    // Inicializar contador
+    updateListCounter();
+    
+    // Función para mostrar las listas en la interfaz
+    function displayUreshiiLists() {
+        const animeGrid = document.getElementById('anime-grid');
+        animeGrid.innerHTML = '';
+        
+        if (ureshiiLists.length === 0) {
+            // Ocultar el botón original cuando no hay listas
+            document.querySelector('.create-list-container').style.display = 'none';
+            
+            // Crear el mensaje y el botón dentro del grid
+            const emptyContainer = document.createElement('div');
+            emptyContainer.className = 'empty-message';
+            
+            // Añadir el SVG grande encima del texto
+            const emptySvg = document.createElement('div');
+            emptySvg.innerHTML = `
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="error-svg" aria-hidden="true" role="img" style="width: 120px; height: 120px; margin-bottom: 20px; fill: #aaa;">
+                    <path d="M12.049 17.984l.9 2.7a.999.999 0 0 1-.95 1.317c-.418 0-.808-.265-.948-.684l-.9-2.7a1.847 1.847 0 0 0-2.334-1.168l-2.701.9a1 1 0 0 1-.632-1.897l2.7-.9a3.85 3.85 0 0 1 4.865 2.432zm9.9-6.3a1 1 0 0 1-.632 1.265l-2.701.9a1.848 1.848 0 0 0-1.167 2.335l.9 2.7a.999.999 0 0 1-.95 1.317c-.418 0-.808-.265-.948-.684l-.9-2.7a3.85 3.85 0 0 1 2.433-4.865l2.7-.9a.998.998 0 0 1 1.265.632zm-13.5-4.5a3.85 3.85 0 0 1-2.432 4.865l-2.7.9a.999.999 0 0 1-1.265-.632.999.999 0 0 1 .632-1.265l2.7-.9a1.85 1.85 0 0 0 1.168-2.335l-.9-2.7a1 1 0 1 1 1.897-.633l.9 2.7zm3.502-1.167l-.9-2.7a.999.999 0 0 1 .632-1.265 1 1 0 0 1 1.266.632l.9 2.7a1.85 1.85 0 0 0 2.334 1.168l2.701-.9a1 1 0 0 1 .632 1.897l-2.7.9a3.832 3.832 0 0 1-1.213.198 3.854 3.854 0 0 1-3.652-2.63z"></path>
+                </svg>
+            `;
+            
+            emptyContainer.appendChild(emptySvg);
+            
+            // Añadir el contenido del mensaje después del SVG
+            const messageContent = document.createElement('div');
+            messageContent.innerHTML = `
+                <p>Todavía no tienes ninguna UreshiiLista.</p>
+                <p>¡Vamos a crear una!</p>
+                <button id="empty-create-list-button" class="create-list-button">CREAR UNA NUEVA LISTA</button>
+            `;
+            
+            emptyContainer.appendChild(messageContent);
+            animeGrid.appendChild(emptyContainer);
+            
+            // Añadir evento al nuevo botón
+            document.getElementById('empty-create-list-button').addEventListener('click', () => {
+                listNameInput.value = '';
+                createListModal.style.display = 'block';
+            });
+            
+            return;
+        }
+        
+        // Mostrar el botón original cuando hay listas
+        document.querySelector('.create-list-container').style.display = 'flex';
+        
+        ureshiiLists.forEach(list => {
+            const listCard = document.createElement('div');
+            listCard.className = 'anime-card horizontal-list-card';
+            
+            // Generar un ID único para este dropdown
+            const dropdownId = `dropdown-${list.id}`;
+            
+            listCard.innerHTML = `
+                <div class="list-info">
+                    <h3>${list.name}</h3>
+                    <div class="list-count">${list.items.length} elementos</div>
+                </div>
+                <div class="list-actions">
+                    <div class="dropdown" data-dropdown-id="${dropdownId}">
+                        <button class="dropdown-trigger">
+                            <svg class="dropdown-trigger__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 24" data-t="more-svg" aria-hidden="true" role="img">
+                                <path d="M6 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-2 4c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2-2 .9-2 2zm2 4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu" data-dropdown-id="${dropdownId}">
+                            <button class="dropdown-item rename-list" data-list-id="${list.id}">Renombrar</button>
+                            <button class="dropdown-item delete-list" data-list-id="${list.id}">Eliminar Lista</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Añadir evento para ir a la página de la lista
+            listCard.addEventListener('click', (e) => {
+                // Solo navegar si no se hizo clic en el menú desplegable
+                if (!e.target.closest('.dropdown')) {
+                    window.location.href = `ureshiilista.html?id=${list.id}`;
+                }
+            });
+            
+            animeGrid.appendChild(listCard);
+        });
+        
+        // Añadir eventos a los botones del menú desplegable
+        setupDropdownEvents();
+    }
+    
+    // Mostrar las listas al cargar la página
+    displayUreshiiLists();
+    
+    // Abrir modal para crear nueva lista
+    createListButton.addEventListener('click', () => {
+        listNameInput.value = '';
+        createListModal.style.display = 'block';
+    });
+    
+    // Cerrar modales al hacer clic en X
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            createListModal.style.display = 'none';
+            addToListModal.style.display = 'none';
+        });
+    });
+    
+    // Cerrar modales al hacer clic fuera del contenido
+    window.addEventListener('click', (e) => {
+        if (e.target === createListModal) {
+            createListModal.style.display = 'none';
+        }
+        if (e.target === addToListModal) {
+            addToListModal.style.display = 'none';
+        }
+    });
+    
+    // Cancelar creación de lista
+    createListCancel.addEventListener('click', () => {
+        createListModal.style.display = 'none';
+        document.getElementById('create-list-error').classList.remove('show');
+    });
+    
+    // Función mejorada para mostrar mensajes de error
+    function showErrorMessage(errorElement) {
+        // Si es un elemento dentro de un modal, mostrar inline
+        if (errorElement.closest('.modal')) {
+            errorElement.classList.add('show');
+            
+            // Ocultar automáticamente después de 5 segundos
+            setTimeout(() => {
+                errorElement.classList.remove('show');
+            }, 5000);
+        } else {
+            // Si no está en un modal, usar la notificación flotante
+            errorNotification.textContent = errorElement.textContent;
+            errorNotification.classList.add('show');
+            
+            // Ocultar automáticamente después de 5 segundos
+            setTimeout(() => {
+                errorNotification.classList.remove('show');
+            }, 5000);
+        }
+    }
+    
+    // Crear nueva lista
+    createListConfirm.addEventListener('click', () => {
+        const listName = listNameInput.value.trim();
+        const errorMessage = document.getElementById('create-list-error');
+        
+        if (!listName) {
+            // Mostrar mensaje de error
+            showErrorMessage(errorMessage);
+            return;
+        }
+        
+        // Ocultar mensaje de error si existe
+        errorMessage.classList.remove('show');
+        
+        // Crear nueva lista
+        const newList = {
+            id: Date.now().toString(),
+            name: listName,
+            items: [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+        
+        // Añadir a las listas
+        ureshiiLists.push(newList);
+        
+        // Guardar en localStorage
+        localStorage.setItem(URESHII_LISTS_KEY, JSON.stringify(ureshiiLists));
+        
+        // Actualizar contador
+        updateListCounter();
+        
+        // Cerrar modal
+        createListModal.style.display = 'none';
+        
+        // Guardar el nombre de la lista en sessionStorage para mostrar la notificación después de la redirección
+        sessionStorage.setItem('newListName', listName);
+        
+        // Redirigir inmediatamente
+        window.location.href = `ureshiilista.html?id=${newList.id}`;
+    });
+    
+    // Mostrar notificación
+    function showNotification(message) {
+        const notification = document.getElementById('favorites-notification');
+        const notificationContent = notification.querySelector('.favorites-notification-content');
+        
+        notificationContent.textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 6000);
+    }
+    
+    // Abrir modal para añadir a lista existente desde otra página
+    function openAddToListModal(animeId) {
+        // Limpiar contenedor de listas
+        listsContainer.innerHTML = '';
+        
+        // Si no hay listas, mostrar modal para crear una
+        if (ureshiiLists.length === 0) {
+            createListModal.style.display = 'block';
+            return;
+        }
+        
+        // Generar elementos para cada lista
+        ureshiiLists.forEach(list => {
+            const listItem = document.createElement('div');
+            listItem.className = 'list-item';
+            
+            const listInfo = document.createElement('div');
+            listInfo.className = 'list-info';
+            
+            const listName = document.createElement('div');
+            listName.className = 'list-name';
+            listName.textContent = list.name;
+            
+            const listCount = document.createElement('div');
+            listCount.className = 'list-count';
+            listCount.textContent = `${list.items.length} elementos`;
+            
+            const addButton = document.createElement('button');
+            addButton.className = 'add-to-list-button';
+            addButton.innerHTML = '+';
+            addButton.addEventListener('click', () => {
+                addAnimeToList(list.id, animeId);
+            });
+            
+            listInfo.appendChild(listName);
+            listInfo.appendChild(listCount);
+            
+            listItem.appendChild(listInfo);
+            listItem.appendChild(addButton);
+            
+            listsContainer.appendChild(listItem);
+        });
+        
+        // Mostrar modal
+        addToListModal.style.display = 'block';
+    }
+    
+    // Añadir anime a una lista específica
+    function addAnimeToList(listId, animeId) {
+        const list = ureshiiLists.find(l => l.id === listId);
+        
+        // Verificar que el anime existe en animeData
+        const animeExists = animeData.some(anime => String(anime.id) === String(animeId));
+        
+        if (list && animeExists && !list.items.includes(animeId)) {
+            // Añadir anime a la lista
+            list.items.push(animeId);
+            list.updatedAt = new Date().toISOString();
+            
+            // Guardar en localStorage
+            localStorage.setItem(URESHII_LISTS_KEY, JSON.stringify(ureshiiLists));
+            
+            // Actualizar myList para reflejar que el anime está en una lista
+            let myList = JSON.parse(localStorage.getItem(MY_LIST_KEY)) || [];
+            if (!myList.includes(animeId)) {
+                myList.push(animeId);
+                localStorage.setItem(MY_LIST_KEY, JSON.stringify(myList));
+            }
+            
+            // Actualizar el estado del anime en animeData
+            const anime = animeData.find(a => String(a.id) === String(animeId));
+            if (anime) {
+                anime.inMyList = true;
+            }
+            
+            // Actualizar los indicadores visuales si la función existe
+            if (typeof updateVisualIndicators === 'function') {
+                updateVisualIndicators(animeId, true);
+            }
+            
+            // Mostrar notificación
+            showNotification('Añadido a la lista');
+        } else if (!animeExists) {
+            // Mostrar notificación de error
+            showNotification('Error: El anime no existe');
+        } else if (list.items.includes(animeId)) {
+            // Mostrar notificación de que ya está en la lista
+            showNotification('Este anime ya está en la lista');
+        }
+        
+        // Cerrar modal
+        addToListModal.style.display = 'none';
+    }
+    
+    // Abrir modal para crear nueva lista desde el modal de añadir a lista
+    createNewListButton.addEventListener('click', () => {
+        addToListModal.style.display = 'none';
+        createListModal.style.display = 'block';
+    });
+    
+    // Exponer funciones para uso desde otras páginas
+    window.openAddToListModal = openAddToListModal;
+    
+    // Verificar si hay parámetros en la URL para abrir el modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const action = urlParams.get('action');
+        const animeId = urlParams.get('animeId');
+        
+        if (action === 'addToList' && animeId) {
+            openAddToListModal(animeId);
+        }
+    });
+
+
+    // Elementos del DOM para los nuevos modales
+    const renameListModal = document.getElementById('rename-list-modal');
+    const deleteListModal = document.getElementById('delete-list-modal');
+    const renameListNameInput = document.getElementById('rename-list-name');
+    const renameListIdInput = document.getElementById('rename-list-id');
+    const deleteListIdInput = document.getElementById('delete-list-id');
+    const renameListConfirm = document.getElementById('rename-list-confirm');
+    const renameListCancel = document.getElementById('rename-list-cancel');
+    const deleteListConfirm = document.getElementById('delete-list-confirm');
+    const deleteListCancel = document.getElementById('delete-list-cancel');
+    
+    // Configurar eventos para los menús desplegables
+    function setupDropdownEvents() {
+        // Eventos para mostrar/ocultar menús desplegables
+        const dropdownTriggers = document.querySelectorAll('.dropdown-trigger');
+        dropdownTriggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const menu = trigger.nextElementSibling;
+                
+                // Si el menú no existe (porque se movió), buscar por su ID
+                let targetMenu = menu;
+                if (!targetMenu) {
+                    const dropdownId = trigger.closest('.dropdown').getAttribute('data-dropdown-id');
+                    if (dropdownId) {
+                        targetMenu = document.querySelector(`.dropdown-menu[data-dropdown-id="${dropdownId}"]`);
+                    }
+                }
+                
+                if (!targetMenu) return; // Si aún no se encuentra, salir
+                
+                // Cerrar todos los otros menús
+                document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
+                    if (openMenu !== targetMenu) {
+                        openMenu.classList.remove('show');
+                        // Devolver otros menús abiertos a sus contenedores originales
+                        const menuId = openMenu.getAttribute('data-dropdown-id');
+                        if (menuId) {
+                            const originalContainer = document.querySelector(`.dropdown[data-dropdown-id="${menuId}"]`);
+                            if (originalContainer && !originalContainer.contains(openMenu)) {
+                                originalContainer.appendChild(openMenu);
+                                openMenu.style.position = 'absolute';
+                                openMenu.style.top = '100%';
+                                openMenu.style.right = '0';
+                                openMenu.style.left = 'auto';
+                            }
+                        }
+                    }
+                });
+                
+                // Alternar visibilidad del menú actual
+                if (!targetMenu.classList.contains('show')) {
+                    // Asignar IDs únicos si no existen
+                    const dropdownId = `dropdown-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+                    trigger.closest('.dropdown').setAttribute('data-dropdown-id', dropdownId);
+                    targetMenu.setAttribute('data-dropdown-id', dropdownId);
+                    
+                    // Guardar la posición original antes de moverlo
+                    const rect = trigger.getBoundingClientRect();
+                    
+                    // Añadir clase show para hacerlo visible
+                    targetMenu.classList.add('show');
+                    
+                    // Asegurar que el menú esté por encima de todo
+                    document.body.appendChild(targetMenu);
+                    
+                    // Posicionar el menú en la misma posición relativa al botón
+                    targetMenu.style.position = 'fixed';
+                    targetMenu.style.top = `${rect.bottom}px`;
+                    targetMenu.style.right = `${window.innerWidth - rect.right}px`;
+                    targetMenu.style.left = 'auto';
+                } else {
+                    // Si ya está visible, ocultar y devolver a su posición original
+                    targetMenu.classList.remove('show');
+                    const dropdownId = targetMenu.getAttribute('data-dropdown-id');
+                    if (dropdownId) {
+                        const originalContainer = document.querySelector(`.dropdown[data-dropdown-id="${dropdownId}"]`);
+                        if (originalContainer && !originalContainer.contains(targetMenu)) {
+                            originalContainer.appendChild(targetMenu);
+                            targetMenu.style.position = 'absolute';
+                            targetMenu.style.top = '100%';
+                            targetMenu.style.right = '0';
+                            targetMenu.style.left = 'auto';
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Evento para renombrar lista
+        const renameButtons = document.querySelectorAll('.rename-list');
+        renameButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const listId = button.getAttribute('data-list-id');
+                const list = ureshiiLists.find(l => l.id === listId);
+                if (list) {
+                    renameListNameInput.value = list.name;
+                    renameListIdInput.value = listId;
+                    renameListModal.style.display = 'block';
+                }
+                // Cerrar el menú desplegable
+                button.closest('.dropdown-menu').classList.remove('show');
+            });
+        });
+        
+        // Evento para eliminar lista
+        const deleteButtons = document.querySelectorAll('.delete-list');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const listId = button.getAttribute('data-list-id');
+                deleteListIdInput.value = listId;
+                deleteListModal.style.display = 'block';
+                // Cerrar el menú desplegable
+                button.closest('.dropdown-menu').classList.remove('show');
+            });
+        });
+    }
+    
+    // Cerrar menús desplegables al hacer clic en cualquier parte del documento
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+            menu.classList.remove('show');
+            // Devolver el menú a su contenedor original
+            const dropdownId = menu.getAttribute('data-dropdown-id');
+            if (dropdownId) {
+                const originalContainer = document.querySelector(`.dropdown[data-dropdown-id="${dropdownId}"]`);
+                if (originalContainer && !originalContainer.contains(menu)) {
+                    originalContainer.appendChild(menu);
+                    menu.style.position = 'absolute';
+                    menu.style.top = '100%';
+                    menu.style.right = '0';
+                    menu.style.left = 'auto';
+                }
+            }
+        });
+    });
+    
+    // Eventos para el modal de renombrar
+    renameListCancel.addEventListener('click', () => {
+        renameListModal.style.display = 'none';
+        document.getElementById('rename-list-error').classList.remove('show');
+    });
+    
+    renameListConfirm.addEventListener('click', () => {
+        const listId = renameListIdInput.value;
+        const newName = renameListNameInput.value.trim();
+        const errorMessage = document.getElementById('rename-list-error');
+        
+        if (!newName) {
+            // Mostrar mensaje de error
+            showErrorMessage(errorMessage);
+            return;
+        }
+        
+        // Ocultar mensaje de error
+        errorMessage.classList.remove('show');
+        
+        // Encontrar y actualizar la lista
+        const listIndex = ureshiiLists.findIndex(l => l.id === listId);
+        if (listIndex !== -1) {
+            ureshiiLists[listIndex].name = newName;
+            ureshiiLists[listIndex].updatedAt = new Date().toISOString();
+            
+            // Guardar en localStorage
+            localStorage.setItem(URESHII_LISTS_KEY, JSON.stringify(ureshiiLists));
+            
+            // Cerrar modal
+            renameListModal.style.display = 'none';
+            
+            // Mostrar notificación
+            showNotification('Lista renombrada correctamente');
+            
+            // Actualizar la interfaz
+            displayUreshiiLists();
+            updateListCounter();
+        }
+    });
+    
+    // Eventos para el modal de eliminar
+    deleteListCancel.addEventListener('click', () => {
+        deleteListModal.style.display = 'none';
+    });
+    
+    deleteListConfirm.addEventListener('click', () => {
+        const listId = deleteListIdInput.value;
+        
+        // Encontrar y eliminar la lista
+        const listIndex = ureshiiLists.findIndex(l => l.id === listId);
+        if (listIndex !== -1) {
+            // Obtener los IDs de los animes en la lista antes de eliminarla
+            const animesInList = [...ureshiiLists[listIndex].items];
+            
+            ureshiiLists.splice(listIndex, 1);
+            
+            // Actualizar myList en localStorage eliminando los animes que solo estaban en esta lista
+            let myList = JSON.parse(localStorage.getItem(MY_LIST_KEY)) || [];
+            
+            // Para cada anime en la lista eliminada
+            animesInList.forEach(animeId => {
+                // Verificar si el anime está en otras listas
+                const isInOtherLists = ureshiiLists.some(list => list.items.includes(Number(animeId)));
+                
+                if (!isInOtherLists) {
+                    // Si no está en otras listas, eliminarlo de myList
+                    const myListIndex = myList.indexOf(Number(animeId));
+                    if (myListIndex !== -1) {
+                        myList.splice(myListIndex, 1);
+                        
+                        // Actualizar el estado del anime en animeData
+                        const anime = animeData.find(a => a.id === Number(animeId));
+                        if (anime) {
+                            anime.inMyList = false;
+                        }
+                    }
+                }
+            });
+            
+            // Guardar myList actualizada
+            localStorage.setItem(MY_LIST_KEY, JSON.stringify(myList));
+            // Actualizar también window.myList para mantener sincronizado
+            window.myList = myList;
+            
+            // Guardar en localStorage
+            localStorage.setItem(URESHII_LISTS_KEY, JSON.stringify(ureshiiLists));
+            
+            // Cerrar modal
+            deleteListModal.style.display = 'none';
+            
+            // Mostrar notificación
+            showNotification('Lista eliminada correctamente');
+            
+            // Actualizar la interfaz
+            displayUreshiiLists();
+            updateListCounter();
+        }
+    });
+    
+    // Función para mostrar notificaciones
+    function showNotification(message) {
+        const notification = document.getElementById('favorites-notification');
+        notification.querySelector('.favorites-notification-content').textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+    
+    // Actualizar los eventos de cierre para incluir los nuevos modales
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            createListModal.style.display = 'none';
+            addToListModal.style.display = 'none';
+            renameListModal.style.display = 'none';
+            deleteListModal.style.display = 'none';
+        });
+    });
+    
+    // Actualizar el evento de clic en ventana para incluir los nuevos modales
+    window.addEventListener('click', (e) => {
+        if (e.target === createListModal) createListModal.style.display = 'none';
+        if (e.target === addToListModal) addToListModal.style.display = 'none';
+        if (e.target === renameListModal) renameListModal.style.display = 'none';
+        if (e.target === deleteListModal) deleteListModal.style.display = 'none';
+    });
+    
+    // Cargar datos desde Google Drive si está disponible
+    if (typeof window.loadInitialDataFromDrive === 'function') {
+        window.loadInitialDataFromDrive();
+    }
+    
+    // Escuchar cuando los datos de Drive estén listos
+    window.addEventListener('driveDataReady', function(event) {
+        console.log('Datos de Google Drive cargados en ureshiilists.html:', event.detail);
+        // Recargar contenido que dependa de los datos
+        if (typeof displayLists === 'function') {
+            displayLists();
+        }
+    });
+
+</script>

@@ -1,0 +1,299 @@
+:root {
+    /* Variables relacionadas con el header */
+    --header-height: 60px; /* Reducido de 60px a 50px para resoluciones grandes */
+}
+
+/* Desactivar scroll horizontal globalmente */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Prevenir scroll horizontal en todos los elementos */
+* {
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+/* Asegurar que elementos fixed no causen scroll */
+*[style*="position: fixed"],
+.fixed-element {
+    max-width: 100vw !important;
+}
+
+/* Media query para pantallas grandes */
+@media (min-width: 1200px) {
+    header {
+        height: 50px; /* Altura reducida específicamente para pantallas grandes */
+    }
+    
+    .header-svg-icon {
+        width: 28px; /* SVG más grandes en pantallas grandes */
+        height: 28px;
+    }
+}
+
+/* Ajustar el header para que sea más corto */
+/* Estilos para el header con el botón de exportar */
+header {
+    background: #272727;
+    padding: 0.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Añadir esta línea */
+    height: var(--header-height);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Ajustar el título para que esté a la izquierda */
+h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    text-align: left;
+}
+
+h1:hover {
+    color: #e2e2e2;
+    transition: all 0.3s ease;
+}
+
+.anime-release-time {
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 2px;
+}
+
+/* Estilos para el logo del header */
+.header-logo {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+    text-decoration: none; /* Eliminar subrayado del enlace */
+    transition: all 0.3s ease;
+}
+
+.header-logo:hover {
+    opacity: 0.8; /* Oscurecer ligeramente al pasar el cursor */
+    filter: brightness(0.9); /* Reducir el brillo para oscurecer */
+}
+
+.logo-img {
+    height: 30px; /* Altura aproximada al h1 anterior */
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Media query para ajustar el tamaño en pantallas más pequeñas */
+@media (max-width: 768px) {
+    .logo-img {
+        height: 35px; /* Ligeramente más pequeño en móviles */
+    }
+}
+
+/* Estilos para las categorías de navegación */
+.nav-categories {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1px;
+    margin-left: 10px; /* Empuja las categorías hacia la derecha */
+    margin-right: auto; /* Centra el espacio restante */
+}
+
+.nav-category {
+    color: #d1d1d1; /* Cambiado a #d1d1d1 como solicitado */
+    text-decoration: none;
+    font-weight: 500;
+    font-weight: normal;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.nav-category:hover {
+    background-color: rgba(0, 0, 0, 0.3); /* Oscurecer el fondo al hacer hover */
+}
+
+/* Estilos para los botones del header */
+.header-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-right: 0.5rem;
+    margin-left: auto; /* Añadir esta línea */
+}
+
+.header-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px; /* Cambio a cuadrado con bordes redondeados */
+    background-color: transparent; /* Fondo transparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    text-decoration: none;
+}
+
+.header-button:hover {
+    background-color: rgba(0, 0, 0, 0.3); /* Oscurecer el fondo al hacer hover */
+}
+
+.header-button:hover .header-svg-icon {
+    opacity: 1; /* Hacer que el icono sea completamente blanco al hacer hover */
+}
+
+.header-button-icon {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+.header-svg-icon {
+    width: 24px;
+    height: 24px;
+    fill: #d1d1d1; /* Color blanco para los iconos */
+    opacity: 0.8; /* Un poco gris como solicitado */
+    transition: all 0.3s ease;
+}
+
+/* Botón de exportar/importar */
+.export-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px; /* Cambio a cuadrado con bordes redondeados */
+    background-color: transparent; /* Fondo transparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative; /* Cambiar de absolute a relative */
+}
+
+.export-button:hover {
+    background-color: rgba(0, 0, 0, 0.3); /* Oscurecer el fondo al hacer hover */
+}
+
+.export-button:hover .header-svg-icon {
+    opacity: 1; /* Hacer que el icono sea completamente blanco al hacer hover */
+}
+
+.export-icon {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+}
+
+/* Estilos para el botón de menú */
+.menu-button {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: transparent;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.menu-button:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 768px) {
+    .menu-button {
+        display: flex;
+    }
+    
+    .header-logo {
+        margin-left: 0.5rem;
+    }
+    
+    .nav-categories {
+        position: fixed; /* Cambiado de absolute a fixed para mejor comportamiento */
+        top: var(--header-height);
+        left: -100%;
+        width: 200px;
+        flex-direction: column;
+        background-color: #272727;
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        transition: left 0.3s ease;
+        z-index: 99;
+    }
+    
+    .nav-categories.active {
+        left: 0;
+    }
+    
+    .nav-category {
+        padding: 0.8rem;
+        width: 100%;
+        border-radius: 8px;
+    }
+    
+    /* Asegurar que los botones del header estén a la derecha */
+    header {
+        justify-content: space-between;
+    }
+    
+    .header-buttons {
+        margin-left: auto;
+        margin-right: 0.5rem; /* Añadir margen derecho */
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* Añadir la clase hidden para ocultar el header al hacer scroll */
+header.hidden {
+    transform: translateY(-100%);
+    box-shadow: none;
+}
+
+/* Añadir media query para pantallas grandes */
+@media (min-width: 1600px) {
+    :root {
+        --header-height: 70px; /* Aumentar altura del header en pantallas grandes */
+    }
+    
+    h1 {
+        font-size: 1.8rem; /* Título más grande */
+    }
+    
+    .logo-img {
+        height: 40px; /* Logo más grande */
+    }
+    
+    .nav-category {
+        font-size: 1.2rem; /* Texto de categorías más grande */
+        padding: 0.4rem 1rem; /* Más padding */
+    }
+    
+    .header-button, .export-button {
+        width: 44px; /* Botones más grandes */
+        height: 44px;
+    }
+    
+    .header-svg-icon {
+        width: 28px; /* Iconos más grandes */
+        height: 28px;
+    }
+    
+    .header-button-icon, .export-icon {
+        font-size: 22px; /* Texto de iconos más grande */
+    }
+    
+    .anime-release-time {
+        font-size: 1rem; /* Texto de tiempo de lanzamiento más grande */
+    }
+}

@@ -2,20 +2,20 @@
     --background-color: #121212;
     --card-color: #1e1e1e;
     --text-color: #ffffff;
-    --accent-color: #ff5e3a;
+    --accent-color: #ff6e00;
     --secondary-color: #2c2c2c;
     --watched-color: #4caf50;
     /* Reducir la altura del header */
-    --header-height: 60px; /* Reducido de 90px a 60px */
-    --primary-color: #ff7700; /* Cambiado de #6a11cb (púrpura) a naranja */
-    --gradient-color: #ff5e3a; /* Cambiado de #2575fc (azul) a naranja más claro */
+    /* --header-height: 60px; */ /* Eliminado porque ahora está en header.css */
+    --primary-color: #ff6e00; /* Cambiado de #6a11cb (púrpura) a naranja */
+    --gradient-color: #ff6e00; /* Cambiado de #2575fc (azul) a naranja más claro */
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Avenir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -24,129 +24,175 @@ body {
     padding-bottom: 2rem;
 }
 
-/* Ajustar el header para que sea más corto */
-/* Estilos para el header con el botón de exportar */
-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
-    padding: 0.5rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+/* Desactivar scroll horizontal */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+
+
+
+
+/* Estilos para los botones de acción */
+.anime-actions {
     display: flex;
-    align-items: center;
-    justify-content: center; /* Centrar el contenido */
-    height: var(--header-height);
-    transition: all 0.3s ease-in-out;
-    position: relative; /* Añadir posición relativa para posicionar el botón */
-}
-
-/* Ajustar el título para que esté centrado */
-h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    text-align: center;
-}
-
-/* Botón de exportar/importar */
-.export-button {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: absolute; /* Posicionar absolutamente */
-    right: 1rem; /* Colocar a la derecha */
-    top: 50%; /* Centrar verticalmente */
-    transform: translateY(-50%); /* Ajustar para centrado vertical perfecto */
-}
-
-.export-button:hover {
-    background-color: rgba(255, 255, 255, 0.452);
-}
-
-.export-icon {
-    font-size: 18px;
-    color: white;
-    font-weight: bold;
-}
-
-/* Estilos para el modal de exportar/importar */
-.export-import-container {
-    padding: 1.5rem;
-    color: var(--text-color);
-}
-
-.export-section, .import-section {
-    margin-bottom: 2rem;
-    background-color: var(--card-color);
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.export-import-container h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: var(--gradient-color);
-}
-
-.export-import-container h3 {
-    margin-bottom: 1rem;
-    color: var(--primary-color);
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 0 5px;
 }
 
 .action-button {
-    background: linear-gradient(135deg, var(--primary-color), var(--gradient-color));
-    color: white;
+    background: transparent;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 5px;
     cursor: pointer;
-    margin-top: 1rem;
-    transition: all 0.3s ease;
+    padding: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
 }
 
 .action-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.2);
 }
 
-#export-code, #import-code {
-    width: 100%;
-    height: 100px;
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    padding: 0.75rem;
-    margin: 1rem 0;
-    resize: none;
-    font-family: monospace;
+.action-icon {
+    width: 22px;
+    height: 22px;
+    fill: #d1d1d1;
+    transition: fill 0.3s ease;
 }
 
-.result-message {
-    margin-top: 1rem;
-    padding: 0.75rem;
-    border-radius: 5px;
-    display: none;
+.action-button:hover .action-icon {
+    fill: var(--accent-color);
 }
 
-.success {
-    background-color: rgba(76, 175, 80, 0.2);
-    color: #4CAF50;
-    display: block;
+/* Estilos específicos para cada botón */
+.play-button:hover .action-icon {
+    fill: #ff5722;
 }
 
-.error {
-    background-color: rgba(244, 67, 54, 0.2);
-    color: #F44336;
-    display: block;
+.favorite-button.in-favorites .action-icon {
+    fill: #ff4081;
 }
+
+.favorite-button:hover .action-icon {
+    fill: #ff4081;
+}
+
+.watchlist-button.in-list:hover .action-icon {
+    fill: var(--watched-color);
+}
+
+/* Añadir efecto hover para el botón de lista relleno en anime-info */
+.anime-info .watchlist-button.in-list:hover .action-icon {
+    fill: #ff8a65 !important; /* Naranja más claro al hacer hover */
+}
+
+.watchlist-button.in-list:hover .action-icon {
+    fill: #ff8a65 !important; /* Color más claro al hacer hover cuando ya está en la lista */
+}
+
+.watchlist-button:hover .action-icon {
+    fill: var(--watched-color);
+}
+
+/* Estilos para los botones de acción en la parte gris */
+.info-actions {
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente (antes era flex-start) */
+    gap: 15px;
+    margin-top: 0; /* Quitar margen superior */
+    position: absolute; /* Posicionamiento absoluto */
+    bottom: 50%; /* Posicionar en el centro vertical (antes era 10px) */
+    left: 50%; /* Posicionar en el centro horizontal (antes era 10px) */
+    transform: translate(-50%, 50%); /* Centrar perfectamente el elemento */
+    opacity: 0; /* Ocultar por defecto */
+    transition: opacity 0.2s ease; /* Transición más rápida */
+    z-index: 20; /* Asegurar que estén por encima de otros elementos */
+    pointer-events: auto; /* Permitir interacción con los botones */
+}
+
+/* Mostrar los botones SOLO al hacer hover en la tarjeta - selector más específico */
+.anime-card:hover .anime-info .info-actions {
+    opacity: 1 !important;
+}
+
+/* Eliminar cualquier clase .visible que pueda estar causando problemas */
+.info-actions.visible {
+    opacity: 0 !important;
+}
+
+.anime-info {
+    padding: 0.8rem;
+    position: relative; /* Para posicionamiento absoluto de los botones */
+    min-height: 70px; /* Altura mínima para asegurar espacio para los botones */
+}
+
+.anime-info .action-button {
+    background: transparent !important;
+    border: none;
+    padding: 5px;
+    margin: 0;
+    transition: opacity 0.2s ease;
+    box-shadow: none !important;
+}
+
+.anime-info .action-button:hover {
+    transform: none !important; /* No agrandar al hacer hover */
+    opacity: 0.8;
+}
+
+.anime-info .action-icon {
+    width: 24px;
+    height: 24px;
+    fill: #ff5722 !important; /* Color naranja para todos los iconos */
+}
+
+.anime-info .action-button:hover .action-icon {
+    fill: #ff8a65 !important; /* Naranja más claro al hacer hover */
+}
+
+.anime-info .favorite-button.in-favorites .action-icon {
+    fill: #ff5722 !important; /* Mantener naranja cuando está en favoritos */
+}
+
+.anime-info .watchlist-button.in-list .action-icon {
+    fill: #ff5722 !important; /* Mantener naranja cuando está en la lista */
+}
+
+/* Ocultar los tooltips en la parte gris */
+.anime-info .tooltip {
+    display: block !important;
+}
+
+/* Tooltip para los botones */
+.action-button .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+    z-index: 1000; /* Aumentar el z-index para que aparezca por encima de todo */
+}
+
+.action-button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+
 
 /* Ajustar el título para que tenga un margen adecuado */
 h1 {
@@ -183,64 +229,21 @@ h1 {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1800px; /* Aumentado de 1200px para permitir más tarjetas por fila */
     margin: 0 auto;
     padding: 1rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-.anime-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-
-.anime-card {
-    background-color: var(--card-color);
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    animation: fadeInUp 0.6s ease-out forwards;
-    opacity: 0;
-    transform: translateY(20px);
-}
-
-@keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
+/* Reducir padding del contenedor en móvil */
+@media (max-width: 768px) {
+    .container {
+        padding: 0.5rem;
+        max-width: 100vw;
+        overflow-x: hidden;
     }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.anime-card:nth-child(2) {
-    animation-delay: 0.1s;
-}
-
-.anime-card:nth-child(3) {
-    animation-delay: 0.2s;
-}
-
-.anime-card:nth-child(4) {
-    animation-delay: 0.3s;
-}
-
-.anime-card:nth-child(5) {
-    animation-delay: 0.4s;
-}
-
-.anime-card:nth-child(n+6) {
-    animation-delay: 0.5s;
-}
-
-.anime-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .anime-image {
@@ -251,7 +254,7 @@ h1 {
 }
 
 .anime-info {
-    padding: 1rem;
+    padding: 0.8rem;
 }
 
 .anime-title {
@@ -261,6 +264,37 @@ h1 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.anime-info h3 {
+    font-size: 1rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Estilos para los subtítulos de Sub y Dob */
+.anime-subtitle {
+    font-size: 0.8rem;
+    color: #d1d1d1;
+    margin-top: 5px;
+}
+
+.anime-subtitle .sub,
+.anime-subtitle .dob {
+    display: inline-block;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+.anime-subtitle .sub {
+    color: #d1d1d1;
+}
+
+.anime-subtitle .dob {
+    color: #d1d1d1;
 }
 
 .anime-episodes {
@@ -325,62 +359,69 @@ h1 {
 }
 
 .add-to-list {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 0;
+    display: none;
+}
+
+/* Estilos para los botones de acción en el overlay */
+.overlay-actions {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-    padding: 0;
-    line-height: 1;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.add-to-list:hover {
-    background-color: var(--accent-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.add-to-list.in-list {
-    background-color: var(--watched-color);
-}
-
-.add-to-list::before {
-    content: '+';
-    font-size: 18px;
+    justify-content: flex-start; /* Alinear a la izquierda */
+    gap: 15px;
+    margin-top: auto; /* Empujar hacia abajo */
+    padding: 10px 0;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: all 0.3s ease;
+    bottom: 10px;
+    left: 15px;
 }
 
-.add-to-list.in-list::before {
-    content: '✓';
-    animation: checkmark 0.5s ease-in-out;
+.anime-overlay .action-button,
+.anime-poster .anime-overlay .action-button {
+    background: transparent !important;
+    border: none;
+    padding: 5px;
+    margin: 0;
+    transition: opacity 0.2s ease;
+    box-shadow: none !important; /* Aseguramos que no haya sombra */
 }
 
-@keyframes checkmark {
-    0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.5);
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
+.anime-overlay .action-button:hover,
+.anime-poster .anime-overlay .action-button:hover {
+    transform: none !important; /* No agrandar al hacer hover */
+    opacity: 0.8;
+    box-shadow: none !important; /* Aseguramos que no haya sombra al hacer hover */
+}
+
+.anime-overlay .action-icon,
+.anime-poster .anime-overlay .action-icon {
+    width: 24px;
+    height: 24px;
+    fill: #ff5722 !important; /* Color naranja para todos los iconos */
+}
+
+.anime-overlay .action-button:hover .action-icon,
+.anime-poster .anime-overlay .action-button:hover .action-icon {
+    fill: #ff8a65 !important; /* Naranja más claro al hacer hover */
+}
+
+.anime-overlay .favorite-button.in-favorites .action-icon,
+.anime-poster .anime-overlay .favorite-button.in-favorites .action-icon {
+    fill: #ff5722 !important; /* Mantener naranja cuando está en favoritos */
+}
+
+.anime-overlay .watchlist-button.in-list .action-icon,
+.anime-poster .anime-overlay .watchlist-button.in-list .action-icon {
+    fill: #ff5722 !important; /* Mantener naranja cuando está en la lista */
+}
+
+/* Añadir efecto hover para el botón de lista relleno en overlay */
+.anime-overlay .watchlist-button.in-list:hover .action-icon,
+.anime-poster .anime-overlay .watchlist-button.in-list:hover .action-icon {
+    fill: #ff8a65 !important; /* Naranja más claro al hacer hover */
+}
+
+/* Estilos para los botones de acción en el overlay */
+.overlay-actions {
+    display: none;
 }
 
 .detail-list-button {
@@ -810,7 +851,44 @@ body.modal-open {
     font-size: 0.9rem;
 }
 
+/* Media queries específicas para el grid principal */
+/* Tablets: 4 cards por fila */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .anime-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 1.5rem;
+    }
+}
+
+/* Pantallas medianas: SIEMPRE 5 cards por fila */
+@media (min-width: 1025px) and (max-width: 1600px) {
+    .anime-grid {
+        grid-template-columns: repeat(5, 1fr) !important;
+        gap: 1.5rem;
+    }
+}
+
+/* Pantallas grandes: 6 cards por fila */
+@media (min-width: 1601px) {
+    .anime-grid {
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 1.5rem;
+    }
+}
+
 /* Ajustar para dispositivos móviles */
+@media (max-width: 768px) {
+    .anime-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* Forzar 2 cards por fila en móvil */
+        gap: 1rem;
+    }
+    
+    .load-more-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+
 @media (max-width: 575px) {
     .pagination {
         flex-wrap: wrap;
@@ -828,6 +906,11 @@ body.modal-open {
         text-align: center;
         order: -1;
         margin-bottom: 0.5rem;
+    }
+    
+    .load-more-button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
     }
 }
 
@@ -851,6 +934,94 @@ body.modal-open {
     background-color: #FFC107; /* Un amarillo más oscuro al hacer hover */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
+}
+
+@keyframes nextEpisodePulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    }
+}
+
+/* Estilo para episodios no lanzados (muy oscuros) */
+.episode.future {
+    background-color: #222; /* Más oscuro que antes */
+    color: #666; /* Texto más oscuro */
+    cursor: not-allowed;
+    opacity: 0.5; /* Más transparente */
+    border: 1px solid #333; /* Borde sutil */
+}
+
+/* Estilo para el próximo episodio a lanzar (amarillo) */
+.episode.next-release {
+    background-color: #FFD700; /* Amarillo brillante */
+    color: #000; /* Texto negro para contraste */
+    border: 1px solid #FFC107;
+    animation: nextEpisodePulse 2s infinite;
+    cursor: pointer;
+}
+
+/* Modal para fecha de lanzamiento */
+.release-date-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.release-date-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.release-date-content {
+    background-color: var(--card-color);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    max-width: 90%;
+    width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.release-date-content h3 {
+    color: var(--accent-color);
+    margin-top: 0;
+}
+
+.release-date-content p {
+    font-size: 1.2rem;
+    margin: 15px 0;
+}
+
+.release-date-close {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.release-date-close:hover {
+    background-color: #ff7043;
 }
 
 /* Estilo para el botón cuando está en modo mostrar solo vistos */
@@ -882,6 +1053,596 @@ body.modal-open {
     opacity: 0.2;
 }
 
+/* Indicador de anime en lista (círculo negro con bandera) */
+.in-list-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.in-list-indicator svg {
+    width: 16px;
+    height: 16px;
+}
+
+.in-list-indicator .action-icon {
+    fill: #ff5722 !important;
+}
+
+/* Indicador triangular para anime en lista */
+.in-list-corner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 40px 40px 0;
+    border-color: transparent #000000 transparent transparent;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.in-list-corner svg {
+    position: absolute;
+    top: 5px;
+    right: -35px;
+    width: 16px;
+    height: 16px;
+    fill: #ff5722;
+}
+
+/* Ocultar el indicador cuando se hace hover en la tarjeta */
+.anime-card:hover .in-list-indicator,
+.anime-card:hover .in-list-corner {
+    opacity: 0;
+}
+
+/* Estilo para el título de la sección */
+.section-title {
+    text-align: left;
+    margin-bottom: 1.5rem;
+    padding-left: 0.5rem;
+}
+
+.section-title h2 {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin: 0;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title h2:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background-color: var(--accent-color);
+    border-radius: 2px;
+}
+
+/* Estilos para el botón de menú */
+.menu-button {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: transparent;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.menu-button:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 768px) {
+    .menu-button {
+        display: flex;
+    }
+    
+    .header-logo {
+        margin-left: 0.5rem;
+    }
+    
+    .nav-categories {
+        position: fixed; /* Cambiado de absolute a fixed para mejor comportamiento */
+        top: var(--header-height);
+        left: -100%;
+        width: 200px;
+        flex-direction: column;
+        background-color: #272727;
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        transition: left 0.3s ease;
+        z-index: 99;
+    }
+    
+    .nav-categories.active {
+        left: 0;
+    }
+    
+    .nav-category {
+        padding: 0.8rem;
+        width: 100%;
+        border-radius: 8px;
+    }
+    
+    /* Asegurar que los botones del header estén a la derecha */
+    header {
+        justify-content: space-between;
+    }
+    
+    .header-buttons {
+        margin-left: auto;
+        margin-right: 0.5rem; /* Añadir margen derecho */
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* Hero Carousel Styles */
+.hero-carousel {
+    width: 100%;
+    height: 80vh;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    margin-top: -50px; /* Valor negativo para subir el carousel */
+}
+
+.hero-slides {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 0 5%;
+    box-sizing: border-box;
+}
+
+.hero-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.hero-slide-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.hero-slide-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, var(--background-color), transparent);
+    z-index: 0;
+}
+
+.hero-slide-content {
+    position: relative;
+    z-index: 2;
+    max-width: 400px; /* Reducido aún más para PC */
+    margin-bottom: 5%;
+}
+
+.hero-slide-logo {
+    max-width: 300px;
+    max-height: 100px;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.hero-slide-description {
+    color: #aaaaaa; /* Cambiado a gris en lugar de blanco */
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 1rem;
+    line-height: 1.5;
+    max-width: 350px; /* Reducido aún más para que sea menos ancho */
+    /* Truncar texto largo en PC */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hero-slide-tags {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.hero-slide-tag {
+    padding: 2px 6px;
+    border-radius: 4px; /* Hacerlo más redondito */
+    font-size: 0.7rem;
+    display: inline-block;
+}
+
+.hero-slide-tag.rating {
+    background-color: #333; /* Color gris oscuro */
+    color: #fff;
+    border: none;
+    font-weight: bold;
+}
+
+.hero-slide-tag.lang {
+    background-color: transparent;
+    color: #b4b4b4;
+    font-weight: normal;
+    font-size: 0.8rem;
+}
+
+.hero-slide-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.hero-slide-button {
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    position: relative;
+}
+
+.hero-slide-button.play-button {
+    background-color: var(--accent-color);
+    color: var(--background-color); /* Color del texto igual al fondo de la página */
+}
+
+.hero-slide-button.play-button svg {
+    fill: var(--background-color); /* Color del SVG igual al fondo de la página */
+}
+
+.hero-slide-button.add-button {
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1/1; /* Asegurar que el botón sea cuadrado */
+}
+
+.hero-slide-button.add-button .action-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--accent-color);
+}
+
+.hero-slide-button.add-button.in-list .action-icon {
+    fill: var(--accent-color);
+}
+
+
+.hero-slide-button.play-button:hover {
+    background-color: #ff7755;
+}
+
+.hero-slide-button.add-button:hover {
+    background-color: rgba(255, 94, 58, 0.1);
+}
+
+.hero-slide-button .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: normal; /* Quitar negrita */
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+    z-index: 100;
+    margin-bottom: 5px;
+}
+
+.hero-slide-button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.hero-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* Reemplazar puntos por barras de progreso */
+.hero-dots {
+    display: flex;
+    gap: 8px;
+    width: 50%;
+    max-width: 200px; /* Reducido para que sea menos largo */
+    margin: 0 auto; /* Centrar horizontalmente (para móvil) */
+}
+
+.hero-dot {
+    width: 100%;
+    height: 6px; /* Todas las barras con la misma altura */
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: width 0.3s ease, height 0.3s ease; /* Animación suave para cambios de tamaño */
+}
+
+.hero-dot.active {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: none;
+}
+
+.hero-dot:not(.active) {
+    width: 50%; /* Barras no activas más cortas */
+    margin: 0 auto; /* Centrar las barras más cortas */
+    transition: width 0.3s ease; /* Animación suave */
+}
+
+.hero-dot-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent-color);
+    transition: width 0.1s linear;
+}
+
+.hero-dot.active .hero-dot-progress {
+    width: 0%; /* Iniciar en 0% */
+    animation: progressAnimation 10s linear forwards; /* Añadir 'forwards' para mantener el estado final */
+}
+
+@keyframes progressAnimation {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+/* Reposicionar controles en PC */
+@media (min-width: 769px) {
+    .hero-carousel {
+        position: relative; /* Asegurar que el carrusel tenga posición relativa */
+    }
+    
+    .hero-slide-bg {
+        width: 120%; /* Imagen más grande que el contenedor */
+        object-fit: cover;
+        object-position: left; /* Alinear a la izquierda */
+    }
+    
+    /* Añadir degradado lateral desde la derecha */
+    .hero-slide::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30%; /* Ancho del degradado lateral */
+        height: 100%;
+        background: linear-gradient(to left, var(--background-color), transparent);
+        z-index: 1; /* Por encima del fondo pero por debajo del contenido */
+    }
+    
+    .hero-slide-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Alinear a la izquierda en PC */
+    }
+    
+    .hero-controls {
+        bottom: 40px; /* Ajustar posición en PC */
+        justify-content: flex-start; /* Alinear a la izquierda en PC */
+        padding-left: 5%; /* Añadir padding para que no quede pegado al borde */
+    }
+    
+    .hero-dots {
+        margin: 0; /* Quitar el auto margin para que no se centre */
+    }
+    
+    /* Mover los controles dentro del contenido de la diapositiva */
+    .hero-slide-content .hero-slide-button {
+        margin-bottom: 15px; /* Espacio entre el botón y las barras */
+    }
+}
+
+/* Añadir media query específico para pantallas grandes */
+@media (min-width: 1600px) {
+    .hero-carousel {
+        height: 75vh; /* Altura intermedia, no tan reducida */
+    }
+    
+    .hero-slide {
+        justify-content: flex-end; /* Volver a posicionar el contenido en la parte inferior */
+        padding-bottom: 8%; /* Más espacio en la parte inferior */
+    }
+    
+    .hero-slide-bg {
+        width: 140%; /* Hacer la imagen un poco más grande para que se vea más cercana */
+        object-position: center 30%; /* Posicionar la imagen para que se vea más del centro */
+    }
+    
+    .hero-slide-content {
+        max-width: 550px; /* Contenido más ancho */
+        margin-bottom: 2%; /* Añadir un poco de margen inferior */
+    }
+    
+    .hero-slide-logo {
+        max-width: 450px; /* Logo más grande */
+        max-height: 150px;
+    }
+    
+    .hero-slide-description {
+        font-size: 1.3rem; /* Texto más grande */
+        max-width: 520px; /* Ancho mayor para el texto */
+        -webkit-line-clamp: 4; /* Mostrar menos líneas para que se parezca a resolución mediana */
+        line-height: 1.5; /* Mejor espaciado entre líneas */
+    }
+    
+    .hero-slide-tag {
+        font-size: 1rem !important; /* Etiquetas más grandes */
+        padding: 4px 10px;
+        margin-right: 10px; /* Más espacio entre etiquetas */
+    }
+    
+    .hero-slide-button{
+        padding: 16px 32px !important; /* Botones más grandes */
+        font-size: 1.2rem !important;
+    }
+    
+    /* Sobrescribir el padding para el botón de añadir y mantenerlo cuadrado */
+    .hero-slide-button.add-button {
+        padding: 16px !important; /* Padding igual en todos los lados */
+    }
+    
+    .hero-controls {
+        bottom: 140px; /* Posición de controles similar a resolución mediana */
+    }
+    
+    .hero-dots {
+        max-width: 250px; /* Barras más largas */
+    }
+    
+    .hero-dot {
+        height: 8px; /* Barras más gruesas */
+    }
+    
+    /* Estilos para los elementos h2 en resoluciones grandes */
+    h2 {
+        font-size: 2.2rem; /* Tamaño base para todos los h2 */
+    }
+    
+
+    
+    .section-title h2 {
+        font-size: 2.4rem;
+    }
+    
+    .section-title h2:after {
+        width: 60px; /* Línea más larga debajo del título */
+        height: 4px; /* Línea más gruesa */
+    }
+    
+    .notification-container h2 {
+        font-size: 2rem;
+        padding: 1.5rem;
+    }
+}
+
+/* Eliminar el media query intermedio y dejar solo PC y teléfono */
+@media (max-width: 768px) {
+    .hero-carousel {
+        height: 75vh; /* Aumentado de 60vh a 75vh para hacer el carousel más alto en móvil */
+    }
+    
+    .hero-slide-bg {
+        width: 100%;
+        object-fit: cover;
+        object-position: center 10%; /* Reducido de 30% a 10% para mostrar más parte superior */
+        top: 0; /* Eliminar el desplazamiento hacia abajo */
+        height: 100%; /* Volver al tamaño normal */
+    }
+    
+    .hero-slide-content {
+        /* Centrar todo en móvil */
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 20px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-slide-logo {
+        max-width: 220px; /* Logo más grande en teléfono */
+        max-height: 90px; /* Aumentado para mantener proporción */
+    }
+    
+    .hero-slide-description {
+        /* Ocultar descripción en móvil */
+        display: none;
+    }
+    
+    .hero-slide-tags {
+        margin-bottom: 0.8rem;
+        /* Centrar tags en móvil */
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .hero-slide-tag {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    
+    .hero-slide-button {
+        margin: 0 auto;
+        margin-bottom: 25px; /* Añadir margen entre el botón y las barras de carga */
+    }
+    
+    .hero-dots {
+        margin-top: 0; /* Quitar margen superior ya que ahora usamos margin-bottom en el botón */
+    }
+}
+
 /* Estilos para el footer */
 .footer {
     background-color: var(--card-color);
@@ -911,7 +1672,53 @@ header.hidden {
     transform: translateY(-100%);
     box-shadow: none;
 }
-/* Añadir después de los estilos existentes */
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.load-more-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.load-more-button:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.load-more-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.load-more-button:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
 /* Estilos para la notificación de primera visita */
 .notification-overlay {

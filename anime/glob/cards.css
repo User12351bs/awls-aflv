@@ -1,0 +1,651 @@
+/* Estilos para las tarjetas de anime */
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Media query para móvil - forzar 2 columnas */
+@media (max-width: 768px) {
+    .anime-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.8rem;
+        padding: 0 0.5rem;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    
+    .anime-card {
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .anime-poster {
+        height: 200px; /* Reducir altura en móvil */
+    }
+    
+    .anime-info {
+        padding: 0.6rem;
+    }
+    
+    .anime-info h3 {
+        font-size: 0.9rem;
+    }
+}
+
+.anime-card {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    overflow: visible; /* Cambiar a visible para permitir que los tooltips se muestren */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+    max-height: 350px; /* Limitar la altura de la card */
+}
+
+/* Añadir overflow: hidden solo al contenedor de la imagen */
+.anime-poster {
+    overflow: hidden;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.anime-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.anime-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.anime-card:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.anime-card:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+.anime-card:nth-child(n+6) {
+    animation-delay: 0.5s;
+}
+
+.anime-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.anime-poster {
+    position: relative;
+    overflow: hidden;
+    height: 250px; /* Altura fija para todas las imágenes */
+    border-radius: 12px 12px 0 0; /* Añadir bordes redondeados solo en las esquinas superiores */
+}
+
+.anime-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Mantener la proporción sin zoom excesivo */
+    object-position: center; /* Centrar la imagen */
+    transition: transform 0.3s ease;
+}
+
+.anime-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.anime-card:hover .anime-overlay {
+    opacity: 1;
+}
+
+/* Ocultar la información normal al hacer hover, excepto los botones */
+.anime-card:hover .anime-info h3,
+.anime-card:hover .anime-info .anime-subtitle {
+    opacity: 0;
+}
+
+.anime-card:hover .anime-release-time {
+    opacity: 0;
+}
+
+.anime-release-time {
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* Mantener los botones visibles al hacer hover */
+.anime-card:hover .anime-info .info-actions {
+    opacity: 1 !important;
+}
+
+/* Estilos para el contenido del overlay */
+.overlay-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.overlay-details {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+.overlay-description {
+    font-size: 0.8rem;
+    color: #ddd;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Number of lines to show */
+    line-clamp: 4; /* Standard property for line clamping */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    margin-bottom: 10px;
+    max-height: 80px; /* Altura máxima para la descripción */
+}
+
+.anime-info {
+    padding: 0.8rem;
+}
+
+.anime-info h3 {
+    font-size: 1rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Estilos para los subtítulos de Sub y Dob */
+.anime-subtitle {
+    font-size: 0.8rem;
+    color: #d1d1d1;
+    margin-top: 5px;
+}
+
+.anime-subtitle .sub,
+.anime-subtitle .dob {
+    display: inline-block;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+.anime-subtitle .sub {
+    color: #d1d1d1;
+}
+
+.anime-subtitle .dob {
+    color: #d1d1d1;
+}
+
+/* Estilos para los botones de acción */
+.anime-info .action-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.anime-info .action-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.anime-info .action-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--text-color);
+}
+
+.anime-info .action-button:hover .action-icon {
+    fill: var(--accent-color);
+}
+
+.anime-info .favorite-button.in-favorites .action-icon {
+    fill: var(--accent-color);
+}
+
+.anime-info .watchlist-button.in-list .action-icon {
+    fill: var(--accent-color);
+}
+
+.anime-info .tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.anime-info .action-button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Estilos para los botones de acción en el overlay */
+.anime-overlay .action-button,
+.anime-poster .anime-overlay .action-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.anime-overlay .action-button:hover,
+.anime-poster .anime-overlay .action-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.anime-overlay .action-icon,
+.anime-poster .anime-overlay .action-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--text-color);
+}
+
+.anime-overlay .action-button:hover .action-icon,
+.anime-poster .anime-overlay .action-button:hover .action-icon {
+    fill: var(--accent-color);
+}
+
+.anime-overlay .favorite-button.in-favorites .action-icon,
+.anime-poster .anime-overlay .favorite-button.in-favorites .action-icon {
+    fill: var(--accent-color);
+}
+
+.anime-overlay .watchlist-button.in-list .action-icon,
+.anime-poster .anime-overlay .watchlist-button.in-list .action-icon {
+    fill: var(--accent-color);
+}
+
+.anime-overlay .watchlist-button.in-list:hover .action-icon,
+.anime-poster .anime-overlay .watchlist-button.in-list:hover .action-icon {
+    fill: var(--text-color);
+}
+
+/* Indicador triangular en la esquina */
+.in-list-corner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 40px 40px 0;
+    border-color: transparent #000000 transparent transparent;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.in-list-corner svg {
+    position: absolute;
+    top: 5px;
+    right: -35px;
+    width: 16px;
+    height: 16px;
+    fill: #ff5722;
+}
+
+/* Ocultar el indicador cuando se hace hover en la tarjeta */
+.anime-card:hover .in-list-indicator,
+.anime-card:hover .in-list-corner {
+    opacity: 0;
+}
+.favorites-notification {
+    position: fixed;
+    top: -100px; /* Inicialmente fuera de la pantalla por arriba */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%; /* Más ancho para mejor visualización */
+    max-width: 600px; /* Limitar el ancho máximo en pantallas grandes */
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease, top 0.3s ease; /* Transición para top en lugar de transform */
+    pointer-events: none;
+}
+
+.favorites-notification.show {
+    opacity: 1;
+    top: 20px; /* Mostrar en la parte superior */
+}
+
+.favorites-notification.hide {
+    opacity: 0;
+    top: -100px; /* Ocultar hacia arriba */
+}
+
+.favorites-notification-content {
+    background-color: rgba(76, 175, 80, 0.6); /* Verde translúcido */
+    backdrop-filter: blur(15px); /* Efecto de desenfoque */
+    border: 1px solid rgba(76, 175, 80, 0.7); /* Borde verde */
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); /* Sombra suave */
+    font-weight: 500;
+    text-align: center; /* Centrar el texto */
+    width: 100%; /* Ocupar todo el ancho disponible */
+    box-sizing: border-box; /* Incluir padding en el ancho */
+}
+
+                .modal {
+                    display: none;
+                    position: fixed;
+                    z-index: 1000;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: auto;
+                    background-color: rgba(0, 0, 0, 0.7);
+                }
+                
+                .modal-content {
+                    background-color: #1a1a1a;
+                    margin: 10% auto;
+                    padding: 20px;
+                    border-radius: 12px;
+                    width: 90%;
+                    max-width: 500px;
+                    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                    position: relative;
+                }
+                
+                .close {
+                    color: #aaa;
+                    float: right;
+                    font-size: 28px;
+                    font-weight: bold;
+                    position: absolute;
+                    right: 20px;
+                    top: 10px;
+                    cursor: pointer;
+                }
+                
+                .modal-header {
+                    margin-bottom: 20px;
+                }
+                
+                .modal-header h3 {
+                    margin: 0;
+                    color: white;
+                }
+                
+                .create-new-list-button {
+                    width: 100%;
+                    background-color: #FF6B00;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    padding: 10px;
+                    margin-bottom: 15px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    text-transform: uppercase;
+                }
+                
+                .lists-container {
+                    max-height: 300px;
+                    overflow-y: auto;
+                }
+                
+                .list-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px;
+                    border-bottom: 1px solid #444;
+                }
+                
+                .list-item:last-child {
+                    border-bottom: none;
+                }
+                
+                .list-info {
+                    flex-grow: 1;
+                }
+                
+                .list-name {
+                    color: white;
+                }
+                
+                .list-count {
+                    color: #aaa;
+                    font-size: 14px;
+                }
+                
+                .list-actions {
+                    display: flex;
+                    gap: 10px;
+                }
+                
+                .add-to-list-button {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 5px;
+                    transition: opacity 0.3s ease;
+                    color: #FF6B00;
+                }
+                
+                .add-to-list-button svg {
+                    width: 24px;
+                    height: 24px;
+                    fill: currentColor;
+                }
+                
+                .add-to-list-button.in-list {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+                
+                .delete-from-list-button {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 5px;
+                    transition: opacity 0.3s ease;
+                }
+                
+                .delete-from-list-button svg {
+                    width: 24px;
+                    height: 24px;
+                    fill: #FF6B00;
+                }
+                
+                .delete-from-list-button.disabled {
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+
+                body.modal-open {
+                    overflow: hidden;
+                }
+                
+                .modal.fade-out {
+                    opacity: 0;
+                    transition: opacity 0.3s ease-out;
+                }
+
+                /* Media query para pantallas grandes */
+                @media screen and (min-width: 1600px) {
+                    .anime-grid {
+                        grid-template-columns: repeat(6, 1fr); /* Exactamente 6 columnas */
+                        gap: 2rem;
+                    }
+                    
+                    /* El resto de los estilos se mantienen igual */
+                    .anime-card {
+                        max-height: 400px;
+                    }
+                    
+                    .anime-poster {
+                        height: 300px;
+                    }
+                    
+                    .anime-info {
+                        padding: 1rem;
+                    }
+                    
+                    .anime-info h3 {
+                        font-size: 1.2rem;
+                    }
+                    
+                    .anime-subtitle {
+                        font-size: 0.9rem;
+                        margin-top: 8px;
+                    }
+                    
+                    .anime-release-time {
+                        font-size: 1rem;
+                        margin-top: 8px;
+                        margin-bottom: 8px;
+                    }
+                    
+                    .anime-info .action-icon {
+                        width: 24px;
+                        height: 24px;
+                    }
+                    
+                    .overlay-title {
+                        font-size: 1.4rem;
+                        margin-bottom: 15px;
+                    }
+                    
+                    .overlay-details {
+                        font-size: 1.1rem;
+                        margin-bottom: 15px;
+                    }
+                    
+                    .overlay-description {
+                        font-size: 1rem;
+                        margin-bottom: 15px;
+                        max-height: 100px;
+                    }
+                    
+                    .anime-info .tooltip {
+                        font-size: 0.9rem;
+                        padding: 8px 12px;
+                    }
+                    
+                    .in-list-corner svg {
+                        width: 20px;
+                        height: 20px;
+                        top: 6px;
+                        right: -46px;
+                    }
+
+                    .in-list-corner {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        width: 0;
+                        height: 0;
+                        border-style: solid;
+                        border-width: 0 50px 50px 0;
+                        border-color: transparent #000000 transparent transparent;
+                        z-index: 10;
+                        transition: opacity 0.3s ease;
+                    }
+                    
+                    .favorites-notification-content {
+                        padding: 16px 32px;
+                        font-size: 1.1rem;
+                    }
+                    
+                    .modal-content {
+                        max-width: 600px;
+                        padding: 30px;
+                    }
+                    
+                    .modal-header h3 {
+                        font-size: 1.4rem;
+                    }
+                    
+                    .create-new-list-button {
+                        padding: 12px;
+                        font-size: 16px;
+                    }
+                    
+                    .list-name {
+                        font-size: 1.1rem;
+                    }
+                    
+                    .list-count {
+                        font-size: 1rem;
+                    }
+                    
+                    .add-to-list-button svg,
+                    .delete-from-list-button svg {
+                        width: 28px;
+                        height: 28px;
+                    }
+                }
+

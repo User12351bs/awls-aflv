@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novedades - Ureshii Anime</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ureshii Anime">
+    <script src="glob/localstorage.js"></script>
+    <script src="animes.js"></script>
+    <link rel="stylesheet" href="glob/header.css">
+    <script src="glob/header.js"></script>
+    <link rel="stylesheet" href="glob/cards.css">
+    <script src="glob/cards.js"></script>
+
+</head>
+<body>
+    <header>
+        <div class="menu-button" id="menu-toggle">
+            <svg class="menu-ab-svg--wDGx3 header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="menu-svg" aria-hidden="true" role="img"><path class="menu-ab-svg__top--Xgjtj" d="M20 5H4V7H20V5Z"></path><path class="menu-ab-svg__middle--vsB5D" d="M4 11H20V13H4V11Z"></path><path class="menu-ab-svg__bottom--6yklx" d="M20 17H4V19H20V17Z"></path></svg>
+        </div>
+        <a href="index.html" class="header-logo">
+            <picture>
+                <source media="(max-width: 768px)" srcset="logo.png">
+                <source media="(min-width: 769px)" srcset="horizontal-logo.png">
+                <img src="horizontal-logo.png" alt="Ureshii Anime" class="logo-img">
+            </picture>
+        </a>
+        <div class="nav-categories">
+            <a href="index.html" class="nav-category">Catálogo</a>
+            <a href="novedades.html" class="nav-category">Novedades</a>
+        </div>
+        <div class="header-buttons">
+            <a href="search.html" class="header-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="search-svg" aria-hidden="true" role="img"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 19C12.4879 19 14.3164 18.3176 15.7641 17.1742L21.2927 22.7069L22.7074 21.2931L17.1778 15.7595C18.319 14.3126 19 12.4858 19 10.5C19 5.80558 15.1944 2 10.5 2C5.80558 2 2 5.80558 2 10.5C2 15.1944 5.80558 19 10.5 19ZM10.5 17C14.0899 17 17 14.0899 17 10.5C17 6.91015 14.0899 4 10.5 4C6.91015 4 4 6.91015 4 10.5C4 14.0899 6.91015 17 10.5 17Z"></path></svg>
+            </a>
+            <a href="ureshiilists.html" class="header-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="watchlist-svg" aria-hidden="true" role="img"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.0001 20.5858C19.0001 21.4767 17.9229 21.9229 17.293 21.2929L12.0001 16L6.7071 21.2929C6.07714 21.9229 5 21.4767 5 20.5858L5.00006 3H19.0001V20.5858ZM7.00001 18.1716L7.00006 5H17.0001V18.1716L12.0001 13.1716L7.00001 18.1716Z"></path></svg>
+            </a>
+            <a href="account.html" class="export-button" id="export-import-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="user-settings-svg" aria-hidden="true" role="img"><path d="M12 20a6.01 6.01 0 0 1-5.966-5.355L12 12.088l5.966 2.557A6.01 6.01 0 0 1 12 20m0-16c1.654 0 3 1.346 3 3s-1.345 3-2.999 3h-.002A3.003 3.003 0 0 1 9 7c0-1.654 1.346-3 3-3m7.394 9.081l-4.572-1.959A4.997 4.997 0 0 0 17 7c0-2.757-2.243-5-5-5S7 4.243 7 7c0 1.71.865 3.22 2.178 4.122l-4.572 1.959A.999.999 0 0 0 4 14c0 4.411 3.589 8 8 8s8-3.589 8-8c0-.4-.238-.762-.606-.919"></path></svg>
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section-title">
+        <h2>Añadido recientemente</h2>        
+        <!-- Sección: Últimas 24h -->
+        <h3 class="subsection-title">Últimas 24h</h3>
+        <div class="anime-grid" id="last24h-episodes"></div>
+        
+        <!-- Sección: Esta semana -->
+        <h3 class="subsection-title">Últimos 7d</h3>
+        <div class="anime-grid" id="thisweek-episodes"></div>
+        
+        <!-- Sección: Hace tiempo -->
+        <h3 class="subsection-title">Hace tiempo</h3>
+        <div class="anime-grid" id="older-episodes"></div>
+    </div>
+    
+    <!-- Modal para exportar/importar datos -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-content-container"></div>
+        </div>
+    </div>
+    
+<script>
+    // Cargar datos del localStorage
+    const watchedEpisodes = JSON.parse(localStorage.getItem(WATCHED_EPISODES_KEY)) || {};
+    const watchingAnimes = JSON.parse(localStorage.getItem(WATCHING_ANIMES_KEY)) || [];
+
+    function formatTimeAgo(date, referenceDate) {
+        const now = referenceDate || new Date();
+        const diffMs = now - date;
+
+        const diffMinutes = Math.floor(diffMs / (1000 * 60));
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        if (diffMinutes < 60) return `hace ${diffMinutes} minutos`;
+        if (diffHours < 24) return `hace ${diffHours} horas`;
+        return `hace ${diffDays} días`;
+    }
+
+    // Categorizar por tiempo
+    function getTimeCategory(date, referenceDate) {
+        const now = referenceDate || new Date();
+        const diffMs = now - date;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        // Si tiene más de 30 días, no aparecerá en ninguna categoría
+        if (diffDays > 30) return null;
+        if (diffHours < 24) return 'last24h';
+        if (diffDays < 7) return 'thisweek';
+        return 'older';
+    }
+
+    // Obtener animes usando generatedDate y newEpisode
+    function getNewEpisodes() {
+        let episodes = [];
+        
+        // Obtener animes con generatedDate
+        const generatedDateEpisodes = animeData
+            .filter(anime => anime.generatedDate)
+            .map(anime => ({
+                animeId: anime.id,
+                animeTitle: anime.title,
+                animeImage: anime.image,
+                animePoster: anime.poster,
+                date: new Date(anime.generatedDate),
+                contentRating: anime.contentRating,
+                subtitled: anime.subtitled,
+                dubbed: anime.dubbed,
+                timeCategory: getTimeCategory(new Date(anime.generatedDate))
+            }));
+        
+        episodes = [...episodes, ...generatedDateEpisodes];
+        
+        // Obtener animes con newEpisode
+        animeData.forEach(anime => {
+            if (anime.seasons) {
+                anime.seasons.forEach(season => {
+                    if (season.newEpisode && season.newEpisode.date && season.newEpisode.releasedEpisodes > 0) {
+                        // Calcular la fecha del último episodio lanzado
+                        const initialDate = new Date(season.newEpisode.date);
+                        const broadcastInterval = season.newEpisode.broadcastInterval || 7; // Por defecto, semanal
+                        const releasedEpisodes = season.newEpisode.releasedEpisodes;
+                        
+                        // Calcular días transcurridos desde el primer episodio hasta el último lanzado
+                        const daysElapsed = (releasedEpisodes - 1) * broadcastInterval;
+                        
+                        // Fecha del último episodio lanzado
+                        const lastEpisodeDate = new Date(initialDate);
+                        lastEpisodeDate.setDate(initialDate.getDate() + daysElapsed);
+                        
+                        // Verificar si el último episodio está dentro del rango de tiempo para mostrarse
+                        const timeCategory = getTimeCategory(lastEpisodeDate);
+                        
+                        // Solo incluir si tiene una categoría de tiempo válida
+                        if (timeCategory) {
+                            episodes.push({
+                                animeId: anime.id,
+                                animeTitle: anime.title,
+                                animeImage: anime.image,
+                                animePoster: anime.poster,
+                                date: lastEpisodeDate, // Usamos la fecha del último episodio
+                                contentRating: anime.contentRating,
+                                subtitled: anime.subtitled,
+                                dubbed: anime.dubbed,
+                                timeCategory: timeCategory,
+                                seasonInfo: `${season.title} - Episodio ${releasedEpisodes}`
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Ordenar todos los episodios por fecha (más recientes primero)
+        return episodes.sort((a, b) => b.date - a.date);
+    }
+
+    // Crear tarjeta
+    function createEpisodeCard(anime) {
+        const inMyList = window.myList.includes(anime.animeId);
+        const inFavorites = window.favorites.includes(anime.animeId);
+
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.dataset.animeId = anime.animeId;
+
+        // Buscar el anime completo para obtener la descripción y temporadas
+        const fullAnime = animeData.find(a => a.id === anime.animeId) || {};
+        const description = fullAnime.description || 'No hay descripción disponible.';
+        const seasonsCount = fullAnime.seasons ? fullAnime.seasons.length : 1;
+
+        // Usar getTotalEpisodes para mostrar solo los episodios lanzados
+        const episodesCount = fullAnime.seasons ? getTotalEpisodes(fullAnime) : 0;
+
+        card.innerHTML = `
+            <div class="anime-poster">
+                ${inMyList ? `<div class="in-list-corner">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z"></path>
+                    </svg>
+                </div>` : ''}
+                <img src="${anime.animePoster || anime.animeImage}" alt="${anime.animeTitle}" loading="lazy">
+                <div class="anime-overlay">
+                    <div class="overlay-title">${anime.animeTitle}</div>
+                    <div class="overlay-details">
+                        ${seasonsCount} Temporada${seasonsCount > 1 ? 's' : ''} | 
+                        ${episodesCount} Episodio${episodesCount > 1 ? 's' : ''}
+                    </div>
+                    <div class="overlay-description">
+                        ${description}
+                    </div>
+                </div>
+            </div>
+            <div class="anime-info">
+                <div class="anime-release-time"></div>
+
+                <h3 class="anime-title">${anime.animeTitle}</h3>
+                <div class="anime-meta">
+                    <span class="anime-subtitle">
+                        ${anime.subtitled && anime.dubbed ? 'Sub | Dob' :
+                          anime.subtitled ? 'Subtitulado' :
+                          anime.dubbed ? 'Doblado' : ''}
+                        • ${formatTimeAgo(anime.date)}
+                        ${anime.seasonInfo ? `<br>${anime.seasonInfo}` : ''}
+                    </span>
+                </div>
+                <div class="anime-actions info-actions">
+                    <button class="action-button play-button" data-anime-id="${anime.animeId}" title="">
+                        <span class="tooltip">Reproducir</span>
+                        <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="play-svg" aria-hidden="false" role="img">
+                            <path d="M5.944 3C5.385 3 5 3.445 5 4.22v16.018c0 .771.384 1.22.945 1.22.234 0 .499-.078.779-.243l13.553-7.972c.949-.558.952-1.468 0-2.028L6.724 3.243C6.444 3.078 6.178 3 5.944 3m1.057 2.726l11.054 6.503L7 18.732l.001-13.006"></path>
+                        </svg>
+                    </button>
+                    <button class="action-button favorite-button ${inFavorites ? 'in-favorites' : ''}" data-anime-id="${anime.animeId}" title="">
+                        <span class="tooltip">${inFavorites ? 'Quitar de favoritos' : 'Añadir a favoritos'}</span>
+                        <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="${inFavorites ? 'favorite-filled-svg' : 'favorite-svg'}" aria-hidden="true" role="img">
+                            <path d="${inFavorites ? 'M12.078 5.446C10.801 3.816 9.156 3 7.144 3 3.818 3 1.426 6.285 2.26 9.924c.785 3.422 4.058 7.114 9.818 11.076 5.608-3.613 8.845-7.305 9.711-11.076C22.706 5.935 20.244 3 16.965 3c-1.927 0-3.556.815-4.887 2.446z' : 'M19.84 9.476C20.442 6.858 19.07 5 16.965 5c-1.31 0-2.377.534-3.337 1.71L12.046 8.65l-1.542-1.97C9.602 5.53 8.536 5 7.144 5 5.132 5 3.658 7.07 4.21 9.477c.601 2.623 3.21 5.702 7.901 9.099 4.512-3.103 7.054-6.163 7.73-9.1zM16.965 3c3.279 0 5.741 2.935 4.824 6.924-.866 3.77-4.103 7.463-9.71 11.076-5.761-3.962-9.034-7.654-9.819-11.076C1.426 6.285 3.818 3 7.144 3c1.322 0 2.485.352 3.49 1.055l-.105.127.282.002c.456.346.879.766 1.267 1.262a7.499 7.499 0 0 1 1.264-1.236l.31.003a9.964 9.964 0 0 0-.115-.146C14.549 3.356 15.692 3 16.965 3z'}"></path>
+                        </svg>
+                    </button>
+                    <button class="action-button watchlist-button ${inMyList ? 'in-list' : ''}" data-anime-id="${anime.animeId}" title="">
+                        <span class="tooltip">${inMyList ? 'Eliminar de Ureshiilist' : 'Agregar a Ureshiilist'}</span>
+                        <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="${inMyList ? 'watchlist-filled-svg' : 'watchlist-svg'}" aria-hidden="true" role="img">
+                            <path d="${inMyList ? 'M18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z' : 'M17 18.113l-3.256-2.326A2.989 2.989 0 0 0 12 15.228c-.629 0-1.232.194-1.744.559L7 18.113V4h10v14.113zM18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z'}"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Añadir eventos para los botones
+        card.querySelector('.play-button')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            window.location.href = `anime.html?id=${anime.animeId}`;
+        });
+
+        card.querySelector('.favorite-button')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleFavorites(anime.animeId); // Usar toggleFavorites de cards.js
+        });
+
+        card.querySelector('.watchlist-button')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMyList(anime.animeId);
+            const isInList = window.myList.includes(anime.animeId);
+            e.currentTarget.classList.toggle('in-list', isInList);
+            e.currentTarget.querySelector('.tooltip').textContent = isInList ? 'Eliminar de Ureshiilist' : 'Agregar a Ureshiilist';
+            e.currentTarget.querySelector('path').setAttribute('d', isInList ? 
+                'M18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z' : 
+                'M17 18.113l-3.256-2.326A2.989 2.989 0 0 0 12 15.228c-.629 0-1.232.194-1.744.559L7 18.113V4h10v14.113zM18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z');
+        });
+
+        // Evento para ir a la página del anime
+        card.addEventListener('click', () => {
+            window.location.href = `anime.html?id=${anime.animeId}`;
+        });
+
+        return card;
+    }
+
+    // Mostrar secciones
+    // Al inicio del script, después de cargar los datos
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar el estado de favoritos en los objetos anime
+        animeData.forEach(anime => {
+            anime.inFavorites = window.favorites.includes(anime.id);
+        });
+        
+        // Mostrar secciones directamente en lugar de llamar a una función inexistente
+        // Actualizar episodios lanzados antes de mostrar los animes
+        window.updateReleasedEpisodes();
+        
+        const last24hContainer = document.getElementById('last24h-episodes');
+        const thisWeekContainer = document.getElementById('thisweek-episodes');
+        const olderContainer = document.getElementById('older-episodes');
+
+        last24hContainer.innerHTML = '';
+        thisWeekContainer.innerHTML = '';
+        olderContainer.innerHTML = '';
+
+        const episodes = getNewEpisodes();
+
+        const last24h = episodes.filter(ep => ep.timeCategory === 'last24h');
+        const thisWeek = episodes.filter(ep => ep.timeCategory === 'thisweek');
+        const older = episodes.filter(ep => ep.timeCategory === 'older');
+
+        const appendCards = (list, container, emptyMessage) => {
+            if (list.length === 0) {
+                const msg = document.createElement('div');
+                msg.className = 'empty-message';
+                msg.textContent = emptyMessage;
+                container.appendChild(msg);
+                return;
+            }
+            list.forEach(ep => container.appendChild(createEpisodeCard(ep)));
+        };
+
+        appendCards(last24h, last24hContainer, 'No hay episodios en las últimas 24 horas.');
+        appendCards(thisWeek, thisWeekContainer, 'No hay episodios esta semana.');
+        appendCards(older, olderContainer, 'No hay episodios anteriores.');
+    });
+    
+</script>
+
+    <style>
+        .subsection-title {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 1.5rem;
+            color: #aaa;
+            font-size: 1rem;
+            grid-column: 1 / -1;
+        }
+        
+        /* Media query para pantallas grandes */
+        @media screen and (min-width: 1600px) {
+            .subsection-title {
+                font-size: 2rem;
+                margin: 2rem 0 1.5rem;
+                border-left: 6px solid var(--accent-color);
+                padding-left: 15px;
+            }
+            
+            .empty-message {
+                font-size: 1.3rem;
+                padding: 2rem;
+            }
+            
+            .anime-grid {
+                grid-template-columns: repeat(6, 1fr); /* Exactamente 6 columnas */
+                gap: 2rem;
+            }
+        }
+    </style>
+    
+    <script>
+        // Cargar datos desde Google Drive cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar datos desde Google Drive si está disponible
+            if (typeof window.loadInitialDataFromDrive === 'function') {
+                window.loadInitialDataFromDrive();
+            }
+            
+            // Escuchar cuando los datos de Drive estén listos
+            window.addEventListener('driveDataReady', function(event) {
+                console.log('Datos de Google Drive cargados en novedades.html:', event.detail);
+                // Recargar contenido que dependa de los datos si es necesario
+            });
+        });
+    </script>
+</body>
+</html>

@@ -3,60 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Viewer</title>
+    <title>Ureshii Anime</title>
     <link rel="stylesheet" href="index.css">
     <link rel="icon" href="logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="animes.js">
-    <!-- Añadir estas líneas para soporte de iOS -->
     <link rel="apple-touch-icon" href="logo.png">
-    <meta name="apple-mobile-web-app-capable" content="no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Anime Viewer">
-    <!-- Fin de las líneas añadidas -->
+    <meta name="apple-mobile-web-app-title" content="Ureshii Anime">
+    <script src="glob/localstorage.js"></script>
+    <script src="glob/google-drive.js"></script>
     <script src="animes.js"></script>
-
+    <script src="glob/header.js"></script>
+    <script src="glob/cards.js"></script>
+    <link rel="stylesheet" href="glob/cards.css">
+    <link rel="stylesheet" href="glob/header.css">
 </head>
 <body>
-    <!-- Notificación grande con botón de cierre -->
     <div class="notification-overlay" id="first-visit-notification">
         <div class="notification-container">
             <span class="notification-close">&times;</span>
-            <h2>¡Bienvenido a Anime Viewer!</h2>
+            <h2>¡Bienvenido a Ureshii Anime!</h2>
             <div class="notification-content">
-                <p><strong>Recomendamos encarecidamente usar un bloqueador de anuncios</strong> en cualquier dispositivo que utilices (iPhone, Android, ordenador, tablet...).</p>
+                <p><strong>Recomendamos encarecidamente usar un bloqueador de anuncios</strong> en cualquier dispositivo que utilices ya sea iPhone, Android, Ordenador, Tablet...</p>
                 <p>No recomendamos usar el sistema de navegación entre episodios de AnimeFlv. En su lugar, utiliza los botones de navegación de nuestra aplicación para una mejor experiencia.</p>
                 <hr>
-                <p class="disclaimer">Todo el contenido de esta página proviene de AnimeFlv. El objetivo de Anime Viewer es únicamente evitar la publicidad y ofrecer mayor comodidad con funciones como "Mi lista" o marcar episodios como "Vistos", características que no están disponibles en AnimeFlv.</p>
+                <p>Todo el contenido de esta página proviene de AnimeFlv y Crunchyroll. El objetivo de Ureshii Anime es únicamente evitar la publicidad y ofrecer mayor comodidad con funciones como "Mi lista" o marcar episodios como "Vistos", características que no están disponibles en AnimeFlv.</p>
             </div>
         </div>
     </div>
     
     <header>
-        <h1>Anime Viewer</h1>
-        <div class="export-button" id="export-import-button">
-            <i class="export-icon">↗</i>
+        <div class="menu-button" id="menu-toggle">
+            <svg class="menu-ab-svg--wDGx3 header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="menu-svg" aria-hidden="true" role="img"><path class="menu-ab-svg__top--Xgjtj" d="M20 5H4V7H20V5Z"></path><path class="menu-ab-svg__middle--vsB5D" d="M4 11H20V13H4V11Z"></path><path class="menu-ab-svg__bottom--6yklx" d="M20 17H4V19H20V17Z"></path></svg>
+        </div>
+        <a href="index.html" class="header-logo">
+            <picture>
+                <source media="(max-width: 768px)" srcset="logo.png">
+                <source media="(min-width: 769px)" srcset="horizontal-logo.png">
+                <img src="horizontal-logo.png" alt="Ureshii Anime" class="logo-img">
+            </picture>
+        </a>
+        <div class="nav-categories">
+            <a href="index.html" class="nav-category">Catálogo</a>
+            <a href="novedades.html" class="nav-category">Novedades</a>
+        </div>
+        <div class="header-buttons">
+            <a href="search.html" class="header-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="search-svg" aria-hidden="true" role="img"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 19C12.4879 19 14.3164 18.3176 15.7641 17.1742L21.2927 22.7069L22.7074 21.2931L17.1778 15.7595C18.319 14.3126 19 12.4858 19 10.5C19 5.80558 15.1944 2 10.5 2C5.80558 2 2 5.80558 2 10.5C2 15.1944 5.80558 19 10.5 19ZM10.5 17C14.0899 17 17 14.0899 17 10.5C17 6.91015 14.0899 4 10.5 4C6.91015 4 4 6.91015 4 10.5C4 14.0899 6.91015 17 10.5 17Z"></path></svg>
+            </a>
+            <a href="ureshiilists.html" class="header-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="watchlist-svg" aria-hidden="true" role="img"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.0001 20.5858C19.0001 21.4767 17.9229 21.9229 17.293 21.2929L12.0001 16L6.7071 21.2929C6.07714 21.9229 5 21.4767 5 20.5858L5.00006 3H19.0001V20.5858ZM7.00001 18.1716L7.00006 5H17.0001V18.1716L12.0001 13.1716L7.00001 18.1716Z"></path></svg>
+            </a>
+            <a href="account.html" class="export-button" id="export-import-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="user-settings-svg" aria-hidden="true" role="img"><path d="M12 20a6.01 6.01 0 0 1-5.966-5.355L12 12.088l5.966 2.557A6.01 6.01 0 0 1 12 20m0-16c1.654 0 3 1.346 3 3s-1.345 3-2.999 3h-.002A3.003 3.003 0 0 1 9 7c0-1.654 1.346-3 3-3m7.394 9.081l-4.572-1.959A4.997 4.997 0 0 0 17 7c0-2.757-2.243-5-5-5S7 4.243 7 7c0 1.71.865 3.22 2.178 4.122l-4.572 1.959A.999.999 0 0 0 4 14c0 4.411 3.589 8 8 8s8-3.589 8-8c0-.4-.238-.762-.606-.919"></path></svg>
+            </a>
         </div>
     </header>
 
+    <!-- Hero Carousel Section -->
+    <div class="hero-carousel" id="hero-carousel">
+    <div class="hero-slides" id="hero-slides">
+    <!-- Las diapositivas se generarán dinámicamente con JavaScript -->
+    </div>
+    <div class="hero-controls">
+    <div class="hero-dots" id="hero-dots">
+    <!-- Los puntos de navegación se generarán dinámicamente -->
+    </div>
+    </div>
+    </div>
+
     <div class="container">
-        <div class="filters" id="filter-buttons">
-            <button class="filter-button active" data-filter="all">Todos</button>
-            <button class="filter-button" data-filter="watching">Viendo</button>
-            <button class="filter-button" data-filter="completed">Completados</button>
-            <button class="filter-button" data-filter="mylist">Mi lista</button>
-        </div>
-
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Buscar anime...">
-            <button id="search-button">Buscar</button>
-        </div>
-
+    <!-- Título de la sección -->
+    <div class="section-title">
+    <h2>Catálogo</h2>
+    </div>
+    
         <div class="anime-grid" id="anime-container">
             <!-- Anime cards will be generated here -->
         </div>
 
-        <div class="pagination" id="pagination-controls">
-            <!-- Pagination controls will be generated here -->
+        <div class="load-more-container" id="load-more-container">
+            <button id="load-more-button" class="load-more-button">Mostrar más</button>
         </div>
 
         <div class="loading" id="loading">Cargando animes...</div>
@@ -71,783 +98,330 @@
         </div>
     </div>
 
-    <!-- Modal para exportar/importar datos -->
-    <div class="modal" id="export-import-modal">
-        <span class="close-modal" id="close-export-import">&times;</span>
-        <div class="modal-content">
-            <div class="export-import-container">
-                <h2>Exportar/Importar Datos</h2>
-                
-                <div class="export-section">
-                    <h3>Exportar Datos</h3>
-                    <p>Genera un código para guardar tus datos:</p>
-                    <button id="generate-export-code" class="action-button">Generar Código</button>
-                    <div id="export-code-container" style="display: none;">
-                        <textarea id="export-code" readonly></textarea>
-                        <button id="copy-export-code" class="action-button">Copiar Código</button>
-                    </div>
-                </div>
-                
-                <div class="import-section">
-                    <h3>Importar Datos</h3>
-                    <p>Pega tu código para recuperar tus datos:</p>
-                    <textarea id="import-code" placeholder="Pega aquí tu código..."></textarea>
-                    <button id="import-data-button" class="action-button">Importar Datos</button>
-                    <div id="import-result" class="result-message"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+
     
     <script>
         // Get DOM elements
         const animeContainer = document.getElementById('anime-container');
         const loadingElement = document.getElementById('loading');
-        const searchInput = document.getElementById('search-input');
-        const searchButton = document.getElementById('search-button');
-        const filterButtons = document.querySelectorAll('.filter-button');
         const animeDetailModal = document.getElementById('anime-detail-modal');
         const closeAnimeDetail = document.getElementById('close-anime-detail');
         const animeDetailContainer = document.getElementById('anime-detail-container');
-        const paginationControls = document.getElementById('pagination-controls');
+        const loadMoreContainer = document.getElementById('load-more-container');
+        const loadMoreButton = document.getElementById('load-more-button');
+    
 
-        // Elementos del modal de exportar/importar
-        const exportImportButton = document.getElementById('export-import-button');
-        const exportImportModal = document.getElementById('export-import-modal');
-        const closeExportImport = document.getElementById('close-export-import');
-        const generateExportCode = document.getElementById('generate-export-code');
-        const exportCodeContainer = document.getElementById('export-code-container');
-        const exportCode = document.getElementById('export-code');
-        const copyExportCode = document.getElementById('copy-export-code');
-        const importCode = document.getElementById('import-code');
-        const importDataButton = document.getElementById('import-data-button');
-        const importResult = document.getElementById('import-result');
 
-        // Local storage keys
-        const WATCHED_EPISODES_KEY = 'animeflv-watched-episodes';
-        const MY_LIST_KEY = 'animeflv-my-list';
-        const WATCHING_ANIMES_KEY = 'animeflv-watching-animes'; // Nueva clave para animes en estado "viendo"
 
-        // Get watched episodes from local storage
-        let watchedEpisodes = JSON.parse(localStorage.getItem(WATCHED_EPISODES_KEY)) || {};
-        
-        // Get my list from local storage
-        let myList = JSON.parse(localStorage.getItem(MY_LIST_KEY)) || [];
-        
-        // Get watching animes from local storage
-        let watchingAnimes = JSON.parse(localStorage.getItem(WATCHING_ANIMES_KEY)) || [];
-
-        // Current filter and pagination state
+        const watchedEpisodes = JSON.parse(localStorage.getItem(WATCHED_EPISODES_KEY)) || {};
+        const watchingAnimes = JSON.parse(localStorage.getItem(WATCHING_ANIMES_KEY)) || [];
         let currentFilter = 'all';
         let currentSearch = '';
-        let currentPage = 1;
-        const animesPerPage = 6; // Número de animes por página
+        let displayedAnimes = 0; // Contador de animes mostrados
         
-        // Función para crear los controles de paginación
-        function createPaginationControls(totalPages) {
-            // Botón anterior
-            if (currentPage > 1) {
-                const prevButton = document.createElement('button');
-                prevButton.className = 'pagination-button';
-                prevButton.textContent = 'Anterior';
-                prevButton.addEventListener('click', () => {
-                    currentPage--;
-                    displayAnimes();
-                    // Scroll hacia arriba para ver los nuevos resultados
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-                paginationControls.appendChild(prevButton);
-            }
-            
-            // Información de página actual
-            const pageInfo = document.createElement('span');
-            pageInfo.className = 'page-info';
-            pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
-            paginationControls.appendChild(pageInfo);
-            
-            // Botón siguiente
-            if (currentPage < totalPages) {
-                const nextButton = document.createElement('button');
-                nextButton.className = 'pagination-button';
-                nextButton.textContent = 'Siguiente';
-                nextButton.addEventListener('click', () => {
-                    currentPage++;
-                    displayAnimes();
-                    // Scroll hacia arriba para ver los nuevos resultados
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-                paginationControls.appendChild(nextButton);
-            }
+        // Función para determinar cuántos animes cargar según el tamaño de pantalla
+        function getAnimesPerLoad() {
+            return window.innerWidth <= 768 ? 6 : 10; // 6 para móvil, 10 para PC
         }
-
-        // Display animes with pagination
+        
+        // Display animes with "load more" functionality
         function displayAnimes() {
-            animeContainer.innerHTML = '';
-            paginationControls.innerHTML = '';
+            // Actualizar episodios lanzados
+            updateReleasedEpisodes();
+            
+            // Si es la primera carga, limpiar el contenedor
+            if (displayedAnimes === 0) {
+                animeContainer.innerHTML = '';
+            }
+            
             loadingElement.style.display = 'none';
-
-            const filteredAnimes = animeData.filter(anime => {
-                // Verificar si el anime está completado (todos los episodios vistos)
-                let isCompleted = false;
-                let isWatching = false;
-                
-                if (currentFilter === 'completed' || currentFilter === 'watching') {
-                    // Verificar si hay al menos un episodio visto para "viendo"
-                    isWatching = watchingAnimes.includes(anime.id);
-                    
-                    // Para "completado", verificar si todos los episodios están vistos
-                    if (currentFilter === 'completed') {
-                        isCompleted = true;
-                        for (const season of anime.seasons) {
-                            for (let i = 1; i <= season.episodes; i++) {
-                                const globalEpisode = getGlobalEpisodeNumber(anime, season.number, i);
-                                if (!isEpisodeWatched(anime.id, globalEpisode)) {
-                                    isCompleted = false;
-                                    break;
-                                }
-                            }
-                            if (!isCompleted) break;
-                        }
-                        
-                        // Si está completado, quitarlo de la lista de "viendo"
-                        if (isCompleted && watchingAnimes.includes(anime.id)) {
-                            watchingAnimes = watchingAnimes.filter(id => id !== anime.id);
-                            localStorage.setItem(WATCHING_ANIMES_KEY, JSON.stringify(watchingAnimes));
-                        }
-                    }
-                }
-                
-                const matchesFilter = 
-                    currentFilter === 'all' || 
-                    (currentFilter === 'completed' && isCompleted) ||
-                    (currentFilter === 'watching' && isWatching && !isCompleted) ||
-                    (currentFilter === 'mylist' && myList.includes(anime.id));
-                const matchesSearch = anime.title.toLowerCase().includes(currentSearch.toLowerCase());
-                return matchesFilter && matchesSearch;
-            });
-
+    
+            // Mostrar todos los animes
+            const filteredAnimes = animeData;
+    
             if (filteredAnimes.length === 0) {
                 animeContainer.innerHTML = '<div class="loading">No se encontraron animes</div>';
+                loadMoreContainer.style.display = 'none';
                 return;
             }
-
-            // Calcular el número total de páginas
-            const totalPages = Math.ceil(filteredAnimes.length / animesPerPage);
+    
+            // Determinar cuántos animes cargar
+            const animesPerLoad = getAnimesPerLoad();
             
-            // Asegurarse de que la página actual es válida
-            if (currentPage > totalPages) {
-                currentPage = totalPages;
-            }
+            // Calcular el rango de animes a mostrar
+            const startIndex = displayedAnimes;
+            const endIndex = Math.min(startIndex + animesPerLoad, filteredAnimes.length);
             
-            // Calcular el índice de inicio y fin para la página actual
-            const startIndex = (currentPage - 1) * animesPerPage;
-            const endIndex = Math.min(startIndex + animesPerPage, filteredAnimes.length);
-            
-            // Mostrar solo los animes de la página actual
+            // Mostrar los animes adicionales
             for (let i = startIndex; i < endIndex; i++) {
                 const anime = filteredAnimes[i];
                 
-                const animeCard = document.createElement('div');
-                animeCard.className = 'anime-card';
-
-                const animeImage = document.createElement('img');
-                animeImage.className = 'anime-image';
-                animeImage.src = anime.image;
-                animeImage.alt = anime.title;
-                
-                // Hacer que la imagen abra la vista detallada
-                animeImage.addEventListener('click', () => openAnimeDetail(anime));
-
-                const animeInfo = document.createElement('div');
-                animeInfo.className = 'anime-info';
-
-                const titleContainer = document.createElement('div');
-                titleContainer.style.display = 'flex';
-                titleContainer.style.justifyContent = 'space-between';
-                titleContainer.style.alignItems = 'center';
-                
-                const animeTitle = document.createElement('div');
-                animeTitle.className = 'anime-title';
-                animeTitle.textContent = anime.title;
-                animeTitle.style.cursor = 'pointer';
-                animeTitle.addEventListener('click', () => openAnimeDetail(anime));
-                
-                const addToListButton = document.createElement('button');
-                addToListButton.className = 'add-to-list';
-                addToListButton.dataset.animeId = anime.id;
-                if (myList.includes(anime.id)) {
-                    addToListButton.classList.add('in-list');
-                }
-                addToListButton.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleMyList(anime.id);
-                });
-                
-                titleContainer.appendChild(animeTitle);
-                titleContainer.appendChild(addToListButton);
-
-                animeInfo.appendChild(titleContainer);
-
-                animeCard.appendChild(animeImage);
-                animeCard.appendChild(animeInfo);
-
+                // Crear la tarjeta de anime
+                const animeCard = createAnimeCard(anime);
                 animeContainer.appendChild(animeCard);
             }
             
-            // Crear controles de paginación si hay más de una página
-            if (totalPages > 1) {
-                createPaginationControls(totalPages);
-            }
-        }
-        
-        // Función para obtener el número global del episodio
-        function getGlobalEpisodeNumber(anime, seasonNumber, episodeNumber) {
-            let globalEpisode = episodeNumber;
+            // Actualizar el contador de animes mostrados
+            displayedAnimes = endIndex;
             
-            // Sumar los episodios de temporadas anteriores
-            for (let i = 0; i < anime.seasons.length; i++) {
-                const season = anime.seasons[i];
-                if (season.number < seasonNumber) {
-                    globalEpisode += season.episodes;
-                }
-            }
-            
-            return globalEpisode;
-        }
-        
-        // Función para añadir/quitar anime de mi lista
-        function toggleMyList(animeId) {
-            const index = myList.indexOf(animeId);
-            if (index === -1) {
-                // Añadir a mi lista
-                myList.push(animeId);
-                // Actualizar el estado en el objeto anime
-                const anime = animeData.find(a => a.id === animeId);
-                if (anime) {
-                    anime.inMyList = true;
-                }
+            // Mostrar u ocultar el botón "Mostrar más" según corresponda
+            if (displayedAnimes >= filteredAnimes.length) {
+                loadMoreContainer.style.display = 'none';
             } else {
-                // Quitar de mi lista
-                myList.splice(index, 1);
-                // Actualizar el estado en el objeto anime
-                const anime = animeData.find(a => a.id === animeId);
-                if (anime) {
-                    anime.inMyList = false;
-                }
+                loadMoreContainer.style.display = 'flex';
             }
-            
-            // Guardar en localStorage
-            localStorage.setItem(MY_LIST_KEY, JSON.stringify(myList));
-            
-            // Actualizar todos los botones de este anime
-            const addToListButtons = document.querySelectorAll(`.add-to-list[data-anime-id="${animeId}"]`);
-            addToListButtons.forEach(button => {
-                if (myList.includes(animeId)) {
-                    button.classList.add('in-list');
-                } else {
-                    button.classList.remove('in-list');
-                }
-            });
         }
-
-        // Abrir episodio directamente en AnimeFlv y marcarlo como visto
-        function openEpisode(anime, episodeGlobalNumber, seasonNumber, episodeInSeason, seasonSlug) {
-            // En lugar de abrir AnimeFlv directamente, abrimos nuestro emulador
-            const viewerUrl = `viewer.html?id=${anime.id}&season=${seasonNumber}&episode=${episodeInSeason}`;
-            
-            // Marcar el episodio como visto automáticamente
-            markEpisodeAsWatched(anime.id, episodeGlobalNumber);
-            
-            // Actualizar la interfaz para reflejar que el episodio ha sido visto
+    
+        // Evento para el botón "Mostrar más"
+        loadMoreButton.addEventListener('click', () => {
             displayAnimes();
-            
-            // Abrir nuestro emulador en la misma pestaña
-            window.location.href = viewerUrl;
-        }
+        });
+    
+        // Las media queries CSS se encargan del layout responsivo del grid
+    
+
         
-        // Abrir vista detallada del anime
-        function openAnimeDetail(anime) {
-            // Limpiar contenedor
-            animeDetailContainer.innerHTML = '';
-            
-            // Crear encabezado con imagen y título
-            const detailHeader = document.createElement('div');
-            detailHeader.className = 'anime-detail-header';
-            
-            const detailImage = document.createElement('img');
-            detailImage.className = 'anime-detail-image';
-            detailImage.src = anime.image;
-            detailImage.alt = anime.title;
-            
-            const detailInfo = document.createElement('div');
-            detailInfo.className = 'anime-detail-info';
-            
-            const detailTitle = document.createElement('div');
-            detailTitle.className = 'anime-detail-title';
-            detailTitle.textContent = anime.title;
-            
-            const detailStatus = document.createElement('div');
-            detailStatus.className = 'anime-detail-status';
-            
-            // Verificar si está completado
-            let isCompleted = true;
-            for (const season of anime.seasons) {
-                for (let i = 1; i <= season.episodes; i++) {
-                    const globalEpisode = getGlobalEpisodeNumber(anime, season.number, i);
-                    if (!isEpisodeWatched(anime.id, globalEpisode)) {
-                        isCompleted = false;
-                        break;
-                    }
-                }
-                if (!isCompleted) break;
-            }
-            
-            // Mostrar el estado correcto
-            if (isCompleted) {
-                detailStatus.textContent = 'Completado';
-            } else if (watchingAnimes.includes(anime.id)) {
-                detailStatus.textContent = 'Viendo';
-            } else {
-                detailStatus.textContent = '';
-            }
-            
-            // Botón para añadir/quitar de mi lista
-            const addToListButton = document.createElement('button');
-            addToListButton.className = 'add-to-list';
-            addToListButton.dataset.animeId = anime.id;
-            if (myList.includes(anime.id)) {
-                addToListButton.classList.add('in-list');
-            }
-            addToListButton.addEventListener('click', () => {
-                toggleMyList(anime.id);
-                if (myList.includes(anime.id)) {
-                    addToListButton.classList.add('in-list');
-                } else {
-                    addToListButton.classList.remove('in-list');
-                }
-            });
-            
-            // Botón para marcar/desmarcar todos los episodios visibles
-            const toggleAllWatchedButton = document.createElement('button');
-            toggleAllWatchedButton.className = 'toggle-all-watched-button';
-            toggleAllWatchedButton.textContent = 'Modo marcar como no vistos';
-            toggleAllWatchedButton.dataset.showingAll = 'true'; // Nuevo atributo para rastrear el estado
-            toggleAllWatchedButton.addEventListener('click', () => {
-                // Obtener todos los episodios visibles
-                const allEpisodes = document.querySelectorAll('.season-episodes[style*="display: flex"] .episode');
-                
-                // Determinar si estamos mostrando todos o solo los vistos
-                const showingAll = toggleAllWatchedButton.dataset.showingAll === 'true';
-                
-                // Cambiar el estado
-                toggleAllWatchedButton.dataset.showingAll = showingAll ? 'false' : 'true';
-                
-                // Actualizar la clase del botón para el estilo
-                if (showingAll) {
-                    toggleAllWatchedButton.classList.add('showing-watched-only');
-                } else {
-                    toggleAllWatchedButton.classList.remove('showing-watched-only');
-                }
-                
-                // Mostrar/ocultar episodios según el estado
-                allEpisodes.forEach(ep => {
-                    if (showingAll) {
-                        // Si estamos mostrando todos y vamos a mostrar solo vistos
-                        if (ep.classList.contains('watched')) {
-                            ep.style.display = 'flex';
-                            ep.classList.add('unwatch-mode'); // Añadir clase para el modo desmarcar
-                        } else {
-                            ep.style.display = 'none';
-                        }
-                    } else {
-                        // Si estamos mostrando solo vistos y vamos a mostrar todos
-                        ep.style.display = 'flex';
-                        ep.classList.remove('unwatch-mode'); // Quitar clase del modo desmarcar
-                    }
-                });
-            });
-            
-            // Añadir elementos al detailInfo
-            detailInfo.appendChild(detailTitle);
-            detailInfo.appendChild(detailStatus);
-            detailInfo.appendChild(addToListButton); // Añadir el botón de añadir a mi lista
-            detailInfo.appendChild(toggleAllWatchedButton); // Añadir el botón de marcar/desmarcar todos
-            
-            detailHeader.appendChild(detailImage);
-            detailHeader.appendChild(detailInfo);
-            
-            // Crear sección de temporadas
-            const detailSeasons = document.createElement('div');
-            detailSeasons.className = 'anime-detail-seasons';
-            
-            // Título de sección
-            const seasonsTitle = document.createElement('h3');
-            seasonsTitle.textContent = 'Temporadas';
-            detailSeasons.appendChild(seasonsTitle);
-            
-            // Mostrar todas las temporadas
-            anime.seasons.forEach(season => {
-                const seasonContainer = document.createElement('div');
-                seasonContainer.className = 'season-container';
-                
-                const seasonTitle = document.createElement('div');
-                seasonTitle.className = 'season-title';
-                
-                const seasonToggle = document.createElement('span');
-                seasonToggle.className = 'season-toggle';
-                seasonToggle.textContent = '▼';
-                
-                seasonTitle.appendChild(seasonToggle);
-                seasonTitle.appendChild(document.createTextNode(`${season.title} (${season.episodes} episodios)`));
-                
-                // Si hay un nuevo episodio próximo, mostrar la información
-                if (season.newEpisode) {
-                    const newEpisodeBadge = document.createElement('span');
-                    newEpisodeBadge.className = 'new-episode-badge';
-                    newEpisodeBadge.textContent = `${season.newEpisode.status} - ${season.newEpisode.date}`;
-                    seasonTitle.appendChild(newEpisodeBadge);
-                }
-                
-                const seasonEpisodes = document.createElement('div');
-                seasonEpisodes.className = 'season-episodes';
-                seasonEpisodes.style.display = 'flex';
-                seasonEpisodes.style.flexWrap = 'wrap';
-                seasonEpisodes.style.gap = '0.5rem';
-                
-                // Mostrar todos los episodios
-                for (let i = 1; i <= season.episodes; i++) {
-                    const episode = document.createElement('div');
-                    episode.className = 'episode';
-                    const episodeGlobalNumber = getGlobalEpisodeNumber(anime, season.number, i);
-                    episode.dataset.globalEpisode = episodeGlobalNumber; // Guardar el número global para referencia
-                    
-                    if (isEpisodeWatched(anime.id, episodeGlobalNumber)) {
-                        episode.classList.add('watched');
-                    }
-                    episode.textContent = i;
-                    
-                    // Si es un episodio nuevo (el último de una temporada con newEpisode)
-                    if (season.newEpisode && i === season.episodes) {
-                        episode.classList.add('new-episode');
-                        episode.addEventListener('click', (e) => {
-                            // Verificar si estamos en modo de mostrar solo vistos
-                            const showingWatchedOnly = document.querySelector('.toggle-all-watched-button').dataset.showingAll === 'false';
-                            
-                            if (showingWatchedOnly && episode.classList.contains('unwatch-mode')) {
-                                // En modo desmarcar, no abrir el enlace
-                                e.preventDefault();
-                                e.stopPropagation();
-                                return;
-                            }
-                            
-                            // En lugar de abrir AnimeFlv directamente, abrimos nuestro emulador
-                            const viewerUrl = `viewer.html?id=${anime.id}&season=${season.number}&episode=${i}`;
-                            window.location.href = viewerUrl;
-                        });
-                    } else {
-                        episode.addEventListener('click', (e) => {
-                            // Verificar si estamos en modo de mostrar solo vistos
-                            const showingWatchedOnly = document.querySelector('.toggle-all-watched-button').dataset.showingAll === 'false';
-                            
-                            if (showingWatchedOnly && episode.classList.contains('unwatch-mode')) {
-                                // En modo desmarcar, desmarcar el episodio y ocultarlo
-                                e.preventDefault();
-                                e.stopPropagation();
-                                
-                                const episodeGlobalNumber = parseInt(episode.dataset.globalEpisode);
-                                unmarkEpisodeAsWatched(anime.id, episodeGlobalNumber);
-                                episode.classList.remove('watched');
-                                episode.style.display = 'none'; // Ocultar el episodio
-                                return;
-                            }
-                            
-                            // Comportamiento normal
-                            openEpisode(anime, episodeGlobalNumber, season.number, i, season.slug);
-                            animeDetailModal.style.display = 'none';
-                        });
-                    }
-                    
-                    seasonEpisodes.appendChild(episode);
-                }
-                
-                // Alternar visibilidad de episodios al hacer clic en el título de la temporada
-                seasonTitle.addEventListener('click', () => {
-                    const isVisible = seasonEpisodes.style.display !== 'none';
-                    seasonEpisodes.style.display = isVisible ? 'none' : 'flex';
-                    seasonToggle.textContent = isVisible ? '►' : '▼';
-                });
-                
-                seasonContainer.appendChild(seasonTitle);
-                seasonContainer.appendChild(seasonEpisodes);
-                detailSeasons.appendChild(seasonContainer);
-            });
-            
-            // Añadir todo al contenedor principal
-            animeDetailContainer.appendChild(detailHeader);
-            animeDetailContainer.appendChild(detailSeasons);
-            
-            // Mostrar modal
-            animeDetailModal.style.display = 'block';
-            animeDetailModal.classList.add('fade-in');
-            document.body.classList.add('modal-open'); // Añadir clase para bloquear scroll
-            setTimeout(() => {
-                animeDetailModal.classList.remove('fade-in');
-            }, 300);
-        }
-
-        // Check if episode is watched
-        function isEpisodeWatched(animeId, episodeNumber) {
-            return watchedEpisodes[animeId] && watchedEpisodes[animeId].includes(episodeNumber);
-        }
-
-        // Mark episode as watched
-        function markEpisodeAsWatched(animeId, episodeNumber) {
-            if (!watchedEpisodes[animeId]) {
-                watchedEpisodes[animeId] = [];
-            }
-
-            if (!watchedEpisodes[animeId].includes(episodeNumber)) {
-                watchedEpisodes[animeId].push(episodeNumber);
-                localStorage.setItem(WATCHED_EPISODES_KEY, JSON.stringify(watchedEpisodes));
-                
-                // Marcar el anime como "viendo" si no está ya en la lista
-                if (!watchingAnimes.includes(animeId)) {
-                    watchingAnimes.push(animeId);
-                    localStorage.setItem(WATCHING_ANIMES_KEY, JSON.stringify(watchingAnimes));
-                }
-                
-                return true; // Episode was marked as watched
-            }
-            return false; // Episode was already watched
-        }
-
-        // Unmark episode as watched
-        function unmarkEpisodeAsWatched(animeId, episodeNumber) {
-            if (watchedEpisodes[animeId] && watchedEpisodes[animeId].includes(episodeNumber)) {
-                watchedEpisodes[animeId] = watchedEpisodes[animeId].filter(ep => ep !== episodeNumber);
-                localStorage.setItem(WATCHED_EPISODES_KEY, JSON.stringify(watchedEpisodes));
-                return true; // Episode was unmarked
-            }
-            return false; // Episode wasn't marked as watched
-        }
-
-        // Event listeners
-        searchButton.addEventListener('click', () => {
-            currentSearch = searchInput.value;
-            currentPage = 1; // Resetear a la primera página
+        // Inicializar la visualización de animes cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
             displayAnimes();
         });
 
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                currentSearch = searchInput.value;
-                currentPage = 1; // Resetear a la primera página
-                displayAnimes();
-            }
-        });
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                currentFilter = button.dataset.filter;
-                currentPage = 1; // Resetear a la primera página
-                displayAnimes();
-            });
-        });
+    // Función para inicializar el carrusel de héroes
+    function initHeroCarousel() {
+        const heroSlides = document.getElementById('hero-slides');
+        const heroDots = document.getElementById('hero-dots');
         
-        closeAnimeDetail.addEventListener('click', () => {
-            animeDetailModal.classList.add('fade-out');
-            setTimeout(() => {
-                animeDetailModal.style.display = 'none';
-                animeDetailModal.classList.remove('fade-out');
-                document.body.classList.remove('modal-open'); // Quitar clase para permitir scroll
-            }, 300);
-        });
-
-        // Close modals when clicking outside of them
-        window.addEventListener('click', (e) => {
-            if (e.target === animeDetailModal) {
-                animeDetailModal.classList.add('fade-out');
-                setTimeout(() => {
-                    animeDetailModal.style.display = 'none';
-                    animeDetailModal.classList.remove('fade-out');
-                    document.body.classList.remove('modal-open'); // Quitar clase para permitir scroll
-                }, 300);
-            }
-        });
-
-        // Header scroll behavior - mejorado para mostrar/ocultar según dirección del scroll
-        const header = document.querySelector('header');
-        let lastScrollY = 0;
+        // Limpiar contenedores para evitar duplicación
+        heroSlides.innerHTML = '';
+        heroDots.innerHTML = '';
         
-        window.addEventListener('scroll', () => {
-            const currentScrollY = window.scrollY;
+        let currentSlide = 0;
+        let slideInterval;
+        let carouselAnimes = [];
+        
+        // Obtener los animes para el carrusel basados en los IDs definidos
+        if (typeof carouselAnimeIds !== 'undefined' && carouselAnimeIds.length > 0) {
+            carouselAnimes = animeData.filter(anime => carouselAnimeIds.includes(anime.id));
             
-            // Detectar dirección del scroll
-            if (currentScrollY > lastScrollY && currentScrollY > 50) {
-                // Scroll hacia abajo - ocultar header
-                header.classList.add('hidden');
-            } else {
-                // Scroll hacia arriba - mostrar header
-                header.classList.remove('hidden');
+            // Si no hay suficientes animes en los IDs definidos, tomar los primeros 6 disponibles
+            if (carouselAnimes.length < 6) {
+                const remainingCount = 6 - carouselAnimes.length;
+                const otherAnimes = animeData
+                    .filter(anime => !carouselAnimeIds.includes(anime.id) && anime.banner && anime.logo)
+                    .slice(0, remainingCount);
+                carouselAnimes = [...carouselAnimes, ...otherAnimes];
             }
-            
-            // Guardar la posición actual para la próxima comparación
-            lastScrollY = currentScrollY;
-        });
+        } else {
+            // Si no hay IDs definidos, tomar los primeros 6 animes que tengan banner y logo
+            carouselAnimes = animeData
+                .filter(anime => anime.banner && anime.logo)
+                .slice(0, 6);
+        }
         
-        // Abrir modal de exportar/importar
-        exportImportButton.addEventListener('click', () => {
-            exportImportModal.style.display = 'block';
-            exportImportModal.classList.add('fade-in');
-            document.body.classList.add('modal-open');
-            setTimeout(() => {
-                exportImportModal.classList.remove('fade-in');
-            }, 300);
-        });
-
-        // Cerrar modal de exportar/importar
-        closeExportImport.addEventListener('click', () => {
-            exportImportModal.classList.add('fade-out');
-            setTimeout(() => {
-                exportImportModal.style.display = 'none';
-                exportImportModal.classList.remove('fade-out');
-                document.body.classList.remove('modal-open');
-            }, 300);
-        });
-
-        // Cerrar modal al hacer clic fuera
-        window.addEventListener('click', (e) => {
-            if (e.target === exportImportModal) {
-                exportImportModal.classList.add('fade-out');
-                setTimeout(() => {
-                    exportImportModal.style.display = 'none';
-                    exportImportModal.classList.remove('fade-out');
-                    document.body.classList.remove('modal-open');
-                }, 300);
-            }
-        });
-
-        // Generar código de exportación
-        generateExportCode.addEventListener('click', () => {
-            // Recopilar todos los datos guardados
-            const userData = {
-                watchedEpisodes: watchedEpisodes,
-                myList: myList,
-                watchingAnimes: watchingAnimes
+        // Limitar a 6 animes
+        carouselAnimes = carouselAnimes.slice(0, 6);
+        
+        // Modificar la función que crea las diapositivas
+        carouselAnimes.forEach((anime, index) => {
+            // Crear la diapositiva
+            const slide = document.createElement('div');
+            slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+            
+            // Fondo
+            const bg = document.createElement('img');
+            bg.className = 'hero-slide-bg';
+            
+            // Función para actualizar la imagen según el tamaño de pantalla
+            const updateBannerImage = () => {
+                if (window.innerWidth <= 768) {
+                    // Para móvil: usar backdrop_tall
+                    bg.src = (anime.banner || '').replace('backdrop_wide', 'backdrop_tall');
+                } else {
+                    // Para PC: usar backdrop_wide
+                    bg.src = anime.banner || '';
+                }
             };
-
-            // Convertir a JSON y codificar en Base64 para hacerlo más compacto
-            const jsonData = JSON.stringify(userData);
-            const encodedData = btoa(jsonData);
-
-            // Mostrar el código
-            exportCode.value = encodedData;
-            exportCodeContainer.style.display = 'block';
-        });
-
-        // Copiar código de exportación
-        copyExportCode.addEventListener('click', () => {
-            exportCode.select();
-            document.execCommand('copy');
             
-            // Cambiar temporalmente el texto del botón para indicar que se copió
-            const originalText = copyExportCode.textContent;
-            copyExportCode.textContent = '¡Copiado!';
-            setTimeout(() => {
-                copyExportCode.textContent = originalText;
-            }, 2000);
-        });
-
-        // Importar datos
-        importDataButton.addEventListener('click', () => {
-            try {
-                const encodedData = importCode.value.trim();
-                if (!encodedData) {
-                    throw new Error('Por favor, introduce un código válido');
-                }
-
-                // Decodificar y parsear los datos
-                const jsonData = atob(encodedData);
-                const userData = JSON.parse(jsonData);
-
-                // Verificar que los datos tienen la estructura esperada
-                if (!userData.watchedEpisodes || !userData.myList || !userData.watchingAnimes) {
-                    throw new Error('El código no contiene datos válidos');
-                }
-
-                // Actualizar los datos locales
-                watchedEpisodes = userData.watchedEpisodes;
-                myList = userData.myList;
-                watchingAnimes = userData.watchingAnimes;
-
-                // Guardar en localStorage
-                localStorage.setItem(WATCHED_EPISODES_KEY, JSON.stringify(watchedEpisodes));
-                localStorage.setItem(MY_LIST_KEY, JSON.stringify(myList));
-                localStorage.setItem(WATCHING_ANIMES_KEY, JSON.stringify(watchingAnimes));
-
-                // Mostrar mensaje de éxito
-                importResult.textContent = '¡Datos importados correctamente!';
-                importResult.className = 'result-message success';
-
-                // Actualizar la interfaz
-                displayAnimes();
-
-                // Limpiar el campo de importación
-                importCode.value = '';
-
-                // Ocultar el mensaje después de un tiempo
-                setTimeout(() => {
-                    importResult.style.display = 'none';
-                }, 5000);
-            } catch (error) {
-                // Mostrar mensaje de error
-                importResult.textContent = `Error: ${error.message}`;
-                importResult.className = 'result-message error';
-
-                // Ocultar el mensaje después de un tiempo
-                setTimeout(() => {
-                    importResult.style.display = 'none';
-                }, 5000);
+            // Actualizar imagen inicialmente
+            updateBannerImage();
+            
+            // Añadir listener para cambios de tamaño de ventana
+            window.addEventListener('resize', updateBannerImage);
+            
+            bg.alt = anime.title;
+            
+            // Overlay para el degradado
+            const overlay = document.createElement('div');
+            overlay.className = 'hero-slide-overlay';
+            
+            // Contenido
+            const content = document.createElement('div');
+            content.className = 'hero-slide-content';
+            
+            // Logo
+            const logo = document.createElement('img');
+            logo.className = 'hero-slide-logo';
+            logo.src = anime.logo || '';
+            logo.alt = anime.title;
+            logo.onclick = () => window.location.href = `anime.html?id=${anime.id}`;
+            logo.style.cursor = 'pointer';
+            
+            // Etiquetas (clasificación por edad, subtitulado/doblado)
+            const tags = document.createElement('div');
+            tags.className = 'hero-slide-tags';
+            
+            // Añadir clasificación por edad si existe (primero)
+            if (anime.contentRating) {
+                const ratingTag = document.createElement('span');
+                ratingTag.className = 'hero-slide-tag rating';
+                ratingTag.textContent = anime.contentRating;
+                tags.appendChild(ratingTag);
+                
+                // Añadir punto separador después de la clasificación con color gris
+                const separator = document.createElement('span');
+                separator.textContent = ' • ';
+                separator.style.color = '#b4b4b4';
+                tags.appendChild(separator);
             }
+            
+            // Lógica para mostrar etiquetas de subtitulado/doblado según las condiciones
+            if (anime.subtitled && anime.dubbed) {
+                // Si está subtitulado y doblado, mostrar "Sub | Dob"
+                const langTag = document.createElement('span');
+                langTag.className = 'hero-slide-tag lang';
+                langTag.textContent = 'Sub | Dob';
+                tags.appendChild(langTag);
+            } else if (anime.subtitled) {
+                // Si solo está subtitulado, mostrar "Subtitulado"
+                const langTag = document.createElement('span');
+                langTag.className = 'hero-slide-tag lang';
+                langTag.textContent = 'Subtitulado';
+                tags.appendChild(langTag);
+            } else if (anime.dubbed) {
+                // Si solo está doblado, mostrar "Doblado"
+                const langTag = document.createElement('span');
+                langTag.className = 'hero-slide-tag lang';
+                langTag.textContent = 'Doblado';
+                tags.appendChild(langTag);
+            }
+            
+            // Descripción
+            const description = document.createElement('p');
+            description.className = 'hero-slide-description';
+            description.textContent = anime.description || 'Sin descripción disponible';
+            
+            // Contenedor para los botones
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'hero-slide-buttons';
+            
+            // Botón de reproducción
+            const playButton = document.createElement('button');
+            playButton.className = 'hero-slide-button play-button';
+            playButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5V19L19 12L8 5Z" fill="currentColor"/></svg> COMENZAR A VER';
+            playButton.onclick = () => window.location.href = `anime.html?id=${anime.id}`;
+            
+            // Botón de añadir a UreshiiList
+            const addButton = document.createElement('button');
+            addButton.className = `hero-slide-button add-button ${anime.inMyList ? 'in-list' : ''}`;
+            addButton.setAttribute('data-anime-id', anime.id);
+            
+            // SVG para el botón de añadir a UreshiiList (usando los mismos SVG de las cards)
+            const addButtonSvg = anime.inMyList ? 
+                '<svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z"></path></svg>' : 
+                '<svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18.113l-3.256-2.326A2.989 2.989 0 0 0 12 15.228c-.629 0-1.232.194-1.744.559L7 18.113V4h10v14.113zM18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z"></path></svg>';
+            
+            // Tooltip para el botón de añadir a UreshiiList
+            const tooltipText = anime.inMyList ? 'Eliminar de la lista' : 'Agregar a Ureshiilist';
+            addButton.innerHTML = `<span class="tooltip">${tooltipText}</span>${addButtonSvg}`;
+            
+            // Evento para el botón de añadir a UreshiiList
+            addButton.onclick = (e) => {
+                e.stopPropagation();
+                // Usar directamente la función toggleMyList de cards.js
+                toggleMyList(anime.id);
+            };
+            
+            // Añadir botones al contenedor
+            buttonsContainer.appendChild(playButton);
+            buttonsContainer.appendChild(addButton);
+            
+            // Añadir elementos al contenido
+            content.appendChild(logo);
+            content.appendChild(tags);
+            content.appendChild(description);
+            content.appendChild(buttonsContainer);
+            
+            // Añadir elementos a la diapositiva
+            slide.appendChild(bg);
+            slide.appendChild(overlay);
+            slide.appendChild(content);
+            
+            // Añadir diapositiva al contenedor
+            heroSlides.appendChild(slide);
+            
+            // Crear barra de progreso para el contenedor original de dots
+            const dot = document.createElement('div');
+            dot.className = `hero-dot ${index === 0 ? 'active' : ''}`;
+            dot.onclick = () => goToSlide(index);
+            
+            // Añadir barra de progreso interna
+            const progress = document.createElement('div');
+            progress.className = 'hero-dot-progress';
+            dot.appendChild(progress);
+            
+            heroDots.appendChild(dot);
         });
-
-        // Initial display
-        displayAnimes();
-
-    // Código para la notificación de primera visita
-    document.addEventListener('DOMContentLoaded', function() {
-        const NOTIFICATION_SHOWN_KEY = 'animeflv-notification-shown';
-        const notificationOverlay = document.getElementById('first-visit-notification');
-        const notificationClose = document.querySelector('.notification-close');
         
-        // Verificar si es la primera visita
-        const hasSeenNotification = localStorage.getItem(NOTIFICATION_SHOWN_KEY);
-        
-        if (!hasSeenNotification) {
-            // Mostrar la notificación con un pequeño retraso para mejor experiencia
-            setTimeout(() => {
-                notificationOverlay.classList.add('show');
-            }, 500);
+        // Función para ir a una diapositiva específica
+        function goToSlide(index) {
+            // Ocultar diapositiva actual
+            document.querySelector('.hero-slide.active').classList.remove('active');
+            document.querySelector('.hero-dot.active').classList.remove('active');
+            
+            // Reiniciar todas las barras de progreso
+            document.querySelectorAll('.hero-dot-progress').forEach(progress => {
+                progress.style.width = '0%';
+            });
+            
+            // Mostrar nueva diapositiva
+            document.querySelectorAll('.hero-slide')[index].classList.add('active');
+            document.querySelectorAll('.hero-dot')[index].classList.add('active');
+            
+            currentSlide = index;
+            
+            // Reiniciar el intervalo
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 10000);
         }
         
-        // Cerrar la notificación al hacer clic en la X
-        notificationClose.addEventListener('click', () => {
-            notificationOverlay.classList.remove('show');
-            // Marcar como vista en localStorage
-            localStorage.setItem(NOTIFICATION_SHOWN_KEY, 'true');
+        // Función para ir a la siguiente diapositiva
+        function nextSlide() {
+            const nextIndex = (currentSlide + 1) % carouselAnimes.length;
+            goToSlide(nextIndex);
+        }
+        
+        // Iniciar el carrusel automático
+        slideInterval = setInterval(nextSlide, 10000);
+    }
+    
+    // Inicializar el carrusel cuando se cargue la página
+    document.addEventListener('DOMContentLoaded', function() {
+        initHeroCarousel();
+        
+        // Cargar datos desde Google Drive si está disponible
+        if (typeof window.loadInitialDataFromDrive === 'function') {
+            window.loadInitialDataFromDrive();
+        }
+        
+        // Escuchar cuando los datos de Drive estén listos
+        window.addEventListener('driveDataReady', function(event) {
+            console.log('Datos de Google Drive cargados en index.html:', event.detail);
+            // Recargar cualquier contenido que dependa de los datos
+            if (typeof refreshContent === 'function') {
+                refreshContent();
+            }
         });
     });
 </script>
-    
-    <footer class="footer">
-        <div class="footer-content">
-            Anime Viewer v0.0.2 - Developed by LutukiSolo
-            <p class="disclaimer">No se almacena ningún archivo en nuestros servidores. - El contenido proviene de AnimeFLV, no nos hacemos responsables.</p>
-        </div>
-    </footer>
-</body>
-</html>
 </body>
 </html>

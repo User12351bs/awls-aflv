@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ureshii Anime</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ureshii Anime">
+    <script src="glob/localstorage.js"></script>
+    <script src="glob/google-drive.js"></script>
+    <script src="animes.js"></script>
+    <script src="glob/cards.js"></script>
+    <script src="glob/header.js"></script>
+    <link rel="stylesheet" href="anime.css">
+    <link rel="stylesheet" href="glob/cards.css">
+    <link rel="stylesheet" href="glob/header.css">
+
+
+</head>
+<body>
+    <header>
+        <div class="menu-button" id="menu-toggle">
+            <svg class="menu-ab-svg--wDGx3 header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="menu-svg" aria-hidden="true" role="img"><path class="menu-ab-svg__top--Xgjtj" d="M20 5H4V7H20V5Z"></path><path class="menu-ab-svg__middle--vsB5D" d="M4 11H20V13H4V11Z"></path><path class="menu-ab-svg__bottom--6yklx" d="M20 17H4V19H20V17Z"></path></svg>
+        </div>
+        <a href="index.html" class="header-logo">
+            <picture>
+                <source media="(max-width: 768px)" srcset="logo.png">
+                <source media="(min-width: 769px)" srcset="horizontal-logo.png">
+                <img src="horizontal-logo.png" alt="Ureshii Anime" class="logo-img">
+            </picture>
+        </a>
+        <div class="nav-categories">
+            <a href="index.html" class="nav-category">Catálogo</a>
+            <a href="novedades.html" class="nav-category">Novedades</a>
+        </div>
+        <div class="header-buttons">
+            <a href="search.html" class="header-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="search-svg" aria-hidden="true" role="img"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 19C12.4879 19 14.3164 18.3176 15.7641 17.1742L21.2927 22.7069L22.7074 21.2931L17.1778 15.7595C18.319 14.3126 19 12.4858 19 10.5C19 5.80558 15.1944 2 10.5 2C5.80558 2 2 5.80558 2 10.5C2 15.1944 5.80558 19 10.5 19ZM10.5 17C14.0899 17 17 14.0899 17 10.5C17 6.91015 14.0899 4 10.5 4C6.91015 4 4 6.91015 4 10.5C4 14.0899 6.91015 17 10.5 17Z"></path></svg>
+            </a>
+            <a href="ureshiilists.html" class="header-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="watchlist-svg" aria-hidden="true" role="img"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.0001 20.5858C19.0001 21.4767 17.9229 21.9229 17.293 21.2929L12.0001 16L6.7071 21.2929C6.07714 21.9229 5 21.4767 5 20.5858L5.00006 3H19.0001V20.5858ZM7.00001 18.1716L7.00006 5H17.0001V18.1716L12.0001 13.1716L7.00001 18.1716Z"></path></svg>
+            </a>
+            <a href="account.html" class="export-button" id="export-import-button">
+                <svg class="header-svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="user-settings-svg" aria-hidden="true" role="img"><path d="M12 20a6.01 6.01 0 0 1-5.966-5.355L12 12.088l5.966 2.557A6.01 6.01 0 0 1 12 20m0-16c1.654 0 3 1.346 3 3s-1.345 3-2.999 3h-.002A3.003 3.003 0 0 1 9 7c0-1.654 1.346-3 3-3m7.394 9.081l-4.572-1.959A4.997 4.997 0 0 0 17 7c0-2.757-2.243-5-5-5S7 4.243 7 7c0 1.71.865 3.22 2.178 4.122l-4.572 1.959A.999.999 0 0 0 4 14c0 4.411 3.589 8 8 8s8-3.589 8-8c0-.4-.238-.762-.606-.919"></path></svg>
+            </a>
+        </div>
+    </header>
+
+    <div id="anime-detail-container"></div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            Ureshii Anime - Developed by LutukiSolo
+            <p class="disclaimer">No se almacena ningún archivo en nuestros servidores. - El contenido proviene de AnimeFLV, no nos hacemos responsables.</p>
+        </div>
+    </footer>
+
+    <script>
+        const watchedEpisodes = JSON.parse(localStorage.getItem(WATCHED_EPISODES_KEY)) || {};
+        // Actualizar myList sin redeclararla
+        myList = window.myList || JSON.parse(localStorage.getItem(MY_LIST_KEY)) || [];
+        const watchingAnimes = JSON.parse(localStorage.getItem(WATCHING_ANIMES_KEY)) || [];
+        
+        // CORRECCIÓN mínima: funciones para leer/escribir el estado de colapso de temporadas
+        function readSeasonState() {
+            try {
+                return JSON.parse(localStorage.getItem(SEASON_COLLAPSE_KEY)) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+        function writeSeasonState(obj) {
+            try {
+                localStorage.setItem(SEASON_COLLAPSE_KEY, JSON.stringify(obj));
+            } catch (e) { /* ignore */ }
+        }
+        function isSeasonCollapsed(animeId, seasonNumber) {
+            const map = readSeasonState();
+            return !!map[`${animeId}_${seasonNumber}`];
+        }
+        function setSeasonCollapsed(animeId, seasonNumber, collapsed) {
+            const map = readSeasonState();
+            const key = `${animeId}_${seasonNumber}`;
+            if (collapsed) map[key] = true;
+            else delete map[key];
+            writeSeasonState(map);
+        }
+        
+        // Elementos DOM
+        const animeDetailContainer = document.getElementById('anime-detail-container');
+        const backButton = document.getElementById('back-button');
+        const siteTitle = document.getElementById('site-title');
+        
+        // Obtener el ID del anime de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const animeId = parseInt(urlParams.get('id'));
+        
+        // También hacer que el título de la página lleve al inicio
+        if (siteTitle) {
+            siteTitle.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+            siteTitle.style.cursor = 'pointer';
+        }
+        
+        // Función para obtener el número global del episodio
+        function getGlobalEpisodeNumber(anime, seasonNumber, episodeNumber) {
+            let globalEpisode = episodeNumber;
+            
+            // Sumar los episodios de temporadas anteriores
+            for (let i = 0; i < anime.seasons.length; i++) {
+                const season = anime.seasons[i];
+                if (season.number < seasonNumber) {
+                    globalEpisode += season.episodes;
+                }
+            }
+            
+            return globalEpisode;
+        }
+        
+        // Función para verificar si un episodio está visto
+        function isEpisodeWatched(animeId, episodeNumber) {
+            return watchedEpisodes[animeId] && watchedEpisodes[animeId].includes(episodeNumber);
+        }
+        
+        // Función para marcar un episodio como visto
+        function markEpisodeAsWatched(animeId, episodeNumber) {
+            if (!watchedEpisodes[animeId]) {
+                watchedEpisodes[animeId] = [];
+            }
+            
+            if (!watchedEpisodes[animeId].includes(episodeNumber)) {
+                watchedEpisodes[animeId].push(episodeNumber);
+                localStorage.setItem(WATCHED_EPISODES_KEY, JSON.stringify(watchedEpisodes));
+                
+                // Añadir a la lista de "viendo" si no está ya
+                if (!watchingAnimes.includes(animeId)) {
+                    watchingAnimes.push(animeId);
+                    localStorage.setItem(WATCHING_ANIMES_KEY, JSON.stringify(watchingAnimes));
+                }
+            }
+        }
+        
+        // Función para desmarcar un episodio como visto
+        function unwatchEpisode(animeId, episodeNumber) {
+            if (watchedEpisodes[animeId] && watchedEpisodes[animeId].includes(episodeNumber)) {
+                watchedEpisodes[animeId] = watchedEpisodes[animeId].filter(ep => ep !== episodeNumber);
+                localStorage.setItem(WATCHED_EPISODES_KEY, JSON.stringify(watchedEpisodes));
+            }
+        }
+        
+        // Función para añadir/quitar anime de mi lista
+        function toggleMyList(animeId) {
+            const index = myList.indexOf(animeId);
+            if (index === -1) {
+                // Añadir a mi lista
+                myList.push(animeId);
+                // Actualizar el estado en el objeto anime
+                const anime = animeData.find(a => a.id === animeId);
+                if (anime) {
+                    anime.inMyList = true;
+                }
+            } else {
+                // Quitar de mi lista
+                myList.splice(index, 1);
+                // Actualizar el estado en el objeto anime
+                const anime = animeData.find(a => a.id === animeId);
+                if (anime) {
+                    anime.inMyList = false;
+                }
+            }
+            
+            // Guardar en localStorage
+            localStorage.setItem(MY_LIST_KEY, JSON.stringify(myList));
+            
+            // Actualizar todos los botones de este anime
+            const addToListButtons = document.querySelectorAll(`.add-to-list[data-anime-id="${animeId}"]`);
+            addToListButtons.forEach(button => {
+                if (myList.includes(animeId)) {
+                    button.classList.add('in-list');
+                } else {
+                    button.classList.remove('in-list');
+                }
+            });
+        }
+
+        // Abrir episodio directamente en el emulador
+        function openEpisode(anime, episodeGlobalNumber, seasonNumber, episodeInSeason, seasonSlug) {
+            // En lugar de abrir AnimeFlv directamente, abrimos nuestro emulador
+            const viewerUrl = `viewer.html?id=${anime.id}&season=${seasonNumber}&episode=${episodeInSeason}`;
+            
+            // Marcar el episodio como visto automáticamente
+            markEpisodeAsWatched(anime.id, episodeGlobalNumber);
+            
+            // Abrir nuestro emulador en la misma pestaña
+            window.location.href = viewerUrl;
+        }
+        
+        // Función para verificar y desbloquear episodios según la fecha
+        // CORRECCIÓN mínima: getSourceData ahora busca primero la variable animeData (si existe) y después window.animeData
+        function getSourceData(){
+            if (typeof animeData !== 'undefined' && Array.isArray(animeData)) return animeData;
+            if (Array.isArray(window.animeData)) return window.animeData;
+            return [];
+        }
+
+        // Función para verificar y desbloquear episodios según la fecha
+        function checkAndUnlockEpisodes() {
+            // Verificar si animeData exista y es un array
+            const dataArray = getSourceData();
+            if (!Array.isArray(dataArray) || dataArray.length === 0) {
+                console.warn("Error: animeData no es un array o no está definido");
+                return;
+            }
+            
+            // Crear una nueva fecha con la zona horaria local y obtener solo la parte de la fecha
+            const now = new Date();
+            const currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            // Obtener la fecha actual formateada como YYYY-MM-DD (usando hora local)
+            const currentDateFormatted = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+            
+            // Mostrar la fecha actual en la consola para depuración
+            console.log("Fecha actual del sistema:", currentDateFormatted);
+            
+            let dataChanged = false; // Flag para saber si hubo cambios en los datos
+            
+            try {
+                // Recorrer todos los animes
+                dataArray.forEach(anime => {
+                    // Recorrer todas las temporadas
+                    anime.seasons.forEach(season => {
+                        // Verificar si hay información de nuevos episodios
+                        if (season.newEpisode) {
+                            // Guardar la fecha original para no sobrescribirla
+                            const originalDate = season.newEpisode.date;
+                            
+                            // Obtener la fecha inicial de lanzamiento (formato YYYY-MM-DD)
+                            const initialDateParts = originalDate.split('-');
+                            if (initialDateParts.length === 3) {
+                                // Crear objeto Date para la fecha inicial (usando UTC para evitar problemas de zona horaria)
+                                const initialDate = new Date(Date.UTC(
+                                    parseInt(initialDateParts[0]),
+                                    parseInt(initialDateParts[1]) - 1,
+                                    parseInt(initialDateParts[2])
+                                ));
+                                
+                                // Formatear la fecha inicial como YYYY-MM-DD para comparaciones
+                                const initialDateFormatted = initialDate.toISOString().split('T')[0];
+                                
+                                // Obtener el intervalo de transmisión (días entre episodios)
+                                const broadcastInterval = season.newEpisode.broadcastInterval || 7; // Por defecto, semanal
+                                
+                                // Calcular días transcurridos desde la fecha inicial hasta hoy
+                                const initialDateObj = new Date(initialDateFormatted);
+                                const currentDateObj = new Date(currentDateFormatted);
+                                
+                                // Calcular la diferencia en días (solo por fecha, sin horas)
+                                const timeDiff = currentDateObj.getTime() - initialDateObj.getTime();
+                                const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+                                
+                                // Calcular episodios publicados basados en días transcurridos y el intervalo
+                                let releasedEpisodes = Math.floor(daysDiff / broadcastInterval) + 1; // +1 porque el primer episodio sale en la fecha inicial
+                                
+                                // Asegurarse de que releasedEpisodes no exceda el total de episodios
+                                if (releasedEpisodes > season.episodes) {
+                                    releasedEpisodes = season.episodes;
+                                }
+                                
+                                // Asegurarse de que releasedEpisodes no sea negativo
+                                if (releasedEpisodes < 0) {
+                                    releasedEpisodes = 0;
+                                }
+                                
+                                // Si la fecha actual es anterior a la fecha inicial, no hay episodios publicados
+                                if (currentDateFormatted < initialDateFormatted) {
+                                    releasedEpisodes = 0;
+                                }
+                                
+                                // Calcular el próximo episodio
+                                let nextEpisode = releasedEpisodes + 1;
+                                
+                                // Si nextEpisode excede el total de episodios, no hay próximo episodio
+                                if (nextEpisode > season.episodes) {
+                                    nextEpisode = null;
+                                }
+                                
+                                // Calcular la fecha del próximo episodio
+                                let nextReleaseISO = null;
+                                let nextReleaseHuman = null;
+                                
+                                if (nextEpisode !== null) {
+                                    // Calcular días adicionales desde la fecha inicial
+                                    const daysToAdd = (nextEpisode - 1) * broadcastInterval;
+                                    
+                                    // Crear fecha para el próximo episodio (usando UTC para evitar problemas de zona horaria)
+                                    const nextReleaseDate = new Date(initialDate);
+                                    nextReleaseDate.setUTCDate(initialDate.getUTCDate() + daysToAdd);
+                                    
+                                    // Formatear la fecha del próximo episodio
+                                    nextReleaseISO = nextReleaseDate.toISOString().split('T')[0];
+                                    
+                                    // Formatear la fecha en español para mostrar al usuario
+                                    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                                    nextReleaseHuman = nextReleaseDate.toLocaleDateString('es-ES', options);
+                                }
+                                
+                                // Calcular la fecha del último episodio lanzado
+                                let lastEpisodeReleaseDate = null;
+                                if (releasedEpisodes > 0) {
+                                    const daysToAdd = (releasedEpisodes - 1) * broadcastInterval;
+                                    const lastReleaseDate = new Date(initialDate);
+                                    lastReleaseDate.setUTCDate(initialDate.getUTCDate() + daysToAdd);
+                                    lastEpisodeReleaseDate = lastReleaseDate.toISOString().split('T')[0];
+                                }
+                                
+                                // Verificar si el último episodio se lanzó exactamente hoy
+                                const isReleasedToday = lastEpisodeReleaseDate === currentDateFormatted;
+                                
+                                // Actualizar el estado según la comparación de fechas
+                                let status;
+                                if (releasedEpisodes > 0) {
+                                    // Solo mostrar "Disponible" si el episodio se lanzó hoy
+                                    status = isReleasedToday ? 'Disponible' : 'Próximamente';
+                                } else {
+                                    status = 'Próximamente';
+                                }
+                                
+                                // Verificar si hay cambios en los datos
+                                if (season.newEpisode.releasedEpisodes !== releasedEpisodes ||
+                                    season.newEpisode.nextEpisode !== nextEpisode ||
+                                    season.newEpisode.status !== status) {
+                                    dataChanged = true;
+                                }
+                                
+                                // Actualizar los datos de la temporada
+                                season.newEpisode.releasedEpisodes = releasedEpisodes;
+                                season.newEpisode.nextEpisode = nextEpisode;
+                                season.newEpisode.status = status;
+                                season.newEpisode.isReleasedToday = isReleasedToday; // Añadir esta propiedad para usar en otras funciones
+                                
+                                // Actualizar la fecha mostrada (para el badge y modal) sin modificar la fecha original
+                                if (nextReleaseISO) {
+                                    season.newEpisode.displayDate = nextReleaseISO;
+                                    season.newEpisode.displayDateHuman = nextReleaseHuman;
+                                } else {
+                                    season.newEpisode.displayDate = originalDate;
+                                }
+                                
+                                console.log(`Anime: ${anime.title}, ${season.title}, Ep: ${releasedEpisodes}, Lanzado hoy: ${isReleasedToday}`);
+                            }
+                        }
+                    });
+                });
+            } catch (error) {
+                console.warn("Error al procesar los datos de anime:", error);
+            }
+            
+            // Actualizar los badges en la interfaz después de procesar todos los datos
+            updateSeasonBadges();
+            
+            // Si hubo cambios en los datos, actualizar la vista completa
+            if (dataChanged && window.location.pathname.includes('anime.html')) {
+                console.log('Se detectaron cambios en los datos, actualizando la vista...');
+                refreshCurrentAnimeView();
+            }
+        }
+
+        // Función para actualizar los badges de temporada
+        // Función para actualizar los badges de temporada
+        function updateSeasonBadges() {
+            const seasonTitles = document.querySelectorAll('.season-title');
+            
+            try {
+                // Verificar si animeData existe y es un array
+                const dataArray = getSourceData();
+                if (!Array.isArray(dataArray)) {
+                    return;
+                }
+                
+                // Obtener la fecha actual formateada como YYYY-MM-DD
+                const currentDate = new Date();
+                const currentDateFormatted = currentDate.toISOString().split('T')[0];
+                
+                // Recorrer todos los animes y temporadas para actualizar los badges
+                dataArray.forEach(anime => {
+                    anime.seasons.forEach(season => {
+                        if (season.newEpisode) {
+                            // Buscar el título de temporada correspondiente
+                            seasonTitles.forEach(titleElement => {
+                                // Esperamos dataset en formato "<animeId>_<seasonNumber>"
+                                const key = titleElement.dataset.seasonKey;
+                                if (!key) return;
+                                const [aid, seasonNumberStr] = key.split('_');
+                                if (parseInt(aid) !== anime.id) return;
+                                const seasonNumber = parseInt(seasonNumberStr);
+                                if (seasonNumber !== season.number) return;
+                                
+                                // Buscar el badge dentro de este título
+                                const badge = titleElement.querySelector('.new-episode-badge');
+                                if (badge) {
+                                    // Si todos los episodios han sido lanzados, ocultar el badge
+                                    if (season.newEpisode.releasedEpisodes >= season.episodes && season.newEpisode.nextEpisode === null) {
+                                        badge.style.display = 'none';
+                                        return;
+                                    } else {
+                                        badge.style.display = 'inline-block'; // Asegurarse de que sea visible
+                                    }
+                                    
+                                    // Calcular la fecha de lanzamiento del último episodio disponible
+                                    let lastEpisodeReleaseDate = null;
+                                    if (season.newEpisode.releasedEpisodes > 0) {
+                                        // Obtener la fecha inicial de lanzamiento
+                                        const initialDateParts = season.newEpisode.date.split('-');
+                                        if (initialDateParts.length === 3) {
+                                            const initialDate = new Date(Date.UTC(
+                                                parseInt(initialDateParts[0]),
+                                                parseInt(initialDateParts[1]) - 1,
+                                                parseInt(initialDateParts[2])
+                                            ));
+                                            
+                                            // Obtener el intervalo de transmisión
+                                            const broadcastInterval = season.newEpisode.broadcastInterval || 7;
+                                            
+                                            // Calcular días adicionales desde la fecha inicial para el último episodio lanzado
+                                            const daysToAdd = (season.newEpisode.releasedEpisodes - 1) * broadcastInterval;
+                                            
+                                            // Crear fecha para el último episodio lanzado
+                                            lastEpisodeReleaseDate = new Date(initialDate);
+                                            lastEpisodeReleaseDate.setUTCDate(initialDate.getUTCDate() + daysToAdd);
+                                            
+                                            // Formatear la fecha del último episodio lanzado
+                                            lastEpisodeReleaseDate = lastEpisodeReleaseDate.toISOString().split('T')[0];
+                                        }
+                                    }
+                                    
+                                    // Verificar si el último episodio se lanzó exactamente hoy
+                                    const isReleasedToday = lastEpisodeReleaseDate === currentDateFormatted;
+                                    
+                                    // Usar displayDateHuman si existe, sino usar displayDate, y si no existe usar date original
+                                    const dateToShow = season.newEpisode.displayDateHuman || season.newEpisode.displayDate || season.newEpisode.date;
+                                    
+                                    // Actualizar el texto y la clase del badge
+                                    if (isReleasedToday) {
+                                        // Si el episodio se lanzó hoy, mostrar "Disponible"
+                                        badge.textContent = `¡Episodio ya disponible!`;
+                                        badge.classList.add('available');
+                                        badge.classList.remove('upcoming');
+                                    } else {
+                                        // Si no, mostrar "Próximamente" para el siguiente episodio
+                                        badge.textContent = `Próximamente - ${dateToShow}`;
+                                        badge.classList.add('upcoming');
+                                        badge.classList.remove('available');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                });
+            } catch (error) {
+                console.warn("Error al actualizar los badges de temporada:", error);
+            }
+        }
+
+        // Función para refrescar la vista del anime actual
+        function refreshCurrentAnimeView() {
+            // Obtenemos el ID del anime actual de la URL
+            const currentUrlParams = new URLSearchParams(window.location.search);
+            const currentAnimeId = parseInt(currentUrlParams.get('id'));
+            
+            if (currentAnimeId) {
+                console.log('Refrescando vista del anime ID:', currentAnimeId);
+                // Volver a mostrar los detalles del anime para reflejar los cambios
+                displayAnimeDetails(currentAnimeId);
+            }
+        }
+        
+        // Función para mostrar los detalles del anime (modificada)
+        function displayAnimeDetails(animeId) {
+            const anime = getSourceData().find(a => a.id === animeId);
+            if (!anime) {
+                animeDetailContainer.innerHTML = '<p>Anime no encontrado</p>';
+                return;
+            }
+            
+            // Actualizar el título de la página
+            document.title = `${anime.title} - Ureshii Anime`;
+            
+            // Limpiar contenedor
+            animeDetailContainer.innerHTML = '';
+            
+            // Eliminar cualquier contenedor de fondo existente (ya no lo necesitamos)
+            const existingBackground = document.querySelector('.background-image-container');
+            if (existingBackground) {
+                existingBackground.remove();
+            }
+            
+            // Crear el hero-carousel similar al de index.html
+            const heroCarousel = document.createElement('div');
+            heroCarousel.className = 'hero-carousel';
+            heroCarousel.id = 'hero-carousel';
+            
+            const heroSlides = document.createElement('div');
+            heroSlides.className = 'hero-slides';
+            heroSlides.id = 'hero-slides';
+            
+            // Crear la diapositiva
+            const slide = document.createElement('div');
+            slide.className = 'hero-slide active';
+            
+            // Fondo
+            const bg = document.createElement('img');
+            bg.className = 'hero-slide-bg';
+            
+            // Función para actualizar la imagen según el tamaño de pantalla
+            const updateBannerImage = () => {
+                if (window.innerWidth <= 768) {
+                    // Para móvil: usar backdrop_tall
+                    bg.src = (anime.banner || '').replace('backdrop_wide', 'backdrop_tall');
+                } else {
+                    // Para PC: usar backdrop_wide
+                    bg.src = anime.banner || anime.image;
+                }
+            };
+            
+            // Actualizar imagen inicialmente
+            updateBannerImage();
+            
+            // Añadir listener para cambios de tamaño de ventana
+            window.addEventListener('resize', updateBannerImage);
+            
+            bg.alt = anime.title;
+            
+            // Overlay para el degradado
+            const overlay = document.createElement('div');
+            overlay.className = 'hero-slide-overlay';
+            
+            // Contenido
+            const content = document.createElement('div');
+            content.className = 'hero-slide-content';
+            
+            // Logo
+            const logo = document.createElement('img');
+            logo.className = 'hero-slide-logo';
+            logo.src = anime.logo || '';
+            logo.alt = anime.title;            
+            // Si no hay logo, mostrar el título
+            if (!anime.logo) {
+                const titleElement = document.createElement('h2');
+                titleElement.className = 'hero-slide-title';
+                titleElement.textContent = anime.title;
+                content.appendChild(titleElement);
+            } else {
+                content.appendChild(logo);
+            }
+            
+            // Etiquetas (clasificación por edad, subtitulado/doblado)
+            const tags = document.createElement('div');
+            tags.className = 'hero-slide-tags';
+            
+            // Añadir clasificación por edad si existe (primero)
+            if (anime.contentRating) {
+                const ratingTag = document.createElement('span');
+                ratingTag.className = 'hero-slide-tag rating';
+                ratingTag.textContent = anime.contentRating;
+                tags.appendChild(ratingTag);
+                
+                // Añadir punto separador después de la clasificación con color gris
+                const separator = document.createElement('span');
+                separator.textContent = ' • ';
+                separator.style.color = '#b4b4b4';
+                tags.appendChild(separator);
+            }
+            
+            // Lógica para mostrar etiquetas de subtitulado/doblado según las condiciones
+            if (anime.subtitled && anime.dubbed) {
+                // Si está subtitulado y doblado, mostrar "Sub | Dob"
+                const langTag = document.createElement('span');
+                langTag.className = 'hero-slide-tag lang';
+                langTag.textContent = 'Sub | Dob';
+                tags.appendChild(langTag);
+            } else if (anime.subtitled) {
+                // Si solo está subtitulado, mostrar "Subtitulado"
+                const langTag = document.createElement('span');
+                langTag.className = 'hero-slide-tag lang';
+                langTag.textContent = 'Subtitulado';
+                tags.appendChild(langTag);
+            } else if (anime.dubbed) {
+                // Si solo está doblado, mostrar "Doblado"
+                const langTag = document.createElement('span');
+                langTag.className = 'hero-slide-tag lang';
+                langTag.textContent = 'Doblado';
+                tags.appendChild(langTag);
+            }
+            
+            content.appendChild(tags);
+
+            // Función para obtener el texto de advertencia según la clasificación
+            function getContentWarningText(rating) {
+                switch(rating) {
+                    case 'ALL': return 'Contenido apto para todos los públicos.';
+                    case '+12': return 'Consumo de drogas/alcohol, Lenguaje ofensivo, Tabaquismo';
+                    case '12+': return 'Consumo de drogas/alcohol, Lenguaje ofensivo, Tabaquismo';
+                    case '+14': return 'Desnudez, Lenguaje ofensivo, Contenido sexual, Diálogos sugerentes, Suicidio, Violencia';
+                    case '14+': return 'Desnudez, Lenguaje ofensivo, Contenido sexual, Diálogos sugerentes, Suicidio, Violencia';
+                    case '+16': return 'Sangre/Gore, Lenguaje ofensivo, Violencia sexual, Imágenes sexualizadas, Violencia';
+                    case '16+': return 'Sangre/Gore, Lenguaje ofensivo, Violencia sexual, Imágenes sexualizadas, Violencia';
+                    case '+18': return 'Violencia explícita, Contenido sexual explícito, Lenguaje ofensivo.';
+                    case '18+': return 'Violencia explícita, Contenido sexual explícito, Lenguaje ofensivo.';
+                    default: return 'Este contenido puede no ser apropiado para todos los públicos.';
+                }
+            }
+            
+            // Contenedor para los botones
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'hero-slide-buttons';
+            
+            // Encontrar el primer episodio no visto
+            let firstUnwatchedEpisode = null;
+            let firstUnwatchedSeason = null;
+            let firstUnwatchedEpisodeNumber = null;
+            let firstUnwatchedSeasonSlug = null;
+            
+            for (const season of anime.seasons) {
+                for (let i = 1; i <= season.episodes; i++) {
+                    const globalEpisode = getGlobalEpisodeNumber(anime, season.number, i);
+                    if (!isEpisodeWatched(anime.id, globalEpisode)) {
+                        firstUnwatchedEpisode = globalEpisode;
+                        firstUnwatchedSeason = season.number;
+                        firstUnwatchedEpisodeNumber = i;
+                        firstUnwatchedSeasonSlug = season.slug;
+                        break;
+                    }
+                }
+                if (firstUnwatchedEpisode !== null) break;
+            }
+            
+            // Botón de reproducción
+            const playButton = document.createElement('button');
+            playButton.className = 'hero-slide-button play-button';
+            
+            // Si hay un episodio no visto, configurar el botón para reproducirlo
+            if (firstUnwatchedEpisode !== null) {
+                playButton.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5V19L19 12L8 5Z" fill="currentColor"/></svg> COMENZAR A VER E${firstUnwatchedEpisodeNumber}`;
+                playButton.onclick = () => openEpisode(anime, firstUnwatchedEpisode, firstUnwatchedSeason, firstUnwatchedEpisodeNumber, firstUnwatchedSeasonSlug);
+            } else {
+                // Si todos los episodios están vistos, reproducir el primer episodio
+                if (anime.seasons && anime.seasons.length > 0) {
+                    const firstSeason = anime.seasons[0];
+                    playButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5V19L19 12L8 5Z" fill="currentColor"/></svg> COMENZAR A VER E1';
+                    playButton.onclick = () => openEpisode(anime, 1, firstSeason.number, 1, firstSeason.slug);
+                }
+            }
+            
+            // Botón de añadir a UreshiiList
+            const addButton = document.createElement('button');
+            addButton.className = `hero-slide-button add-button ${myList.includes(anime.id) ? 'in-list' : ''}`;
+            addButton.setAttribute('data-anime-id', anime.id);
+            
+            // SVG para el botón de añadir a UreshiiList
+            const addButtonSvg = myList.includes(anime.id) ? 
+                '<svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z"></path></svg>' : 
+                '<svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18.113l-3.256-2.326A2.989 2.989 0 0 0 12 15.228c-.629 0-1.232.194-1.744.559L7 18.113V4h10v14.113zM18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z"></path></svg>';
+            
+            // Tooltip para el botón de añadir a UreshiiList
+            const tooltipText = myList.includes(anime.id) ? 'Eliminar de la lista' : 'Agregar a Ureshiilist';
+            addButton.innerHTML = `<span class="tooltip">${tooltipText}</span>${addButtonSvg}`;
+            
+            // Evento para el botón de añadir a UreshiiList
+            addButton.onclick = (e) => {
+                e.stopPropagation();
+                // Usar la función addToUreshiiList para gestión completa de listas
+                if (typeof addToUreshiiList === 'function') {
+                    addToUreshiiList(anime.id);
+                } else {
+                    // Fallback a toggleMyList si addToUreshiiList no está disponible
+                    toggleMyList(anime.id);
+                }
+            };
+            
+            // Botón para desmarcar episodios (SVG solicitado)
+            const unwatchButton = document.createElement('button');
+            unwatchButton.className = 'hero-slide-button add-button unwatch-button';
+            unwatchButton.innerHTML = `
+                <span class="tooltip">Desmarcar episodios</span>
+                <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-t="more-svg" aria-hidden="true" role="img">
+                    <path d="M6 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-2 4c0 1.1.9 2 2 2s2-.9 2-2-.9-2-2-2-2 .9-2 2zm2 4c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                </svg>
+            `;
+            
+            // Crear el botón para marcar/desmarcar todos los episodios visibles
+            const toggleAllWatchedButton = document.createElement('button');
+            toggleAllWatchedButton.className = 'toggle-all-watched-button';
+            toggleAllWatchedButton.textContent = 'Editar';
+            toggleAllWatchedButton.dataset.showingAll = 'true';
+            toggleAllWatchedButton.style.display = 'none'; // Oculto inicialmente
+            
+            // Evento para el botón de desmarcar episodios (mismo comportamiento que toggleAllWatchedButton)
+            unwatchButton.addEventListener('click', () => {
+                // Obtener todos los episodios visibles
+                const allEpisodes = document.querySelectorAll('.season-episodes[style*="display: flex"] .episode');
+                
+                // Determinar si estamos mostrando todos o solo los vistos
+                const showingAll = toggleAllWatchedButton.dataset.showingAll === 'true';
+                
+                // Cambiar el estado
+                toggleAllWatchedButton.dataset.showingAll = showingAll ? 'false' : 'true';
+                
+                // Actualizar la clase del botón para el estilo
+                if (showingAll) {
+                    toggleAllWatchedButton.classList.add('showing-watched-only');
+                    
+                    // Mostrar el marco de edición entre la info del anime y las temporadas
+                    let editModeFrame = document.querySelector('.edit-mode-frame');
+                    if (!editModeFrame) {
+                        // Crear el marco si no existe
+                        editModeFrame = document.createElement('div');
+                        editModeFrame.className = 'edit-mode-frame';
+                        editModeFrame.textContent = 'Ahora solo se están mostrando los episodios que has visto. Dale click a un episodio para marcar como no visto. Para salir de este modo pulsa otra vez el botón de editar.';
+                        
+                        // Insertar el marco justo antes del contenedor de temporadas
+                        const animeDetailContainer = document.getElementById('anime-detail-container');
+                        const seasonsContainer = document.querySelector('.seasons-container');
+                        if (animeDetailContainer && seasonsContainer) {
+                            animeDetailContainer.insertBefore(editModeFrame, seasonsContainer);
+                        }
+                    }
+                    editModeFrame.style.display = 'block';
+                } else {
+                    toggleAllWatchedButton.classList.remove('showing-watched-only');
+                    
+                    // Ocultar el marco de edición
+                    const editModeFrame = document.querySelector('.edit-mode-frame');
+                    if (editModeFrame) {
+                        editModeFrame.style.display = 'none';
+                    }
+                }
+                
+                // Mostrar/ocultar episodios según el estado
+                allEpisodes.forEach(ep => {
+                    if (showingAll) {
+                        // Si estamos mostrando todos y vamos a mostrar solo vistos
+                        if (ep.classList.contains('watched')) {
+                            ep.style.display = 'flex';
+                            ep.classList.add('unwatch-mode');
+                        } else {
+                            ep.style.display = 'none';
+                        }
+                    } else {
+                        // Si estamos mostrando solo vistos y vamos a mostrar todos
+                        ep.style.display = 'flex';
+                        ep.classList.remove('unwatch-mode');
+                    }
+                });
+            });
+            
+            // Añadir botones al contenedor
+            buttonsContainer.appendChild(playButton);
+            buttonsContainer.appendChild(addButton);
+            buttonsContainer.appendChild(unwatchButton);
+            
+            content.appendChild(buttonsContainer);
+            
+            // Añadir descripción del anime debajo de los botones
+            const descriptionContainer = document.createElement('div');
+            descriptionContainer.className = 'description-container';
+            descriptionContainer.style.position = 'relative'; // Aseguramos que tenga posición relativa
+            descriptionContainer.style.top = '0'; // Fijamos la posición superior
+
+            const description = document.createElement('p');
+            description.className = 'hero-slide-description';
+            description.textContent = anime.description || 'Sin descripción disponible';
+
+            // Añadimos la descripción al contenedor
+            descriptionContainer.appendChild(description);
+            
+            // Añadir botón "Más contenido" después del contenedor de descripción
+            const moreContentButton = document.createElement('button');
+            moreContentButton.className = 'more-content-button';
+            moreContentButton.textContent = 'Más contenido';
+            
+            // Creamos un div para contener tanto la descripción como el botón
+            const descriptionWrapper = document.createElement('div');
+            descriptionWrapper.className = 'description-wrapper';
+            
+            // Crear contenedor de dos columnas
+            const twoColumnContainer = document.createElement('div');
+            twoColumnContainer.className = 'two-column-container';
+            
+            // Crear columna izquierda para la descripción
+            const leftColumn = document.createElement('div');
+            leftColumn.className = 'left-column';
+            
+            // Crear columna derecha para información de audio/subtítulos
+            const rightColumn = document.createElement('div');
+            rightColumn.className = 'right-column';
+            
+            // Crear sección de información de audio
+            const audioInfo = document.createElement('div');
+            audioInfo.className = 'audio-info';
+            // Mostrar siempre Japanese, y Español si está doblado
+            const audioLanguages = ['Japanese'];
+            if (anime.dubbed) {
+                audioLanguages.push('Español');
+            }
+            audioInfo.innerHTML = `<strong>Audio:</strong> ${audioLanguages.join(', ')}`;
+            
+            // Crear sección de información de subtítulos
+            const subtitlesInfo = document.createElement('div');
+            subtitlesInfo.className = 'subtitles-info';
+            // Mostrar estado de subtítulos
+            if (anime.subtitled) {
+                subtitlesInfo.innerHTML = `<strong>Subtítulos:</strong> Español`;
+            } else {
+                subtitlesInfo.innerHTML = `<strong>Subtítulos:</strong> No disponibles`;
+            }
+            
+            // Crear aviso de contenido para la columna derecha
+            const rightContentWarning = document.createElement('div');
+            rightContentWarning.className = 'content-warning-right';
+            const rightAgeRating = anime.contentRating || '+14';
+            rightContentWarning.innerHTML = `<strong>Aviso sobre el contenido:</strong> ${rightAgeRating} ${getContentWarningText(rightAgeRating)}`;
+            
+            // Añadir información a la columna derecha
+            rightColumn.appendChild(audioInfo);
+            rightColumn.appendChild(subtitlesInfo);
+            rightColumn.appendChild(rightContentWarning);
+            
+            // Añadir la descripción a la columna izquierda
+            leftColumn.appendChild(descriptionContainer);
+            
+            // Añadir columnas al contenedor de dos columnas
+            twoColumnContainer.appendChild(leftColumn);
+            twoColumnContainer.appendChild(rightColumn);
+            
+            // Añadir el contenedor de dos columnas al wrapper
+            descriptionWrapper.appendChild(twoColumnContainer);
+            
+            // Función para verificar si el texto se corta en 3 líneas
+            function checkTextOverflow() {
+                // Esperar a que el elemento esté en el DOM
+                setTimeout(() => {
+                    // Calcular la altura de 3 líneas
+                    const lineHeight = parseFloat(window.getComputedStyle(description).lineHeight);
+                    const maxHeight = lineHeight * 3;
+                    
+                    // Temporalmente permitir que el texto se expanda para medir su altura real
+                    const originalMaxHeight = description.style.maxHeight;
+                    description.style.maxHeight = 'none';
+                    const fullHeight = description.scrollHeight;
+                    description.style.maxHeight = originalMaxHeight;
+                    
+                    // Siempre mostrar el botón de "Más contenido"
+                    // Limitar la descripción a 3 líneas cuando no está expandida
+                    if (!description.classList.contains('expanded')) {
+                        description.style.maxHeight = maxHeight + 'px';
+                        description.style.overflow = 'hidden';
+                    }
+                    
+                    // Añadir el botón siempre después del contenedor de dos columnas
+                    // para que aparezca debajo de ambas columnas
+                    descriptionWrapper.appendChild(moreContentButton);
+                    moreContentButton.style.display = 'block';
+                }, 100);
+            }
+            
+            // Verificar overflow inicialmente y en resize
+            checkTextOverflow();
+            window.addEventListener('resize', checkTextOverflow);
+            
+            // No añadimos el wrapper al contenido del slider
+            // Se añadirá después del hero-carousel
+            
+            // El aviso de contenido ya se muestra en la columna derecha
+            
+            // Configurar el evento del botón "Más contenido"
+            moreContentButton.addEventListener('click', (event) => {
+                // Evitar que el scroll se mueva
+                event.preventDefault();
+                
+                const isExpanding = !descriptionContainer.classList.contains('expanded');
+                
+                // Cambiar el texto del botón
+                moreContentButton.textContent = isExpanding ? 'Menos contenido' : 'Más contenido';
+                
+                // Expandir/contraer ambas columnas
+                if (isExpanding) {
+                    // Expandir la descripción
+                    description.style.maxHeight = 'none';
+                    description.style.overflow = 'visible';
+                    
+                    // Expandir la columna derecha
+                    rightColumn.classList.add('expanded');
+                    
+                    // Añadir clase expanded - CSS se encarga de la transición suave
+                    descriptionContainer.classList.add('expanded');
+                    description.classList.add('expanded');
+                } else {
+                    // Contraer la descripción a 3 líneas
+                    const lineHeight = parseFloat(window.getComputedStyle(description).lineHeight);
+                    const maxHeight = lineHeight * 3;
+                    description.style.maxHeight = maxHeight + 'px';
+                    description.style.overflow = 'hidden';
+                    
+                    // Contraer la columna derecha
+                    rightColumn.classList.remove('expanded');
+                    
+                    // Quitar clase expanded
+                    descriptionContainer.classList.remove('expanded');
+                    description.classList.remove('expanded');
+                }
+                
+                // El CSS se encarga de la transición suave sin necesidad de JavaScript adicional
+            });
+            
+            // Crear el contenedor para botones fijos en móvil
+            const fixedButtonsContainer = document.createElement('div');
+            fixedButtonsContainer.className = 'fixed-buttons-container';
+
+            // Clonar los botones para el contenedor fijo
+            const fixedPlayButton = playButton.cloneNode(true);
+            fixedPlayButton.addEventListener('click', playButton.onclick);
+
+            const fixedAddButton = addButton.cloneNode(true);
+            // Asegurar que el botón fijo mantenga el atributo data-anime-id
+            fixedAddButton.setAttribute('data-anime-id', anime.id);
+            // Recrear el event listener para el botón fijo
+            fixedAddButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Usar la función addToUreshiiList para gestión completa de listas
+                if (typeof addToUreshiiList === 'function') {
+                    addToUreshiiList(anime.id);
+                } else {
+                    // Fallback a toggleMyList si addToUreshiiList no está disponible
+                    toggleMyList(anime.id);
+                }
+            });
+
+            // Añadir los botones clonados al contenedor fijo
+            fixedButtonsContainer.appendChild(fixedPlayButton);
+            fixedButtonsContainer.appendChild(fixedAddButton);
+
+            // Añadir el contenedor fijo al body
+            document.body.appendChild(fixedButtonsContainer);
+
+            // Función para mostrar/ocultar los botones fijos según el scroll
+            window.addEventListener('scroll', () => {
+                const buttonsRect = buttonsContainer.getBoundingClientRect();
+                const isButtonsVisible = buttonsRect.top >= 0 && buttonsRect.bottom <= window.innerHeight;
+                
+                // Mostrar los botones fijos solo si los originales no están visibles
+                fixedButtonsContainer.classList.toggle('visible', !isButtonsVisible);
+            });
+            
+            // Añadir elementos a la diapositiva
+            slide.appendChild(bg);
+            slide.appendChild(overlay);
+            slide.appendChild(content);
+            
+            // Añadir diapositiva al contenedor
+            heroSlides.appendChild(slide);
+            heroCarousel.appendChild(heroSlides);
+            
+            // Insertar el hero-carousel al principio del contenedor de detalles
+            animeDetailContainer.insertBefore(heroCarousel, animeDetailContainer.firstChild);
+            
+            // Añadir el wrapper de descripción después del hero-carousel
+            animeDetailContainer.appendChild(descriptionWrapper);
+            
+            animeDetailContainer.appendChild(toggleAllWatchedButton);
+            
+            // Crear contenedor para las temporadas
+            const seasonsContainer = document.createElement('div');
+            seasonsContainer.className = 'seasons-container';
+            
+            // Ordenar temporadas por número
+            const sortedSeasons = [...anime.seasons].sort((a, b) => a.number - b.number);
+            
+            // Crear cada temporada
+            sortedSeasons.forEach(season => {
+                const seasonContainer = document.createElement('div');
+                seasonContainer.className = 'season-container collapsible-box';
+                
+                // Título de la temporada con toggle
+                const seasonTitle = document.createElement('div');
+                seasonTitle.className = 'season-title collapsible-header';
+                
+                const seasonToggle = document.createElement('span');
+                seasonToggle.className = 'season-toggle';
+                seasonToggle.textContent = '▼';
+                
+                seasonTitle.appendChild(seasonToggle);
+                seasonTitle.appendChild(document.createTextNode(`${season.title} (${season.episodes} episodios)`));
+                
+                // Si hay un nuevo episodio próximo, mostrar la información
+                if (season.newEpisode) {
+                    const newEpisodeBadge = document.createElement('span');
+                    newEpisodeBadge.className = 'new-episode-badge';
+                    newEpisodeBadge.textContent = `${season.newEpisode.status} - ${season.newEpisode.date}`;
+                    seasonTitle.appendChild(newEpisodeBadge);
+                }
+
+                // CORRECCIÓN mínima: usar season.number en el dataset para que updateSeasonBadges pueda mapear correctamente
+                seasonTitle.dataset.seasonKey = `${anime.id}_${season.number}`;
+                
+                const seasonContent = document.createElement('div');
+                seasonContent.className = 'season-content collapsible-content';
+                
+                const seasonEpisodes = document.createElement('div');
+                seasonEpisodes.className = 'season-episodes';
+                // CORRECCIÓN mínima: restaurar estado colapsado/expandido desde localStorage
+                const wasCollapsed = isSeasonCollapsed(anime.id, season.number);
+                seasonEpisodes.style.display = wasCollapsed ? 'none' : 'flex';
+                seasonToggle.textContent = wasCollapsed ? '►' : '▼';
+                
+                // Mostrar todos los episodios
+                for (let i = 1; i <= season.episodes; i++) {
+                    const episode = document.createElement('div');
+                    episode.className = 'episode';
+                    const episodeGlobalNumber = getGlobalEpisodeNumber(anime, season.number, i);
+                    episode.dataset.globalEpisode = episodeGlobalNumber;
+                    
+                    if (isEpisodeWatched(anime.id, episodeGlobalNumber)) {
+                        episode.classList.add('watched');
+                    }
+                    episode.textContent = i;
+                    
+                    // Verificar si es un episodio futuro
+                    let isFutureEpisode = false;
+                    let isNextRelease = false;
+                    
+                    // Verificar si hay información de nuevos episodios
+                    if (season.newEpisode) {
+                        const releaseDate = new Date(season.newEpisode.date);
+                        const currentDate = new Date();
+                        const currentDateFormatted = currentDate.toISOString().split('T')[0];
+                        const releaseDateFormatted = releaseDate.toISOString().split('T')[0];
+                        
+                        // Determinar el estado del episodio basado en releasedEpisodes y nextEpisode
+                        if (season.newEpisode.releasedEpisodes !== undefined) {
+                            // Si es un episodio ya lanzado (menor o igual a releasedEpisodes)
+                            if (i <= season.newEpisode.releasedEpisodes) {
+                                // Obtener la fecha actual formateada como YYYY-MM-DD
+                                const currentDate = new Date();
+                                const currentDateFormatted = currentDate.toISOString().split('T')[0];
+                                
+                                // Calcular la fecha exacta de lanzamiento de este episodio
+                                const initialDateParts = season.newEpisode.date.split('-');
+                                if (initialDateParts.length === 3) {
+                                    const initialDate = new Date(Date.UTC(
+                                        parseInt(initialDateParts[0]),
+                                        parseInt(initialDateParts[1]) - 1,
+                                        parseInt(initialDateParts[2])
+                                    ));
+                                    
+                                    // Obtener el intervalo de transmisión
+                                    const broadcastInterval = season.newEpisode.broadcastInterval || 7;
+                                    
+                                    // Calcular días adicionales desde la fecha inicial para este episodio
+                                    const daysToAdd = (i - 1) * broadcastInterval;
+                                    
+                                    // Crear fecha para este episodio
+                                    const episodeReleaseDate = new Date(initialDate);
+                                    episodeReleaseDate.setUTCDate(initialDate.getUTCDate() + daysToAdd);
+                                    
+                                    // Formatear la fecha de este episodio
+                                    const episodeReleaseDateFormatted = episodeReleaseDate.toISOString().split('T')[0];
+                                    
+                                    // Si el episodio se lanzó hoy, aplicar la clase new-available
+                                    if (episodeReleaseDateFormatted === currentDateFormatted) {
+                                        episode.classList.add('new-available');
+                                    } else {
+                                        // Si no, aplicar la clase available normal
+                                        episode.classList.add('available');
+                                    }
+                                } else {
+                                    // Si no podemos calcular la fecha, usar available por defecto
+                                    episode.classList.add('available');
+                                }
+                            }
+                            // Si es el próximo episodio a lanzar
+                            else if (season.newEpisode.nextEpisode !== null && i === season.newEpisode.nextEpisode) {
+                                // Obtener la fecha actual formateada como YYYY-MM-DD
+                                const currentDate = new Date();
+                                const currentDateFormatted = currentDate.toISOString().split('T')[0];
+                                
+                                // (NO crear modal aquí) — el modal se mostrará sólo al hacer click en el episodio next-release.
+                                episode.classList.add('next-release');
+                                episode.title = `Próximo episodio: ${season.newEpisode.displayDateHuman || season.newEpisode.displayDate || season.newEpisode.date}`;
+                            }
+                            // Si es un episodio futuro (mayor que nextEpisode)
+                            else if (season.newEpisode.nextEpisode === null || i > season.newEpisode.nextEpisode) {
+                                isFutureEpisode = true;
+                                episode.classList.add('locked');
+                                episode.title = 'Episodio no disponible aún';
+                            }
+                        }
+                    } else {
+                        // CORRECCIÓN mínima: si la temporada NO tiene newEpisode, tratar todos los episodios como disponibles
+                        episode.classList.add('available');
+                    }
+                    
+                    // Manejar eventos de clic para todos los episodios
+                    episode.addEventListener('click', (e) => {
+                        e.preventDefault(); // Prevenir comportamiento por defecto
+                        e.stopPropagation(); // Detener propagación del evento
+                        
+                        console.log('Clic en episodio:', {
+                            episodeNumber: i,
+                            episodeClasses: episode.className,
+                            hasNextReleaseClass: episode.classList.contains('next-release')
+                        });
+                        
+                        // Verificar directamente si el episodio tiene la clase next-release
+                        if (episode.classList.contains('next-release')) {
+                            // Obtener las fechas actualizadas en el momento del clic
+                            const currentDate = new Date();
+                            const currentDateFormatted = currentDate.toISOString().split('T')[0];
+                            
+                            // Obtener la fecha de lanzamiento del objeto season.newEpisode (usar displayDate si existe)
+                            const releaseISO = season.newEpisode.displayDate || season.newEpisode.date;
+                            const releaseDateParts = releaseISO.split('-');
+                            const releaseDate = new Date(
+                                parseInt(releaseDateParts[0]),
+                                parseInt(releaseDateParts[1]) - 1,
+                                parseInt(releaseDateParts[2])
+                            );
+                            const releaseDateFormatted = releaseDate.toISOString().split('T')[0];
+                            
+                            console.log('Mostrando modal para próximo episodio:', {
+                                currentDateFormatted,
+                                releaseDateFormatted,
+                                episodeNumber: i
+                            });
+                            
+                            // Si la fecha actual es anterior a la fecha de lanzamiento, mostrar el modal
+                            if (currentDateFormatted < releaseDateFormatted) {
+                                // Crear modal para mostrar información del próximo episodio
+                                const modal = document.createElement('div');
+                                modal.className = 'release-date-modal';
+                                
+                                const modalContent = document.createElement('div');
+                                modalContent.className = 'modal-content';
+                                
+                                const closeBtn = document.createElement('span');
+                                closeBtn.className = 'close-modal';
+                                closeBtn.innerHTML = '&times;';
+                                closeBtn.onclick = () => {
+                                    modal.classList.remove('show');
+                                    setTimeout(() => {
+                                        document.body.removeChild(modal);
+                                    }, 300);
+                                };
+                                
+                                const title = document.createElement('h2');
+                                title.textContent = 'Próximo episodio';
+                                
+                                const date = document.createElement('p');
+                                // Usar la fecha en formato humano si está disponible
+                                date.textContent = `Fecha de lanzamiento: ${season.newEpisode.displayDateHuman || season.newEpisode.displayDate || season.newEpisode.date}`;
+                                
+                                const info = document.createElement('p');
+                                info.textContent = `Estado: ${season.newEpisode.status || 'Pendiente'}`;
+                                modalContent.appendChild(closeBtn);
+                                modalContent.appendChild(title);
+                                modalContent.appendChild(date);
+                                modalContent.appendChild(info);
+                                modal.appendChild(modalContent);
+                                
+                                document.body.appendChild(modal);
+                                
+                                // Pequeño retraso para que la animación funcione
+                                setTimeout(() => {
+                                    modal.classList.add('show');
+                                }, 10);
+                                return; // Salir para no ejecutar el código de episodio normal
+                            }
+                        }
+                        
+                        // Verificar si estamos en modo de mostrar solo vistos
+                        const showingWatchedOnly = toggleAllWatchedButton.dataset.showingAll === 'false';
+                        
+                        if (showingWatchedOnly && episode.classList.contains('unwatch-mode')) {
+                            // Si estamos en modo de mostrar solo vistos, desmarcar como visto
+                            unwatchEpisode(anime.id, episodeGlobalNumber);
+                            episode.classList.remove('watched');
+                            episode.style.display = 'none';
+                            
+                            // Si ya no hay episodios vistos, volver a mostrar todos
+                            const watchedEpisodes = seasonEpisodes.querySelectorAll('.episode.watched');
+                            if (watchedEpisodes.length === 0) {
+                                toggleAllWatchedButton.click(); // Simular clic en el botón para volver a mostrar todos
+                            }
+                        } else if (!episode.classList.contains('future') && !episode.classList.contains('locked') && 
+                                  (episode.classList.contains('available') || episode.classList.contains('new-available'))) {
+                            // Si no es un episodio futuro o bloqueado, y es available o new-available, abrir el episodio
+                            openEpisode(anime, episodeGlobalNumber, season.number, i, season.slug || '');
+                        } else if (episode.classList.contains('next-release')) {
+                            // Si es un episodio próximo a lanzarse, mostrar el modal
+                            // Obtener las fechas actualizadas en el momento del clic
+                            const currentDate = new Date();
+                            const currentDateFormatted = currentDate.toISOString().split('T')[0];
+                            
+                            // Obtener la fecha de lanzamiento del objeto season.newEpisode
+                            const releaseISO = season.newEpisode.displayDate || season.newEpisode.date;
+                            const releaseDateParts = releaseISO.split('-');
+                            const releaseDate = new Date(
+                                parseInt(releaseDateParts[0]),
+                                parseInt(releaseDateParts[1]) - 1,
+                                parseInt(releaseDateParts[2])
+                            );
+                            
+                            // Crear modal para mostrar información del próximo episodio
+                            const modal = document.createElement('div');
+                            modal.className = 'release-date-modal';
+                            
+                            const modalContent = document.createElement('div');
+                            modalContent.className = 'modal-content';
+                            
+                            const closeBtn = document.createElement('span');
+                            closeBtn.className = 'close-modal';
+                            closeBtn.innerHTML = '&times;';
+                            closeBtn.onclick = () => {
+                                modal.classList.remove('show');
+                                setTimeout(() => {
+                                    document.body.removeChild(modal);
+                                }, 300);
+                            };
+                            
+                            const title = document.createElement('h2');
+                            title.textContent = 'Próximo episodio';
+                            
+                            const date = document.createElement('p');
+                            date.textContent = `Fecha de lanzamiento: ${season.newEpisode.displayDateHuman || season.newEpisode.displayDate || season.newEpisode.date}`;
+                            
+                            const info = document.createElement('p');
+                            info.textContent = `Estado: ${season.newEpisode.status || 'Pendiente'}`;
+                            modalContent.appendChild(closeBtn);
+                            modalContent.appendChild(title);
+                            modalContent.appendChild(date);
+                            modalContent.appendChild(info);
+                            modal.appendChild(modalContent);
+                            
+                            document.body.appendChild(modal);
+                            
+                            // Pequeño retraso para que la animación funcione
+                            setTimeout(() => {
+                                modal.classList.add('show');
+                            }, 10);
+                        }
+                    });
+                    
+                    seasonEpisodes.appendChild(episode);
+                }
+                
+                // Alternar visibilidad de episodios al hacer clic en el título de la temporada
+                seasonTitle.addEventListener('click', () => {
+                    const isVisible = seasonEpisodes.style.display !== 'none';
+                    seasonEpisodes.style.display = isVisible ? 'none' : 'flex';
+                    seasonToggle.textContent = isVisible ? '►' : '▼';
+                    // CORRECCIÓN mínima: guardar estado en localStorage (collapsed = true cuando se oculta)
+                    setSeasonCollapsed(anime.id, season.number, isVisible);
+                });
+                
+                seasonContainer.appendChild(seasonTitle);
+                seasonContainer.appendChild(seasonEpisodes);
+                seasonsContainer.appendChild(seasonContainer);
+            });
+            
+            // Añadir todo al contenedor principal
+            animeDetailContainer.appendChild(seasonsContainer);
+        }
+        
+        // Añadir sección de "Más contenido" al final de la página
+        function addMoreContentSection() {
+            // Crear el contenedor principal para la sección
+            const moreContentSection = document.createElement('div');
+            moreContentSection.className = 'more-content-section';
+            moreContentSection.style.marginTop = '40px';
+            moreContentSection.style.marginBottom = '20px';
+            moreContentSection.style.marginLeft = '20px';
+            moreContentSection.style.marginRight = '20px';
+            
+            // Crear el título de la sección
+            const sectionTitle = document.createElement('h2');
+            sectionTitle.textContent = 'Más contenido';
+            sectionTitle.style.marginBottom = '20px';
+            sectionTitle.style.borderBottom = '2px solid var(--accent-color)';
+            sectionTitle.style.paddingBottom = '10px';
+            
+            // Crear el contenedor para los animes usando la clase anime-grid
+            const animeContainer = document.createElement('div');
+            animeContainer.className = 'anime-grid';
+            
+            // Obtener el anime actual para excluirlo de las recomendaciones
+            const currentAnimeId = animeId;
+            
+            // Obtener todos los animes disponibles
+            const availableAnimes = getSourceData();
+            
+            // Filtrar el anime actual
+            const filteredAnimes = availableAnimes.filter(anime => anime.id !== currentAnimeId);
+            
+            // Determinar cuántos animes mostrar según el tamaño de pantalla
+            let maxAnimes = 6; // Por defecto para pantallas grandes
+            const screenWidth = window.innerWidth;
+            
+            if (screenWidth <= 768) {
+                maxAnimes = 2; // Móviles
+            } else if (screenWidth <= 1024) {
+                maxAnimes = 4; // Tablets
+            } else if (screenWidth <= 1399) {
+                maxAnimes = 5; // Pantallas medianas
+            }
+            
+            // Seleccionar animes aleatorios según la resolución
+            const selectedAnimes = [];
+            if (filteredAnimes.length > 0) {
+                if (filteredAnimes.length > maxAnimes) {
+                    // Mezclar el array
+                    const shuffled = [...filteredAnimes].sort(() => 0.5 - Math.random());
+                    selectedAnimes.push(...shuffled.slice(0, maxAnimes));
+                } else {
+                    // Si hay menos animes que el máximo, usar todos
+                    selectedAnimes.push(...filteredAnimes);
+                }
+            }
+            
+            // Si no hay animes para mostrar, no añadir la sección
+            if (selectedAnimes.length === 0) {
+                return;
+            }
+            
+            // Crear tarjetas para cada anime seleccionado usando createAnimeCard
+            selectedAnimes.forEach(anime => {
+                const animeCard = window.createAnimeCard(anime);
+                animeContainer.appendChild(animeCard);
+            });
+            
+            // Añadir elementos al contenedor principal
+            moreContentSection.appendChild(sectionTitle);
+            moreContentSection.appendChild(animeContainer);
+            
+            // Añadir la sección al contenedor principal de la página
+            document.querySelector('#anime-detail-container').appendChild(moreContentSection);
+        }
+        
+        // Listener para el evento personalizado de actualización de lista
+        document.addEventListener('animeListUpdated', (event) => {
+            const { animeId: updatedAnimeId, inList } = event.detail;
+            
+            // Actualizar específicamente los botones del slider en esta página
+            const heroSlider = document.querySelector('.hero-slider');
+            if (heroSlider) {
+                const heroButtons = heroSlider.querySelectorAll(`.hero-slide-button.add-button[data-anime-id="${updatedAnimeId}"]`);
+                heroButtons.forEach(button => {
+                    if (inList) {
+                        button.classList.add('in-list');
+                        const tooltip = button.querySelector('.tooltip');
+                        if (tooltip) tooltip.textContent = 'Eliminar de la lista';
+                        const path = button.querySelector('svg path');
+                        if (path) path.setAttribute('d', 'M18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z');
+                    } else {
+                        button.classList.remove('in-list');
+                        const tooltip = button.querySelector('.tooltip');
+                        if (tooltip) tooltip.textContent = 'Agregar a Ureshiilist';
+                        const path = button.querySelector('svg path');
+                        if (path) path.setAttribute('d', 'M17 18.113l-3.256-2.326A2.989 2.989 0 0 0 12 15.228c-.629 0-1.232.194-1.744.559L7 18.113V4h10v14.113zM18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z');
+                    }
+                });
+            }
+            
+            // Actualizar también los botones fijos
+            const fixedContainer = document.querySelector('.fixed-buttons-container');
+            if (fixedContainer) {
+                const fixedButtons = fixedContainer.querySelectorAll(`.hero-slide-button.add-button[data-anime-id="${updatedAnimeId}"]`);
+                fixedButtons.forEach(button => {
+                    if (inList) {
+                        button.classList.add('in-list');
+                        const tooltip = button.querySelector('.tooltip');
+                        if (tooltip) tooltip.textContent = 'Eliminar de la lista';
+                        const path = button.querySelector('svg path');
+                        if (path) path.setAttribute('d', 'M18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z');
+                    } else {
+                        button.classList.remove('in-list');
+                        const tooltip = button.querySelector('.tooltip');
+                        if (tooltip) tooltip.textContent = 'Agregar a Ureshiilist';
+                        const path = button.querySelector('svg path');
+                        if (path) path.setAttribute('d', 'M17 18.113l-3.256-2.326A2.989 2.989 0 0 0 12 15.228c-.629 0-1.232.194-1.744.559L7 18.113V4h10v14.113zM18 2H6a1 1 0 0 0-1 1v17.056c0 .209.065.412.187.581a.994.994 0 0 0 1.394.233l4.838-3.455a1 1 0 0 1 1.162 0l4.838 3.455A1 1 0 0 0 19 20.056V3a1 1 0 0 0-1-1z');
+                    }
+                });
+            }
+        });
+        
+        // Llamar a la función después de cargar los detalles del anime
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ejecutar checkAndUnlockEpisodes primero y luego mostrar los detalles
+            checkAndUnlockEpisodes();
+            
+            // Cargar datos desde Google Drive si está disponible
+            if (typeof window.loadInitialDataFromDrive === 'function') {
+                window.loadInitialDataFromDrive();
+            }
+            
+            // Escuchar cuando los datos de Drive estén listos
+            window.addEventListener('driveDataReady', function(event) {
+                console.log('Datos de Google Drive cargados en anime.html:', event.detail);
+                // Recargar contenido que dependa de los datos
+                if (animeId) {
+                    displayAnimeDetails(animeId);
+                }
+            });
+            
+            // Pequeño retraso para asegurar que los datos estén actualizados antes de mostrar la interfaz
+            setTimeout(() => {
+                if (animeId) {
+                    displayAnimeDetails(animeId);
+                    // Añadir la sección de "Más contenido" después de mostrar los detalles
+                    setTimeout(addMoreContentSection, 100);
+                }
+            }, 10);
+        });
+    </script>
+</body>
+</html>

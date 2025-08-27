@@ -1,0 +1,1395 @@
+.back-button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background-color: #ff5722; /* Cambiado de #9d65e5 a un tono naranja que combina mejor */
+            transform: translateY(-2px);
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+        }
+        
+        .anime-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .anime-detail-header {
+            position: relative;
+            margin-bottom: 30px;
+            background-color: var(--card-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            height: 350px; /* Altura fija para el banner */
+        }
+        
+        .anime-detail-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.7); /* Oscurece ligeramente la imagen */
+        }
+        
+        .anime-detail-info {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+            border-radius: 8px;
+            margin: 20px;
+            backdrop-filter: blur(5px); /* Efecto de desenfoque */
+            width: calc(100% - 40px); /* Ancho ajustado para los márgenes */
+            height: calc(100% - 40px); /* Altura ajustada para los márgenes */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Cambiado de space-between a flex-start */
+        }
+        
+        /* Eliminar todas las definiciones duplicadas y mantener solo estas */
+        .add-to-list {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex; /* Usar flexbox para centrado perfecto */
+            align-items: center; /* Centrado vertical */
+            justify-content: center; /* Centrado horizontal */
+            min-width: 180px;
+            height: 45px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center; /* Asegurar que el texto esté centrado */
+        }
+        
+        .add-to-list:hover {
+            transform: translateY(0px) !important;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .add-to-list:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s;
+        }
+        
+        /* Simplificar el botón eliminando las animaciones complejas */
+        .add-to-list:before {
+            content: "Añadir a mi lista";
+            white-space: nowrap;
+            font-size: 14px; /* Tamaño de fuente explícito */
+            line-height: 1; /* Asegurar que la línea no afecte la altura */
+            display: flex; /* Usar flexbox para centrado perfecto */
+            align-items: center; /* Centrado vertical */
+            justify-content: center; /* Centrado horizontal */
+            width: 100%; /* Ocupar todo el ancho del botón */
+            height: 100%; /* Ocupar toda la altura del botón */
+        }
+        
+        .add-to-list.in-list {
+            background-color: #4CAF50;
+        }
+        
+        .add-to-list.in-list:before {
+            content: "Quitar de mi lista";
+            display: flex; /* Usar flexbox para centrado perfecto */
+            align-items: center; /* Centrado vertical */
+            justify-content: center; /* Centrado horizontal */
+            width: 100%; /* Ocupar todo el ancho del botón */
+            height: 100%; /* Ocupar toda la altura del botón */
+        }
+        
+        .add-to-list.in-list {
+            background-color: #4CAF50;
+        }
+        
+        .add-to-list.in-list:hover {
+            background-color: #66BB6A; /* Verde más claro al hacer hover cuando está en la lista */
+        }
+        
+        /* Estilos para los badges de estado */
+        .new-episode-badge {
+            margin-left: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            display: inline-block;
+        }
+        
+        .new-episode-badge.available {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .new-episode-badge.upcoming {
+            background-color: #f1c40f;
+            color: black;
+        }
+        
+        /* Estilos para los estados de episodios */
+        .episode.locked {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        
+        .episode.next-release {
+            background-color: #f1c40f;
+            color: #000;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .episode.new-available {
+            background-color: #2ecc71;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+        
+        /* Estilos para el modal de fecha de lanzamiento */
+        .release-date-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .release-date-modal.show {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 400px;
+            width: 80%;
+            position: relative;
+            color: white;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+/* Crear un contenedor para la imagen de fondo solo en la parte superior */
+.background-image-container {
+    position: absolute; /* Cambiado de fixed a absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Altura de la ventana */
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* Estilo para la imagen de fondo */
+.background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
+}
+
+/* Degradado a negro en la parte inferior */
+.background-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%; /* Aumentado para un degradado más pronunciado */
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+    z-index: 0;
+}
+
+/* Añadir fondo negro al body */
+body {
+    background-color: #121212; /* Fondo negro para el resto de la página */
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+    /* Eliminar el estilo de tarjeta del encabezado de detalles */
+    .anime-detail-header {
+        position: relative;
+        margin-bottom: 30px;
+        border-radius: 0;
+        overflow: visible;
+        box-shadow: none;
+        background-color: transparent;
+        height: auto;
+    }
+    
+    /* Ocultar la imagen dentro del header ya que ahora es el fondo */
+    .anime-detail-image {
+        display: none;
+    }
+    
+    /* Ajustar el contenedor de información */
+    .anime-detail-info {
+        position: relative;
+        z-index: 2;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        border-radius: 8px;
+        margin: 20px 0;
+        backdrop-filter: blur(5px);
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    /* Estilo para el botón de modo marcar como no vistos */
+    .toggle-all-watched-button {
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 0;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 45px; /* Misma altura que el botón add-to-list */
+        min-width: 120px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        margin-left: 10px; /* Espacio entre los botones */
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .toggle-all-watched-button:hover {
+        transform: translateY(0px) !important;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .toggle-all-watched-button:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: all 0.1s;
+    }
+    
+    .toggle-all-watched-button.showing-watched-only {
+        background-color: #ff2f00; /* Verde cuando está en modo mostrar solo vistos */
+    }
+    
+    .add-to-list.in-list {
+        background-color: #4CAF50;
+    }
+    
+    .add-to-list.in-list:before {
+        content: "Quitar de mi lista";
+        display: flex; /* Usar flexbox para centrado perfecto */
+        align-items: center; /* Centrado vertical */
+        justify-content: center; /* Centrado horizontal */
+        width: 100%; /* Ocupar todo el ancho del botón */
+        height: 100%; /* Ocupar toda la altura del botón */
+    }
+    
+    .add-to-list.in-list {
+        background-color: #4CAF50; /* Color verde cuando está en la lista */
+        margin: 15px 0; /* Márgenes adicionales cuando está en la lista */
+    }
+    
+    .add-to-list.in-list:hover {
+        background-color: #66BB6A; /* Verde más claro al hacer hover cuando está en la lista */
+    }
+    
+    /* Estilos para el modal de fecha de lanzamiento */
+    .release-date-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    
+    .release-date-modal.show {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .release-date-modal .modal-content {
+        background-color: var(--card-color);
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .release-date-modal .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-color);
+    }
+    
+    /* Marco de edición entre la info del anime y las temporadas */
+    .edit-mode-frame {
+        background-color: rgba(229, 56, 53, 0.144); /* Rojo semi-transparente */
+        border: 1px solid rgba(229, 57, 53, 0.7); /* Borde fino rojo */
+        border-radius: 8px;
+        margin: 15px 0;
+        margin-left: 15px;
+        margin-right: 15px;
+        padding: 15px;
+        backdrop-filter: blur(5px); /* Efecto de borrosidad */
+        -webkit-backdrop-filter: blur(5px); /* Para Safari */
+        display: none; /* Oculto por defecto */
+        font-weight: normal;
+        color: #fff;
+        text-align: center;
+    }
+    
+    /* Cuando está en modo de edición, aplicamos estilos adicionales a los contenedores */
+    .season-container.edit-mode {
+        position: relative;
+    }
+    
+    /* Estilo especial para los episodios en modo edición */
+    .edit-mode .season-episodes {
+        background-color: transparent;
+    }
+    
+    .add-to-list.in-list {
+        background-color: #4CAF50;
+    }
+    
+    .add-to-list.in-list:before {
+        content: "Quitar de mi lista";
+        display: flex; /* Usar flexbox para centrado perfecto */
+        align-items: center; /* Centrado vertical */
+        justify-content: center; /* Centrado horizontal */
+        width: 100%; /* Ocupar todo el ancho del botón */
+        height: 100%; /* Ocupar toda la altura del botón */
+    }
+    
+    .add-to-list.in-list {
+        background-color: #4CAF50; /* Color verde cuando está en la lista */
+        margin: 15px 0; /* Márgenes adicionales cuando está en la lista */
+    }
+    
+    .add-to-list.in-list:hover {
+        background-color: #66BB6A; /* Verde más claro al hacer hover cuando está en la lista */
+    }
+    
+    /* Estilos para el modal de fecha de lanzamiento */
+    .release-date-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    
+    .release-date-modal.show {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .release-date-modal .modal-content {
+        background-color: var(--card-color);
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .release-date-modal .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-color);
+    }
+
+/* Estilos para los recuadros desplegables de temporadas */
+.collapsible-box {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background-color: rgba(30, 30, 30, 0.7);
+    transition: all 0.3s ease;
+    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.collapsible-box:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.collapsible-header {
+    padding: 15px;
+    cursor: pointer;
+    background-color: rgba(40, 40, 40, 0.9);
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.collapsible-header:hover {
+    background-color: rgba(60, 60, 60, 0.9);
+}
+
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 15px;
+}
+
+.collapsible-content.active {
+    max-height: 1000px; /* Valor alto para asegurar que todo el contenido sea visible */
+    padding: 15px;
+}
+
+/* Ajustes para los episodios dentro del contenido desplegable */
+.season-episodes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
+    margin: 15px;
+}
+
+/* Estilos para hacer que el hero-carousel sea igual al de inicio */
+.hero-carousel {
+    width: 100%;
+    height: 80vh; /* Igual que en index.css */
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0 !important;
+    margin-top: -50px; /* Valor negativo para subir el carousel */
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    border-radius: 0; /* Eliminar cualquier borde redondeado */
+    box-shadow: none; /* Eliminar cualquier sombra */
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1; /* Siempre visible ya que es estático */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 0 5%; /* Igual que en index.css */
+    box-sizing: border-box;
+    background-color: transparent; /* Asegurar que no tenga fondo */
+}
+
+.hero-slide-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+/* Asegurarse de que el overlay del degradado inferior esté presente y funcione correctamente */
+.hero-slide-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%; /* Aumentar la altura del degradado para que sea más visible */
+    background: linear-gradient(to top, var(--background-color) 10%, transparent 100%);
+
+    z-index: 1; /* Asegurar que esté por encima del fondo pero por debajo del contenido */
+    pointer-events: none; /* Permitir que los clics pasen a través del overlay */
+}
+
+.hero-slide-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%; /* Igual que en index.css */
+    background: linear-gradient(to top, var(--background-color), transparent);
+    z-index: 0;
+}
+
+.hero-slide-content {
+    position: relative;
+    z-index: 2;
+    max-width: 400px; /* Igual que en index.css */
+    margin-bottom: 5%;
+}
+
+/* Ocultar el contenedor de fondo antiguo */
+.background-image-container {
+    display: none;
+}
+
+/* Ajustar el contenedor principal para que no tenga padding en la parte superior */
+.anime-container {
+    padding-top: 0;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+/* Ajustar el contenedor de detalles del anime */
+#anime-detail-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+}
+
+/* Ajustar la posición del contenido de episodios para que esté debajo del slider */
+.anime-episodes-container {
+    margin-top: 0;
+    padding-top: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Estilo para el botón de desmarcar vistos */
+.hero-slide-button.unwatch-button {
+    background-color: transparent;
+    border: none; /* Quitamos el borde exterior */
+    color: var(--accent-color);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1/1; /* Asegurar que el botón sea cuadrado */
+}
+
+/* Aumentar tamaño de los SVG en los botones de guardar y modo edición */
+.hero-slide-button.unwatch-button .action-icon {
+    width: 24px; /* Aumentado de 20px */
+    height: 24px; /* Aumentado de 20px */
+    fill: var(--accent-color);
+}
+
+.modal-button.confirm-button svg,
+.settings-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Media query para resoluciones grandes - Solo aumentar tamaño de fuente de elementos específicos */
+@media (min-width: 1600px) {
+    .hero-slide-description {
+        font-size: 1.1em !important;
+    }
+    
+    .more-content-button {
+        font-size: 1.1em !important;
+    }
+    
+    .audio-info {
+        font-size: 1.1em !important;
+    }
+    
+    .subtitles-info {
+        font-size: 1.1em !important;
+    }
+    
+    .content-warning-right {
+        font-size: 1.1em !important;
+    }
+
+    .season-title {
+        font-size: 1.4em !important;
+    }
+
+    .season-toggle {
+        font-size: 0.9em !important;
+    }
+
+    .episode {
+        font-size: 1em !important;
+    }
+    
+    /* Aumentar tamaño de iconos SVG */
+    svg {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .action-icon {
+        width: 25px !important;
+        height: 25px !important;
+    }
+}
+
+.hero-slide-button.unwatch-button:hover {
+    background-color: transparent; /* Quitamos el fondo al hacer hover */
+}
+
+.hero-slide-button.unwatch-button:hover .action-icon {
+    fill: #ff8c6e; /* Naranja más claro al hacer hover sobre el SVG */
+}
+
+/* Ajustes para el hero-carousel */
+.hero-carousel {
+    margin-top: 0; /* Cambiado de -50px para que esté justo debajo del header */
+    height: 70vh; /* Reducir altura para que la descripción sea más visible */
+}
+
+/* Ajustes para el hero-slide-content */
+.hero-slide-content {
+    position: relative;
+    z-index: 2;
+    max-width: 100%; /* Cambiado de 400px para que ocupe todo el ancho disponible */
+    margin-top: 20px; /* Aumentado para estar más cerca del header */
+    margin-bottom: 5%;
+    padding: 0 20px; /* Añadido padding horizontal */
+}
+
+/* Estilos para la descripción del anime */
+.hero-slide-description {
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    align-self: flex-start;
+    width: 100%; /* Ancho completo del contenedor padre */
+    max-width: none; /* Sin restricción de ancho máximo */
+    min-width: 0; /* Sin restricción de ancho mínimo */
+    display: block; /* Asegurar que mantenga el mismo ancho en ambos estados */
+    /* Estado contraído: altura fija para ambas columnas */
+    height: 4.2em; /* 3 líneas x 1.4 line-height */
+    max-height: 4.2em;
+    overflow: hidden;
+}
+
+/* Degradado para estado contraído */
+.hero-slide-description::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1.4em;
+    background: linear-gradient(transparent 0%, rgba(18, 18, 18, 0.8) 70%, rgba(18, 18, 18, 1) 100%);
+    pointer-events: none;
+}
+
+.hero-slide-description.expanded::after {
+    display: none;
+}
+
+/* Wrapper para la descripción y el botón */
+.description-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    padding: 0; /* Sin padding para mantener consistencia con las columnas */
+    overflow: visible;
+    transform-origin: top;
+    min-height: auto; /* Permite que el wrapper crezca dinámicamente */
+    background: transparent; /* Fondo sutil para separar del slider */
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+/* Desactivar scroll horizontal */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Prevenir scroll horizontal en todos los elementos */
+* {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Reglas específicas para móvil */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+        width: 100% !important;
+    }
+    
+    * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    .anime-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.8rem !important;
+        padding: 0 0.5rem !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+    }
+}
+
+/* Estilos base para el layout de dos columnas */
+.two-column-container {
+    display: block;
+}
+
+.left-column,
+.right-column {
+    width: 100%;
+}
+
+.left-column .hero-slide-description {
+    width: 100%; /* Mantener ancho completo en móvil */
+}
+
+.right-column {
+    width: 100%;
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    max-height: 4.2em; /* 3 líneas x 1.4 line-height */
+    overflow: hidden;
+    position: relative;
+    line-height: 1.4; /* Consistente con la descripción */
+}
+
+.right-column.expanded {
+    max-height: none;
+    overflow: visible;
+}
+
+.right-column::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1.4em;
+    background: linear-gradient(transparent 0%, rgba(18, 18, 18, 0.8) 70%, rgba(18, 18, 18, 1) 100%);
+    pointer-events: none;
+}
+
+.right-column.expanded::after {
+    display: none;
+}
+
+.content-warning-right {
+    color: #8c8c8c;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 12px;
+}
+
+.content-warning-right strong {
+    font-weight: bold;
+    color: #fff;
+}
+
+.audio-info,
+.subtitles-info {
+    margin-bottom: 15px;
+}
+
+.audio-info:last-child,
+.subtitles-info:last-child {
+    margin-bottom: 0;
+}
+
+.audio-info h3,
+.subtitles-info h3 {
+    color: #ff6b35;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.audio-info,
+.subtitles-info {
+    color: #8c8c8c;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.audio-info strong,
+.subtitles-info strong {
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Botón de "Más contenido" */
+.more-content-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 5px 0;
+    margin-top: 10px;
+    text-align: left;
+    position: relative;
+    z-index: 15;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    align-self: flex-start;
+}
+
+/* Definición eliminada - consolidada más abajo */
+
+/* Contenedor para la descripción con altura fija */
+.description-container {
+    position: relative;
+    max-height: 4.5em; /* Usar max-height en lugar de height para transición suave */
+    overflow: hidden;
+    margin-bottom: 0;
+    margin-top: 0 !important;
+    transition: max-height 0.4s ease-out; /* Transición suave para expansión */
+    width: 100%;
+    max-width: none; /* Sin restricción de ancho máximo */
+    min-width: 0; /* Sin restricción de ancho mínimo */
+    z-index: 10;
+    background-color: transparent;
+    border-radius: 0;
+    transform-origin: top;
+}
+
+/* Degradado que corta el texto e integra con el slider */
+.description-container::after {
+    content: '';
+    position: absolute;
+    margin-bottom: 0;
+    margin-top: 0;
+    width: 100%;
+    height: 2em; /* Altura del degradado */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8) 90%);
+    pointer-events: none;
+    z-index: 5; /* Asegura que esté por encima del texto para que se vea el degradado */
+    transition: opacity 0.3s ease, height 0.3s ease;
+}
+
+/* Ocultar el degradado cuando la descripción está expandida */
+.description-container.expanded::after {
+    opacity: 0;
+    height: 0;
+}
+
+.description-container.expanded {
+    height: auto;
+    max-height: none;
+    margin-bottom: 0;
+    margin-top: 0;
+    position: relative;
+    z-index: 100;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    transform-origin: top;
+    width: 100%;
+    transition: max-height 0.4s ease-out, margin-bottom 0.4s ease-out;
+}
+
+/* Eliminamos el degradado cuando está expandido */
+.description-container.expanded::after {
+    opacity: 0;
+}
+
+/* Fallback para navegadores que no soportan :has() */
+.description-container.expanded + .more-content-button {
+    margin-top: 15px;
+}
+
+/* Estilos para la descripción expandida */
+.hero-slide-description.expanded {
+    -webkit-line-clamp: unset;
+    height: auto;
+    max-height: none;
+    max-width: none;
+    overflow: visible;
+    width: 100%; /* Mantener el mismo ancho que en estado contraído */
+    position: relative;
+    color: #fff;
+    line-height: 1.4; /* Mantener la misma altura de línea que en estado contraído */
+    margin: 0;
+    padding: 0;
+    display: block; /* Mismo display que el estado contraído */
+    align-self: flex-start; /* Misma alineación que el estado contraído */
+}
+
+/* Aviso de contenido - estilo similar a Crunchyroll */
+.content-warning {
+    background-color: transparent; /* Fondo transparente como en Crunchyroll */
+    border-radius: 0;
+    padding: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #aaa; /* Color más suave para el texto */
+    position: relative;
+    z-index: 101; /* Asegura que esté por encima de la descripción expandida */
+    border-left: none; /* Eliminamos el borde izquierdo */
+    font-size: 0.9rem; /* Texto más pequeño */
+}
+
+.content-warning.visible {
+    display: block;
+}
+
+/* Estilo para los botones en móvil */
+/* Estilos para el botón cuando está después del contenedor de dos columnas */
+.description-wrapper .more-content-button {
+    margin-top: 15px;
+    width: 100%;
+    text-align: center;
+    clear: both;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+@media (max-width: 768px) {
+    /* Ocultar la columna derecha en móvil cuando no está expandida */
+    .right-column:not(.expanded) {
+        display: none !important;
+    }
+    
+    /* Añadir margen derecho a las columnas en móvil */
+    .left-column,
+    .right-column {
+        margin-right: 20px;
+    }
+    
+    /* Añadir padding a ambos lados y reducir espacio superior en móvil */
+    .description-wrapper {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        padding-top: 5px !important;
+    }
+    
+    /* Quitar el fondo de la segunda columna en móvil */
+    .right-column {
+        background: transparent !important;
+    }
+    
+    /* Eliminar espacio entre información y botón de play */
+    .hero-slide-content {
+        gap: 0px !important;
+    }
+    
+    /* Ajustar altura de los botones para que coincidan con el header */
+    .hero-slide-button.play-button,
+    .hero-slide-button.add-button {
+        height: 36px; /* Altura reducida para coincidir con el header */
+        min-height: 36px;
+        padding: 0 10px;
+        font-size: 13px;
+    }
+    
+    .hero-slide-button.play-button svg,
+    .hero-slide-button.add-button svg,
+    .hero-slide-button.unwatch-button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    
+    /* Ajustar los botones fijos */
+    /* Contenedor de botones fijos en la parte inferior */
+    .fixed-buttons-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7), transparent);
+        padding: 15px 10px;
+        z-index: 100;
+        opacity: 0;
+        transform: translateY(100%);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+    }
+    
+    .fixed-buttons-container.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+    
+    .fixed-buttons-container .hero-slide-button {
+        flex: 1;
+        margin: 0 5px;
+        height: 50px; /* Altura mayor para los botones fijos */
+        font-size: 16px; /* Tamaño de fuente mayor */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .fixed-buttons-container .hero-slide-button svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .fixed-buttons-container .hero-slide-button.play-button {
+        flex: 3; /* Hacer más largo el botón de reproducción */
+        text-align: center; /* Centrar el texto del botón de play */
+    }
+    
+    .fixed-buttons-container .hero-slide-button.add-button {
+        flex: 0 0 50px; /* Aspecto cuadrado para el botón de guardar */
+        width: 50px;
+        height: 50px;
+        aspect-ratio: 1/1;
+    }
+}
+
+/* Estilos específicos para la sección "Más contenido" */
+.more-content-section .anime-grid {
+    display: grid;
+    gap: 20px;
+    grid-auto-rows: max-content;
+    overflow: hidden;
+}
+
+/* Móviles: solo 2 cards por fila */
+@media (max-width: 768px) {
+    .more-content-section .anime-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
+    }
+}
+
+/* Tablets: 3-4 cards por fila */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .more-content-section .anime-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: 1fr;
+    }
+}
+
+/* Pantallas medianas: 5 cards por fila */
+@media (min-width: 1025px) and (max-width: 1399px) {
+    .more-content-section .anime-grid {
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: 1fr;
+    }
+}
+
+/* Pantallas grandes: 6 cards por fila */
+@media (min-width: 1400px) {
+    .more-content-section .anime-grid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: 1fr;
+    }
+}
+
+/* Media query para PC - Centrar verticalmente el contenido */
+@media (min-width: 769px) {
+    .hero-slide {
+        justify-content: center; /* Centrar verticalmente el contenido en PC */
+        align-items: flex-start; /* Mantener alineación horizontal a la izquierda */
+    }
+    
+    .hero-slide-content {
+        margin-bottom: 0; /* Eliminar margen inferior para centrado perfecto */
+    }
+    
+    /* Ocultar botones fijos en PC */
+    .fixed-buttons-container {
+        display: none !important;
+        margin-top: 0; /* Eliminar margen superior para centrado perfecto */
+    }
+    
+    .description-wrapper {
+        max-width: 100%;
+        width: 100%;
+        margin-left: 0;
+        padding: 0 5%;
+        box-sizing: border-box;
+    }
+    
+    .two-column-container {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .left-column {
+        flex: 0 0 50%; /* Ancho fijo de 50% (media pantalla) */
+        max-width: 50%;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .left-column .hero-slide-description {
+        width: 100%; /* Mantener ancho completo dentro de la columna */
+        margin: 0;
+        padding: 0;
+    }
+    
+    .right-column {
+        flex: 0 0 auto;
+        width: 50%;
+        max-width: 50%;
+        min-width: 0;
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        align-self: flex-start;
+        height: 4.2em; /* 3 líneas x 1.4 line-height */
+        max-height: 4.2em;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .right-column.expanded {
+        height: auto;
+        max-height: none;
+        overflow: visible;
+    }
+    
+    .right-column::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1.4em;
+        background: linear-gradient(transparent, rgba(18, 18, 18, 0.8));
+        pointer-events: none;
+    }
+    
+    .right-column.expanded::after {
+        display: none;
+    }
+    
+    .audio-info,
+    .subtitles-info {
+        margin-bottom: 20px;
+    }
+    
+    /* Forzar visibilidad del botón en PC */
+    .more-content-button {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: relative !important;
+        z-index: 999 !important;
+    }
+    
+    .audio-info:last-child,
+    .subtitles-info:last-child {
+        margin-bottom: 0;
+    }
+    
+    .audio-info h3,
+    .subtitles-info h3 {
+        color: #ff6b35;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 10px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .audio-info,
+    .subtitles-info {
+        color: #8c8c8c;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+    
+    .audio-info strong,
+    .subtitles-info strong {
+        font-weight: bold;
+        color: #fff;
+    }
+    
+    .content-warning-right {
+        color: #8c8c8c;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-top: 15px;
+    }
+    
+    .content-warning-right strong {
+        font-weight: bold;
+        color: #fff;
+    }
+    
+    .description-container.expanded {
+        max-width: none;
+        width: 100%;
+    }
+    
+    /* Definición eliminada - consolidada en estilos base */
+}
+    .modal-content {
+        background-color: #222;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 400px;
+        width: 80%;
+        position: relative;
+        color: white;
+    }
+    
+    .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+/* Contenedor para la descripción completa */
+.full-description-container {
+    max-width: 1200px;
+    margin: 30px auto 20px;
+    padding: 0 20px;
+    color: #fff;
+}
+
+.description-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--accent-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.full-description {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    max-height: 4.8em; /* Altura para 3 líneas */
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.3s ease;
+}
+
+.full-description.expanded {
+    max-height: none;
+}
+
+.more-details-button {
+    color: var(--accent-color);
+    background: none;
+    border: none;
+    padding: 5px 0;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: inline-block;
+    position: relative;
+    z-index: 102; /* Asegura que esté por encima de la descripción expandida */
+}
+
+.more-details-button:hover {
+    text-decoration: underline;
+}
+
+/* Ajustar el contenedor de temporadas para que esté debajo de la descripción */
+.seasons-container {
+    margin-top: 20px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    transition: margin-top 0.4s ease-out; /* Sincronizar con la transición del texto */
+}
+
+/* Cuando hay descripción expandida, aumentar el margen del contenedor de temporadas */
+.hero-slide:has(.description-container.expanded) .seasons-container {
+    margin-top: 40px; /* Espacio adicional cuando el texto está expandido */
+}
