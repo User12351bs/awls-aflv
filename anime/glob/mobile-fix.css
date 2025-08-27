@@ -1,0 +1,135 @@
+/* CSS ULTRA RESTRICTIVO PARA ELIMINAR SCROLL HORIZONTAL EN MÓVIL */
+
+/* Aplicar solo en dispositivos móviles */
+@media (max-width: 768px) {
+    /* Resetear completamente html y body */
+    html {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+    }
+    
+    body {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+    }
+    
+    /* Aplicar a todos los elementos */
+    * {
+        max-width: 100vw !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Elementos que NO deben ser html o body */
+    *:not(html):not(body) {
+        max-width: calc(100vw - 1px) !important;
+    }
+    
+    /* Contenedores principales */
+    .container,
+    #anime-container,
+    .anime-grid {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Grid específico */
+    .anime-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.2rem !important;
+        padding: 0.1rem !important;
+    }
+    
+    /* Cards individuales */
+    .anime-card {
+        width: calc(50vw - 0.15rem) !important;
+        max-width: calc(50vw - 0.15rem) !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Imágenes */
+    .anime-poster,
+    .anime-poster img {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Información de anime */
+    .anime-info {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0.2rem !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Títulos */
+    .anime-info h3 {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Eliminar cualquier elemento flotante o posicionado que pueda causar overflow */
+    .anime-overlay,
+    .overlay {
+        max-width: 100% !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Asegurar que elementos estructurales no causen overflow */
+    header,
+    main,
+    section,
+    div,
+    article {
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Forzar que ningún elemento exceda el viewport */
+    [style*="width"] {
+        max-width: 100vw !important;
+    }
+    
+    /* Eliminar scrollbars horizontales completamente */
+    ::-webkit-scrollbar:horizontal {
+        display: none !important;
+    }
+    
+    /* Para Firefox */
+    html {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+}
